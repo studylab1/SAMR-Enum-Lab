@@ -46,15 +46,14 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 
 ### The Virtual Machines Specifications
 
-- **Workstation Operating System:** Windows 11 Enterprise 23H2 x86-64 (version 23H2)
+#### Workstation
+- **Operating System:** Windows 11 Enterprise 23H2 x86-64 (version 23H2)
 - **RAM:** 4 GB
-- **Processor:** 4vCPU
+- **Processor:** 2vCPU  
 
-- **Domain Controller Operating System:** Windows Server 2022 Standard  x86-64
+#### Domain Controller
+- **Operating System:** Windows Server 2022 Standard x86-64
 - **RAM:** 4 GB
-- **Processor:** 2vCPU
+- **Processor:** 4vCPU  
 
 This setup allows for the creation and management of isolated virtual environments for testing SAMR enumeration in a multi-forest Active Directory configuration.
-
-## Conclusion
-This controlled laboratory environment is essential for understanding how SAMR enumeration operates in complex Active Directory trust setups and will guide future research into detection mechanisms and countermeasures against enumeration-based attacks.
