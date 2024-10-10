@@ -32,5 +32,29 @@ The laboratory setup aims to provide insights into:
 - How forest trust types influence enumeration attack surfaces.
 - Strategies for mitigating SAMR-based attacks in multi-forest environments.
 
+## Virtual Environment Configuration
+
+The virtual laboratory is hosted using Microsoft Hyper-V virtualization technology.
+
+### The Host Server Specifications
+
+- **Operating System:** Windows 10 Enterprise (Version 22H2)
+- **RAM:** 32 GB
+- **Processor:** AMD Ryzen 7 PRO 5750G with Radeon Graphics, 3.80 GHz
+- **Virtualization Platform:** Microsoft Hyper-V
+- **Networking:** Private Network (isolated from the host server and Internet)
+
+### The Virtual Machines Specifications
+
+- **Workstation Operating System:** Windows 11 Enterprise 23H2 x86-64 (version 23H2)
+- **RAM:** 4 GB
+- **Processor:** 4vCPU
+
+- **Domain Controller Operating System:** Windows Server 2022 Standard  x86-64
+- **RAM:** 4 GB
+- **Processor:** 2vCPU
+
+This setup allows for the creation and management of isolated virtual environments for testing SAMR enumeration in a multi-forest Active Directory configuration.
+
 ## Conclusion
 This controlled laboratory environment is essential for understanding how SAMR enumeration operates in complex Active Directory trust setups and will guide future research into detection mechanisms and countermeasures against enumeration-based attacks.
