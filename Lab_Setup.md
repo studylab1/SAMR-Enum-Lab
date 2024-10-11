@@ -64,6 +64,12 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 - **Processor:** 4vCPU
 
 ### System Configuration
-- **IPv6 is disabled** to simplify network analysis and ensure consistent results when investigating SAMR enumeration attacks. Disabling IPv6 reduces network complexity and ensures all traffic flows over IPv4, allowing for more focused research on SMB and SAMR protocol behavior without dual-stack complications. This configuration is for research purposes only and not recommended for production environments.
-- **SMBv2/3 encryption is disabled**. This allows to perform network traffic analysis.
+- **IPv6 is disabled** to simplify network analysis and ensure consistent results when investigating SAMR enumeration attacks. Disabling IPv6 reduces network complexity and ensures all traffic flows over IPv4, allowing for more focused research on SMB and SAMR protocol behavior without dual-stack complications. This configuration is for research purposes only and not recommended for production environments. The protocols is disabled by following:  
+`Get-NetAdapterBinding -ComponentID *6|Disable-NetAdapterBinding`  
+`Set-NetIsatapConfiguration -State Disabled`  
+`Set-Net6to4Configuration -State Disabled`  
+`Set-NetTeredoConfiguration -Type Disabled`  
+- **SMBv2/3 encryption is disabled**. This allows to perform network traffic analysis. The encryption is disabled by following:  
+`Set-SmbServerConfiguration -EncryptData $false`
 - **Latest Patches on October 10, 2024.** The result is verified on the systems patched until October 10, 2024.
+- **Data Population**. This lab utilizes the BadBlood tool (released on May 18, 2023) to populate synthetic data in Active Directory.
