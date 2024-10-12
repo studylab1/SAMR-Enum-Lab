@@ -79,3 +79,31 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 `Set-SmbServerConfiguration -EncryptData $false`
 - **Latest Patches on October 10, 2024.** The result is verified on the systems patched until October 10, 2024.
 - **Data Population**. This lab utilizes the BadBlood tool (released on May 18, 2023) to populate synthetic data in Active Directory.
+
+### Network Setup
+
+The following table outlines the IP addressing scheme used for the lab environment. Each forest is assigned its own dedicated /24 subnet, with a domain controller (DC) and workstation (WS) residing in each subnet.
+
+| Role              | Hostname  | Domain          | IP Address       |
+|-------------------|-----------|-----------------|------------------|
+| Domain Controller | dc        | domain-A.lab    | 192.168.1.10/24  |
+| Workstation       | ws        | domain-A.lab    | 192.168.1.11/24  |
+| Domain Controller | dc        | domain-B.lab    | 192.168.2.10/24  |
+| Workstation       | ws        | domain-B.lab    | 192.168.2.11/24  |
+| Domain Controller | dc        | domain-C.lab    | 192.168.3.10/24  |
+| Workstation       | ws        | domain-C.lab    | 192.168.3.11/24  |
+| Domain Controller | dc        | domain-D.lab    | 192.168.4.10/24  |
+| Workstation       | ws        | domain-D.lab    | 192.168.4.11/24  |
+| Domain Controller | dc        | domain-E.lab    | 192.168.5.10/24  |
+| Workstation       | ws        | domain-E.lab    | 192.168.5.11/24  |
+| Domain Controller | dc        | domain-F.lab    | 192.168.6.10/24  |
+| Workstation       | ws        | domain-F.lab    | 192.168.6.11/24  |
+
+The entire network is configured to be **isolated** from the host machine to ensure a controlled and contained environment. No traffic can enter or exit the lab network from the host server, preventing external interference and ensuring accurate testing conditions.
+
+Additionally, **no traffic filtering** is applied within the lab. This means that:
+
+- **No intermediate firewalls** are placed between subnets.
+- **No host-based firewalls** are enabled on the domain controllers or workstations.
+
+This unfiltered setup allows for unrestricted communication between all systems in the lab, which is essential for testing enumeration techniques and observing network traffic without interference from security controls. The isolated and unfiltered network ensures that the focus remains on the behavior of the enumeration techniques and attack vectors within the controlled lab environment.
