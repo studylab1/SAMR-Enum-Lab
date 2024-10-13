@@ -52,7 +52,11 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 - **Processor:** AMD Ryzen 7 PRO 5750G with Radeon Graphics, 3.80 GHz
 - **Virtualization Platform:** Microsoft Hyper-V
 - **Networking:** All virtual machines are connected to one Hyper-V private network.
-
+  - "Microsoft Windows Filtering Platform": Disabled
+  - "Microsoft Azure VFP Switch Extension": Disabled
+  - "Microsoft NDIS Capture": Enabled
+ 
+  
 ### The Virtual Machines Specifications
 
 #### Workstation
