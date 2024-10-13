@@ -7,13 +7,9 @@ This page outlines the laboratory environment created to simulate multiple Activ
 
 > **⚠️ This laboratory setup includes certain configurations that are intentionally _**not secure for production environments**_. These insecure settings, such as disabling encryption in the SMB protocol or relaxing security controls, have been applied for research purposes. Specifically, these settings allow for easier analysis of network traffic and testing SAMR enumeration techniques in a controlled environment.**
 > 
-> **💡 These configurations are solely meant to facilitate research and should _not_ be used in live or production environments.** Using them outside of this context could expose critical vulnerabilities in your network. It is essential to ensure that production systems always follow secure configurations that align with best practices for security.**
+> **💡 These configurations are solely meant to facilitate research and should _not_ be used in live or production environments.** Using them outside of this context could expose critical vulnerabilities in your network. It is essential to ensure that production systems always follow secure configurations that align with best practices for security.
 
 ---
-
-## Research Goals
-
-..text..
 
 ## Key Components of the Lab
 
@@ -55,18 +51,18 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 - **RAM:** 32 GB
 - **Processor:** AMD Ryzen 7 PRO 5750G with Radeon Graphics, 3.80 GHz
 - **Virtualization Platform:** Microsoft Hyper-V
-- **Networking:** "Private Network"
+- **Networking:** All virtual machines are connected to one Hyper-V private network.
 
 ### The Virtual Machines Specifications
 
 #### Workstation
-- **Operating System:** Windows 11 Enterprise 23H2 x86-64 (version 23H2)
+- **Operating System:** Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.2861) 
 - **RAM:** 4 GB
 - **Processor:** 2vCPU
 - **Virtual Machine Generation**: 2  
 
 #### Domain Controller
-- **Operating System:** Windows Server 2022 Standard x86-64
+- **Operating System:** Windows Server 2022 Standard x86-64 (version 21H2, OS build 20348.2762)
 - **RAM:** 4 GB
 - **Processor:** 4vCPU
 - **Virtual Machine Generation**: 2  
