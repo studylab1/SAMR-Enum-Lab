@@ -65,7 +65,14 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 - **Operating System:** Windows Server 2022 Standard x86-64 (version 21H2, OS build 20348.2762)
 - **RAM:** 4 GB
 - **Processor:** 2vCPU
-- **Virtual Machine Generation**: 2  
+- **Virtual Machine Generation**: 2
+
+### Active Directory Domain Services Configuration
+- **Domain Functional Level**: Windows Server 2016
+- **Forest Functional Level**: Windows Server 2016
+- **Time syncronization**: host server
+- **DNS service**: default settings
+- **Security Policies**: default settings
 
 ### System Configuration
 - **IPv6 is disabled** IPv6 is disabled in this lab setup to reduce potential complications arising from dual-stack networking, particularly when analyzing the SAMR and SMB protocols. Although IPv6 offers enhanced address space and security features like IPsec, disabling it ensures that all traffic flows over IPv4, which simplifies packet capture and traffic analysis using tools like Wireshark. Additionally, disabling IPv6 minimizes potential attack vectors associated with misconfigurations in dual-stack environments. The protocols is disabled by following:  
