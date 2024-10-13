@@ -62,9 +62,9 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 - **Virtual Machine Generation**: 2  
 
 #### Domain Controller
-- **Operating System:** Windows Server 2022 Standard x86-64 (version 21H2, OS build 20348.2762)
+- **Operating System:** Windows Server 2022 Standard x86-64 (version 21H2, OS build 22631.4317)
 - **RAM:** 4 GB
-- **Processor:** 4vCPU
+- **Processor:** 2vCPU
 - **Virtual Machine Generation**: 2  
 
 ### System Configuration
