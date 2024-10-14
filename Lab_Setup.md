@@ -51,7 +51,8 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 - **RAM:** 32 GB
 - **Processor:** AMD Ryzen 7 PRO 5750G with Radeon Graphics, 3.80 GHz
 - **Virtualization Platform:** Microsoft Hyper-V
-- **Networking:** All virtual machines are connected to one Hyper-V private network.
+- **Networking:** All virtual machines are connected to one Hyper-V private network.  
+  The "Private (Lab1)" Virtual Switch Extensions:
   - "Microsoft Windows Filtering Platform": Disabled
   - "Microsoft Azure VFP Switch Extension": Disabled
   - "Microsoft NDIS Capture": Enabled
@@ -93,20 +94,26 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 
 The following table outlines the IP addressing scheme used for the lab environment. Each forest is assigned its own dedicated /24 subnet, with a domain controller (DC) and workstation (WS) residing in each subnet.
 
-| Role              | Hostname  | Domain          | IP Address       |
-|-------------------|-----------|-----------------|------------------|
-| Domain Controller | dc        | domain-A.lab    | 192.168.1.10/24  |
-| Workstation       | ws        | domain-A.lab    | 192.168.1.11/24  |
-| Domain Controller | dc        | domain-B.lab    | 192.168.2.10/24  |
-| Workstation       | ws        | domain-B.lab    | 192.168.2.11/24  |
-| Domain Controller | dc        | domain-C.lab    | 192.168.3.10/24  |
-| Workstation       | ws        | domain-C.lab    | 192.168.3.11/24  |
-| Domain Controller | dc        | domain-D.lab    | 192.168.4.10/24  |
-| Workstation       | ws        | domain-D.lab    | 192.168.4.11/24  |
-| Domain Controller | dc        | domain-E.lab    | 192.168.5.10/24  |
-| Workstation       | ws        | domain-E.lab    | 192.168.5.11/24  |
-| Domain Controller | dc        | domain-F.lab    | 192.168.6.10/24  |
-| Workstation       | ws        | domain-F.lab    | 192.168.6.11/24  |
+| **Role**           | **Hostname**        | **VLAN ID** | **IP Address/Subnet** | **Gateway (Routing Server)** |
+|--------------------|---------------------|-------------|-----------------------|------------------------------|
+| **Routing Server**  | router (single NIC) | 10          | 192.168.1.1/24        | N/A                          |
+|                    |                     | 20          | 192.168.2.1/24        | N/A                          |
+|                    |                     | 30          | 192.168.3.1/24        | N/A                          |
+|                    |                     | 40          | 192.168.4.1/24        | N/A                          |
+|                    |                     | 50          | 192.168.5.1/24        | N/A                          |
+|                    |                     | 60          | 192.168.6.1/24        | N/A                          |
+| **Domain Controller** | dc                | 10          | 192.168.1.10/24       | 192.168.1.1                  |
+| **Workstation**     | ws                  | 10          | 192.168.1.100/24      | 192.168.1.1                  |
+| **Domain Controller** | dc                | 20          | 192.168.2.10/24       | 192.168.2.1                  |
+| **Workstation**     | ws                  | 20          | 192.168.2.100/24      | 192.168.2.1                  |
+| **Domain Controller** | dc                | 30          | 192.168.3.10/24       | 192.168.3.1                  |
+| **Workstation**     | ws                  | 30          | 192.168.3.100/24      | 192.168.3.1                  |
+| **Domain Controller** | dc                | 40          | 192.168.4.10/24       | 192.168.4.1                  |
+| **Workstation**     | ws                  | 40          | 192.168.4.100/24      | 192.168.4.1                  |
+| **Domain Controller** | dc                | 50          | 192.168.5.10/24       | 192.168.5.1                  |
+| **Workstation**     | ws                  | 50          | 192.168.5.100/24      | 192.168.5.1                  |
+| **Domain Controller** | dc                | 60          | 192.168.6.10/24       | 192.168.6.1                  |
+| **Workstation**     | ws                  | 60          | 192.168.6.100/24      | 192.168.6.1                  |
 
 The entire network is configured to be **isolated** from the host machine to ensure a controlled and contained environment. No traffic can enter or exit the lab network from the host server, preventing external interference and ensuring accurate testing conditions.
 
