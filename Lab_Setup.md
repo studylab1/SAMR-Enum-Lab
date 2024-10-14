@@ -77,6 +77,9 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 - **Time syncronization**: host server
 - **DNS service**: default settings
 
+### Routing and Remote Access Service (RRAS) Configuration
+The purpuse of the server is to route the network traffic between the subnets. The routing does not require additional configurations in RRAS.
+
 ### Security Configuration on Operating System Level
 - **Windows Defender Firewall**: Disabled
 - **Local and Group Policy Settings**: Default
