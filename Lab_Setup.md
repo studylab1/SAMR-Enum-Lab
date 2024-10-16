@@ -78,7 +78,7 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 - **DNS service**: default settings
 
 ### Microsoft Routing and Remote Access Service (RRAS) Configuration
-The purpuse of the service is to route the network traffic between lab internal subnets. The RRAS (LAN Routing feature) service does not require additional configurations.
+The purpuse of the service is to route the network traffic between lab internal subnets. The RRAS (LAN Routing feature) service does not require additional configurations. The Conditional Forwarders in the DNS service on each domain controller are configured to forward DNS requests to the corresponding DNS server.
 
 ### Security Configuration on Operating System Level
 - **Windows Defender Firewall**: Disabled
@@ -99,27 +99,26 @@ The purpuse of the service is to route the network traffic between lab internal 
 ### Network Setup
 
 The following table outlines the IP addressing scheme used for the lab environment. Each forest is assigned its own dedicated /24 subnet, with a domain controller (DC) and workstation (WS) residing in each subnet.
-
-| **Role**           | **Hostname**        | **VLAN ID** | **IP Address/Subnet** | **Gateway (Routing Server)** |
-|--------------------|---------------------|-------------|-----------------------|------------------------------|
-| **Routing Server**  | router (single NIC) | 10          | 192.168.1.1/24        | N/A                          |
-|                    |                     | 20          | 192.168.2.1/24        | N/A                          |
-|                    |                     | 30          | 192.168.3.1/24        | N/A                          |
-|                    |                     | 40          | 192.168.4.1/24        | N/A                          |
-|                    |                     | 50          | 192.168.5.1/24        | N/A                          |
-|                    |                     | 60          | 192.168.6.1/24        | N/A                          |
-| **Domain Controller** | dc                | 10          | 192.168.1.10/24       | 192.168.1.1                  |
-| **Workstation**     | ws                  | 10          | 192.168.1.100/24      | 192.168.1.1                  |
-| **Domain Controller** | dc                | 20          | 192.168.2.10/24       | 192.168.2.1                  |
-| **Workstation**     | ws                  | 20          | 192.168.2.100/24      | 192.168.2.1                  |
-| **Domain Controller** | dc                | 30          | 192.168.3.10/24       | 192.168.3.1                  |
-| **Workstation**     | ws                  | 30          | 192.168.3.100/24      | 192.168.3.1                  |
-| **Domain Controller** | dc                | 40          | 192.168.4.10/24       | 192.168.4.1                  |
-| **Workstation**     | ws                  | 40          | 192.168.4.100/24      | 192.168.4.1                  |
-| **Domain Controller** | dc                | 50          | 192.168.5.10/24       | 192.168.5.1                  |
-| **Workstation**     | ws                  | 50          | 192.168.5.100/24      | 192.168.5.1                  |
-| **Domain Controller** | dc                | 60          | 192.168.6.10/24       | 192.168.6.1                  |
-| **Workstation**     | ws                  | 60          | 192.168.6.100/24      | 192.168.6.1                  |
+| **Role**           | **Hostname**        | **Domain**    | **VLAN ID** | **IP Address/Subnet** | **Gateway (Routing Server)** |
+|--------------------|---------------------|--------------|-------------|-----------------------|------------------------------|
+| **Routing Server**  | router             | N/A          | 10          | 192.168.1.1/24        | N/A                          |
+|                    |                     |              | 20          | 192.168.2.1/24        | N/A                          |
+|                    |                     |              | 30          | 192.168.3.1/24        | N/A                          |
+|                    |                     |              | 40          | 192.168.4.1/24        | N/A                          |
+|                    |                     |              | 50          | 192.168.5.1/24        | N/A                          |
+|                    |                     |              | 60          | 192.168.6.1/24        | N/A                          |
+| **Domain Controller** | dc                | domain-a.local | 10          | 192.168.1.10/24       | 192.168.1.1                  |
+| **Workstation**     | ws                  | domain-a.local | 10          | 192.168.1.100/24      | 192.168.1.1                  |
+| **Domain Controller** | dc                | domain-b.local | 20          | 192.168.2.10/24       | 192.168.2.1                  |
+| **Workstation**     | ws                  | domain-b.local | 20          | 192.168.2.100/24      | 192.168.2.1                  |
+| **Domain Controller** | dc                | domain-c.local | 30          | 192.168.3.10/24       | 192.168.3.1                  |
+| **Workstation**     | ws                  | domain-c.local | 30          | 192.168.3.100/24      | 192.168.3.1                  |
+| **Domain Controller** | dc                | domain-d.local | 40          | 192.168.4.10/24       | 192.168.4.1                  |
+| **Workstation**     | ws                  | domain-d.local | 40          | 192.168.4.100/24      | 192.168.4.1                  |
+| **Domain Controller** | dc                | domain-e.local | 50          | 192.168.5.10/24       | 192.168.5.1                  |
+| **Workstation**     | ws                  | domain-e.local | 50          | 192.168.5.100/24      | 192.168.5.1                  |
+| **Domain Controller** | dc                | domain-f.local | 60          | 192.168.6.10/24       | 192.168.6.1                  |
+| **Workstation**     | ws                  | domain-f.local | 60          | 192.168.6.100/24      | 192.168.6.1                  |
 
 The entire network is configured to be **isolated** from the host machine to ensure a controlled and contained environment. No traffic can enter or exit the lab network from the host server, preventing external interference and ensuring accurate testing conditions.
 
