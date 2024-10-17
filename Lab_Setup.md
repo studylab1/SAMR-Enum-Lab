@@ -75,10 +75,10 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 - **Domain Functional Level**: Windows Server 2016
 - **Forest Functional Level**: Windows Server 2016
 - **Time syncronization**: host server
-- **DNS service**: default settings
+- **DNS service**: The Conditional Forwarders in the DNS service on each domain controller are configured to forward DNS requests to the corresponding DNS server. Reverse Lookup Zone contains addresses of the foreign domain controllers to make it possible to resolve their IP addresses for DNS Conditional Forwarders.
 
 ### Microsoft Routing and Remote Access Service (RRAS) Configuration
-The purpuse of the service is to route the network traffic between lab internal subnets. The RRAS (LAN Routing feature) service does not require additional configurations. The Conditional Forwarders in the DNS service on each domain controller are configured to forward DNS requests to the corresponding DNS server.
+The purpuse of the service is to route the network traffic between lab internal subnets. The RRAS (LAN Routing feature) service does not require additional configurations. 
 
 ### Security Configuration on Operating System Level
 - **Windows Defender Firewall**: Disabled
