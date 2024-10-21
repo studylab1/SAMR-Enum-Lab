@@ -72,8 +72,8 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 - **Virtual Machine Generation**: 2
 
 ### Active Directory Domain Services Configuration
-- **Domain Functional Level**: Windows Server 2016
-- **Forest Functional Level**: Windows Server 2016
+- **Domain Functional Level**: Windows Server 2016 or Windows Server 2012 R2, depending on the forest.
+- **Forest Functional Level**: Windows Server 2016 or Windows Server 2012 R2, depending on the forest.
 - **Time syncronization**: host server
 - **DNS service**: The Conditional Forwarders in the DNS service on each domain controller are configured to forward DNS requests to the corresponding DNS server. Reverse Lookup Zone contains addresses of the foreign domain controllers to make it possible to resolve their IP addresses for DNS Conditional Forwarders.
 
