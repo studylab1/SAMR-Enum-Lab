@@ -81,7 +81,7 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 The purpuse of the service is to route the network traffic between lab internal subnets. The RRAS (LAN Routing feature) service does not require additional configurations. 
 
 ### Security Configuration on Operating System Level
-- **Windows Defender Firewall**: Disabled
+- **Windows Defender Firewall**: Disabled in GUI "Customize Settings" all profiles ("Domain", "Private" and "Public").
 - **Local and Group Policy Settings**: Default
 - ......
 
