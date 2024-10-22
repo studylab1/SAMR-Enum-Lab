@@ -93,7 +93,7 @@ The purpuse of the service is to route the network traffic between lab internal 
 `Set-NetTeredoConfiguration -Type Disabled`  
 - **SMBv2/3 encryption is disabled**. Disabling encryption allows the capture and inspection of clear-text traffic, which is essential for studying protocol behavior and potential vulnerabilities without interference from encryption layers. The encryption is disabled by following:  
 `Set-SmbServerConfiguration -EncryptData $false`
-- **Latest Patches on October 10, 2024.** The result is verified on the systems patched until October 10, 2024.
+- **Latest Patches on October 10, 2024.** The result is verified on the systems patched until October 22, 2024.
 - **Data Population**. This lab utilizes the BadBlood tool (released on May 18, 2023) to populate synthetic data in Active Directory.
 
 ### Computer Naming Convention
