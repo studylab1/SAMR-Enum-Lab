@@ -96,6 +96,22 @@ The purpuse of the service is to route the network traffic between lab internal 
 - **Latest Patches on October 10, 2024.** The result is verified on the systems patched until October 10, 2024.
 - **Data Population**. This lab utilizes the BadBlood tool (released on May 18, 2023) to populate synthetic data in Active Directory.
 
+### Computer Naming Convention
+
+The computer names follow this convention (excluding router server):
+
+`<domain-letter><role><number-of-the-computer>`
+
+- **Domain Letter:** A single letter representing the domain to which the computer belongs (e.g., `a`, `b`, `c`).
+- **Role:** A two-letter abbreviation for the computer's role in the environment, such as:
+  - **dc**: Domain Controller
+  - **ws**: Workstation
+- **Number of the Computer:** A sequential number indicating the specific machine within its role (e.g., `1`, `2`, `3`).
+
+#### Examples:
+- `adc1`: Domain Controller 1 in domain "A".
+- `bws1`: Workstation 1 in domain "B".
+
 ### Network Setup
 
 The following table outlines the IP addressing scheme used for the lab environment. Each forest is assigned its own dedicated /24 subnet, with a domain controller (DC) and workstation (WS) residing in each subnet.
@@ -108,24 +124,24 @@ The following table outlines the IP addressing scheme used for the lab environme
 |                      |                    |                 | 40          | 192.168.4.1/24         | N/A                          |
 |                      |                    |                 | 50          | 192.168.5.1/24         | N/A                          |
 |                      |                    |                 | 60          | 192.168.6.1/24         | N/A                          |
-| **Domain Controller** | dc1                 | domain-a.local  | 10          | 192.168.1.10/24        | 192.168.1.1                  |
-| **Domain Controller** | dc2                | domain-a.local  | 10          | 192.168.1.20/24        | 192.168.1.1                  |
-| **Workstation**       | ws                 | domain-a.local  | 10          | 192.168.1.100/24       | 192.168.1.1                  |
-| **Domain Controller** | dc1                 | domain-b.local  | 20          | 192.168.2.10/24        | 192.168.2.1                  |
-| **Domain Controller** | dc2                | domain-b.local  | 20          | 192.168.2.20/24        | 192.168.2.1                  |
-| **Workstation**       | ws                 | domain-b.local  | 20          | 192.168.2.100/24       | 192.168.2.1                  |
-| **Domain Controller** | dc1                 | domain-c.local  | 30          | 192.168.3.10/24        | 192.168.3.1                  |
-| **Domain Controller** | dc2                | domain-c.local  | 30          | 192.168.3.20/24        | 192.168.3.1                  |
-| **Workstation**       | ws                 | domain-c.local  | 30          | 192.168.3.100/24       | 192.168.3.1                  |
-| **Domain Controller** | dc1                 | domain-d.local  | 40          | 192.168.4.10/24        | 192.168.4.1                  |
-| **Domain Controller** | dc2                | domain-d.local  | 40          | 192.168.4.20/24        | 192.168.4.1                  |
-| **Workstation**       | ws                 | domain-d.local  | 40          | 192.168.4.100/24       | 192.168.4.1                  |
-| **Domain Controller** | dc1                 | domain-e.local  | 50          | 192.168.5.10/24        | 192.168.5.1                  |
-| **Domain Controller** | dc2                | domain-e.local  | 50          | 192.168.5.20/24        | 192.168.5.1                  |
-| **Workstation**       | ws                 | domain-e.local  | 50          | 192.168.5.100/24       | 192.168.5.1                  |
-| **Domain Controller** | dc1                 | domain-f.local  | 60          | 192.168.6.10/24        | 192.168.6.1                  |
-| **Domain Controller** | dc2                | domain-f.local  | 60          | 192.168.6.20/24        | 192.168.6.1                  |
-| **Workstation**       | ws                 | domain-f.local  | 60          | 192.168.6.100/24       | 192.168.6.1                  |
+| **Domain Controller** | adc1                 | domain-a.local  | 10          | 192.168.1.10/24        | 192.168.1.1                  |
+| **Domain Controller** | adc2                | domain-a.local  | 10          | 192.168.1.20/24        | 192.168.1.1                  |
+| **Workstation**       | aws1                 | domain-a.local  | 10          | 192.168.1.100/24       | 192.168.1.1                  |
+| **Domain Controller** | bdc1                 | domain-b.local  | 20          | 192.168.2.10/24        | 192.168.2.1                  |
+| **Domain Controller** | bdc2                | domain-b.local  | 20          | 192.168.2.20/24        | 192.168.2.1                  |
+| **Workstation**       | bws1                 | domain-b.local  | 20          | 192.168.2.100/24       | 192.168.2.1                  |
+| **Domain Controller** | cdc1                 | domain-c.local  | 30          | 192.168.3.10/24        | 192.168.3.1                  |
+| **Domain Controller** | cdc2                | domain-c.local  | 30          | 192.168.3.20/24        | 192.168.3.1                  |
+| **Workstation**       | cws1                 | domain-c.local  | 30          | 192.168.3.100/24       | 192.168.3.1                  |
+| **Domain Controller** | ddc1                 | domain-d.local  | 40          | 192.168.4.10/24        | 192.168.4.1                  |
+| **Domain Controller** | ddc2                | domain-d.local  | 40          | 192.168.4.20/24        | 192.168.4.1                  |
+| **Workstation**       | dws1                 | domain-d.local  | 40          | 192.168.4.100/24       | 192.168.4.1                  |
+| **Domain Controller** | edc1                 | domain-e.local  | 50          | 192.168.5.10/24        | 192.168.5.1                  |
+| **Domain Controller** | edc2                | domain-e.local  | 50          | 192.168.5.20/24        | 192.168.5.1                  |
+| **Workstation**       | ews1                 | domain-e.local  | 50          | 192.168.5.100/24       | 192.168.5.1                  |
+| **Domain Controller** | fdc1                 | domain-f.local  | 60          | 192.168.6.10/24        | 192.168.6.1                  |
+| **Domain Controller** | fdc2                | domain-f.local  | 60          | 192.168.6.20/24        | 192.168.6.1                  |
+| **Workstation**       | fws1                 | domain-f.local  | 60          | 192.168.6.100/24       | 192.168.6.1                  |
 
 The entire network is configured to be **isolated** from the host machine to ensure a controlled and contained environment. No traffic can enter or exit the lab network from the host server, preventing external interference and ensuring accurate testing conditions.
 
