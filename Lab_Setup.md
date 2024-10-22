@@ -60,7 +60,7 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 ### The Virtual Machines Specifications
 
 #### Workstation
-- **Operating System:** Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.2861) 
+- **Operating System:** Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317) 
 - **RAM:** 4 GB
 - **Processor:** 2vCPU
 - **Virtual Machine Generation**: 2  
