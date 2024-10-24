@@ -79,7 +79,7 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 
 ### Data Population with BadBlood
 
-This lab utilizes the **BadBlood** tool, which automates the process of populating Active Directory (AD) with synthetic data for testing purposes. BadBlood creates a wide range of Active Directory objects, including users, groups, computers, and group policy objects, to simulate a realistic AD environment. This data is critical for testing SAMR enumeration techniques, as it provides a representative set of AD objects that attackers could potentially enumerate across forest boundaries.
+This lab utilizes the **[BadBlood](https://github.com/davidprowe/BadBlood)** tool, which automates the process of populating Active Directory (AD) with synthetic data for testing purposes. BadBlood creates a wide range of Active Directory objects, including users, groups, computers, and group policy objects, to simulate a realistic AD environment. This data is critical for testing SAMR enumeration techniques, as it provides a representative set of AD objects that attackers could potentially enumerate across forest boundaries.
 
 - **BadBlood Version:** The lab is configured using **BadBlood v1.0**, which was released on **May 18, 2023**.
   
