@@ -77,6 +77,22 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 - **Time syncronization**: host server
 - **DNS service**: The Conditional Forwarders in the DNS service on each domain controller are configured to forward DNS requests to the corresponding DNS server. Reverse Lookup Zone contains addresses of the foreign domain controllers to make it possible to resolve their IP addresses for DNS Conditional Forwarders.
 
+### Data Population with BadBlood
+
+This lab utilizes the **BadBlood** tool, which automates the process of populating Active Directory (AD) with synthetic data for testing purposes. BadBlood creates a wide range of Active Directory objects, including users, groups, computers, and group policy objects, to simulate a realistic AD environment. This data is critical for testing SAMR enumeration techniques, as it provides a representative set of AD objects that attackers could potentially enumerate across forest boundaries.
+
+- **BadBlood Version:** The lab is configured using **BadBlood v1.0**, which was released on **May 18, 2023**.
+  
+- **Purpose of Populating Data:**
+  - To simulate a populated AD environment, including the creation of users, groups, and computers with varied permissions.
+  - To create real-world conditions for SAMR enumeration and cross-forest reconnaissance testing by allowing a variety of AD objects and relationships.
+  - To help researchers evaluate the potential exposure of sensitive data in multi-forest trust scenarios.
+
+After populating the domain controllers with synthetic data, **this data is mirrored** to additional domain controllers in other forests to ensure consistency across environments, which is crucial for accurate testing of enumeration across trust boundaries.
+
+> **Note**: This replication of data is performed to ensure consistency in cross-forest enumeration tests, which depend on identical sets of AD objects and relationships being present in each forest.
+
+
 ### Microsoft Routing and Remote Access Service (RRAS) Configuration
 The purpuse of the service is to route the network traffic between lab internal subnets. The RRAS (LAN Routing feature) service does not require additional configurations. 
 
