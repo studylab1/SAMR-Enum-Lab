@@ -93,6 +93,23 @@ After populating the domain controllers with synthetic data, **this data is mirr
 > **Note**: This replication of data is performed to ensure consistency in cross-forest enumeration tests, which depend on identical sets of AD objects and relationships being present in each forest.
 
 
+#### The Data Sync Between Forests
+- **Export:**  
+Objects: `ldifde -f "<PATH>.ldf" -s <DC>.<DOMAIN>.local -d "DC=<DOMAIN>,DC=local" -p subtree -r "(objectClass=*)" -l "dn,objectclass,sAMAccountName,distinguishedName" -o whenChanged -m`  
+SYSVOL ACL: `icacls "<PATH TO SYSVOL>" /save <PATH>.txt /T`  
+Active Directory Objects ACLs: `Get-ADOrganizationalUnit -Filter * | ForEach-Object {  
+    Get-Acl -Path "AD:$($_.DistinguishedName)" | Out-File "<PATH>.txt" -Append  
+}`   
+- **Import:**
+ Objects: `ldifde -i -f "<PATH>.ldf" -s <DC>.<DOMAIN>.local`  
+ SYSVOL ACL: `icacls "<PATH TO SYSVOL>" /restore <PATH>.txt`  
+ Active Directory Objects ACLs: `  
+Get-ADOrganizationalUnit -Filter * | ForEach-Object {
+    $acl = Get-Content "C:\path\to\acl_backup_ad.txt"
+    Set-Acl -Path "AD:$($_.DistinguishedName)" -AclObject $acl
+}`
+
+
 ### Microsoft Routing and Remote Access Service (RRAS) Configuration
 The purpuse of the service is to route the network traffic between lab internal subnets. The RRAS (LAN Routing feature) service does not require additional configurations. 
 
