@@ -88,27 +88,25 @@ This lab utilizes the **[BadBlood](https://github.com/davidprowe/BadBlood)** too
   - To create real-world conditions for SAMR enumeration and cross-forest reconnaissance testing by allowing a variety of AD objects and relationships.
   - To help researchers evaluate the potential exposure of sensitive data in multi-forest trust scenarios.
 
-After populating the domain controllers with synthetic data, **this data is mirrored** to additional domain controllers in other forests to ensure consistency across environments, which is crucial for accurate testing of enumeration across trust boundaries.
+### Cross-Forest Data Synchronization Setup
 
-> **Note**: This replication of data is performed to ensure consistency in cross-forest enumeration tests, which depend on identical sets of AD objects and relationships being present in each forest.
+In this laboratory setup, a cross-forest synchronization of Active Directory data is achieved to ensure that each forest contains identical sets of objects for consistent testing. This synchronization allows for accurate analysis of SAMR enumeration in environments with various trust configurations.
 
+After populating `xdc1.domain-x.local` with synthetic Active Directory data using the **BadBlood** tool, this data is replicated to other domains in separate forests (e.g., `domain-a.local`) using a temporary **two-way forest-wide trust**. This trust relationship enables the **Active Directory Migration Tool (ADMT)** to transfer users, groups, organizational units (OUs), and other relevant directory objects across forests. 
 
-#### The Data Sync Between Forests
-- **Export:**  
-Objects: `ldifde -f "<PATH>.ldf" -s <DC>.<DOMAIN>.local -d "DC=<DOMAIN>,DC=local" -p subtree -r "(objectClass=*)" -l "dn,objectclass,sAMAccountName,distinguishedName" -o whenChanged -m`  
-SYSVOL ACL: `icacls "<PATH TO SYSVOL>" /save <PATH>.txt /T`  
-Active Directory Objects ACLs: `Get-ADOrganizationalUnit -Filter * | ForEach-Object {  
-    Get-Acl -Path "AD:$($_.DistinguishedName)" | Out-File "<PATH>.txt" -Append  
-}`   
-- **Import:**
- Objects: `ldifde -i -f "<PATH>.ldf" -s <DC>.<DOMAIN>.local`  
- SYSVOL ACL: `icacls "<PATH TO SYSVOL>" /restore <PATH>.txt`  
- Active Directory Objects ACLs: `  
-Get-ADOrganizationalUnit -Filter * | ForEach-Object {
-    $acl = Get-Content "C:\path\to\acl_backup_ad.txt"
-    Set-Acl -Path "AD:$($_.DistinguishedName)" -AclObject $acl
-}`
+Key elements of the synchronization setup include:
 
+- **Temporary Forest Trust**: A two-way, forest-wide trust is established between `domain-x.local` and each target forest, allowing ADMT to perform cross-forest migrations. This trust is removed following the data transfer to maintain the lab's isolated setup.
+
+- **Data Replication via ADMT**: With the trust in place, ADMT is used to migrate key directory objects, including:
+  - **Users and Groups**: ADMT transfers users, security groups, and distribution groups.
+  - **Organizational Units (OUs)**: The OU hierarchy.
+  - **Computer Accounts**
+  - **Permissions and ACLs**: ADMT maintains the ACLs and permissions, preserving the access control settings applied in `domain-a.local`.
+
+- **Schema Compatibility**: To prevent compatibility issues, schema extensions present in `domain-x.local` (such as those introduced by BadBlood) are applied to each target forest before initiating ADMT synchronization.
+
+After the synchronization is complete, the trust relationship between `domain-x.local` and the target forests is removed, returning the lab to its isolated state. This setup ensures that each forest contains an identical dataset, allowing researchers to evaluate the effects of different trust relationships on SAMR enumeration within a controlled, consistent environment.
 
 ### Microsoft Routing and Remote Access Service (RRAS) Configuration
 The purpuse of the service is to route the network traffic between lab internal subnets. The RRAS (LAN Routing feature) service does not require additional configurations. 
