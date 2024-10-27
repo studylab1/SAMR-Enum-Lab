@@ -60,7 +60,7 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 ### The Virtual Machines Specifications
 
 #### Workstation
-- **Operating System:** Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317) 
+- **Operating System:** Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317) or Linux Kali 2024.3 Hyper-V AMD64.
 - **RAM:** 4 GB
 - **Processor:** 2vCPU
 - **Virtual Machine Generation**: 2  
@@ -143,6 +143,9 @@ The computer names follow this convention (excluding router server):
 - `adc1`: Domain Controller 1 in domain "A".
 - `bws1`: Workstation 1 in domain "B".
 
+The xdc1 host is a domain controller which contains a dataset to replicating to other domains.
+The xws1 workstation is a Linux client to execute the enumeration scan with tools which are available only for Linux.
+
 ### Network Setup
 
 The following table outlines the IP addressing scheme used for the lab environment. Each forest is assigned its own dedicated /24 subnet, with a domain controller (DC) and workstation (WS) residing in each subnet.
@@ -156,19 +159,20 @@ The following table outlines the IP addressing scheme used for the lab environme
 |                      |                    |                 | 40          | 192.168.4.1/24         | N/A                          |
 |                      |                    |                 | 50          | 192.168.5.1/24         | N/A                          |
 |                      |                    |                 | 60          | 192.168.6.1/24         | N/A                          |
-| **Domain Controller** | xdc1                 | domain-x.local  | 5         | 192.168.0.10/24        | 192.168.0.1                  |
-| **Domain Controller** | adc1                 | domain-a.local  | 10          | 192.168.1.10/24        | 192.168.1.1                  |
-| **Workstation**       | aws1                 | domain-a.local  | 10          | 192.168.1.100/24       | 192.168.1.1                  |
-| **Domain Controller** | bdc1                 | domain-b.local  | 20          | 192.168.2.10/24        | 192.168.2.1                  |
-| **Workstation**       | bws1                 | domain-b.local  | 20          | 192.168.2.100/24       | 192.168.2.1                  |
-| **Domain Controller** | cdc1                 | domain-c.local  | 30          | 192.168.3.10/24        | 192.168.3.1                  |
-| **Workstation**       | cws1                 | domain-c.local  | 30          | 192.168.3.100/24       | 192.168.3.1                  |
-| **Domain Controller** | ddc1                 | domain-d.local  | 40          | 192.168.4.10/24        | 192.168.4.1                  
-| **Workstation**       | dws1                 | domain-d.local  | 40          | 192.168.4.100/24       | 192.168.4.1                  |
-| **Domain Controller** | edc1                 | domain-e.local  | 50          | 192.168.5.10/24        | 192.168.5.1                  
-| **Workstation**       | ews1                 | domain-e.local  | 50          | 192.168.5.100/24       | 192.168.5.1                  |
-| **Domain Controller** | fdc1                 | domain-f.local  | 60          | 192.168.6.10/24        | 192.168.6.1                  
-| **Workstation**       | fws1                 | domain-f.local  | 60          | 192.168.6.100/24       | 192.168.6.1                  |
+| **Domain Controller** | xdc1                 | domain-x.local  | 5        | 192.168.0.10/24        | 192.168.0.1                  |
+| **Workstation**       | xws1                 | N/A             | 5        | 192.168.0.100/24        | 192.168.0.1                  |
+| **Domain Controller** | adc1                 | domain-a.local  | 10       | 192.168.1.10/24        | 192.168.1.1                  |
+| **Workstation**       | aws1                 | domain-a.local  | 10       | 192.168.1.100/24       | 192.168.1.1                  |
+| **Domain Controller** | bdc1                 | domain-b.local  | 20       | 192.168.2.10/24        | 192.168.2.1                  |
+| **Workstation**       | bws1                 | domain-b.local  | 20       | 192.168.2.100/24       | 192.168.2.1                  |
+| **Domain Controller** | cdc1                 | domain-c.local  | 30       | 192.168.3.10/24        | 192.168.3.1                  |
+| **Workstation**       | cws1                 | domain-c.local  | 30       | 192.168.3.100/24       | 192.168.3.1                  |
+| **Domain Controller** | ddc1                 | domain-d.local  | 40       | 192.168.4.10/24        | 192.168.4.1                  |
+| **Workstation**       | dws1                 | domain-d.local  | 40       | 192.168.4.100/24       | 192.168.4.1                  |
+| **Domain Controller** | edc1                 | domain-e.local  | 50       | 192.168.5.10/24        | 192.168.5.1                  |
+| **Workstation**       | ews1                 | domain-e.local  | 50       | 192.168.5.100/24       | 192.168.5.1                  |
+| **Domain Controller** | fdc1                 | domain-f.local  | 60       | 192.168.6.10/24        | 192.168.6.1                  |
+| **Workstation**       | fws1                 | domain-f.local  | 60       | 192.168.6.100/24       | 192.168.6.1                  |
 
 The entire network is configured to be **isolated** from the host machine to ensure a controlled and contained environment. No traffic can enter or exit the lab network from the host server, preventing external interference and ensuring accurate testing conditions.
 
