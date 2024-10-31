@@ -11,7 +11,12 @@ The SAMR protocol allows attackers to gather critical information about users, g
 ## How users can get started with the project
 Users can start by setting up a controlled lab environment using Hyper-V, following the configuration guidelines in the project documentation (to be added later). The SAMR enumeration tool can be used to simulate attacks and analyze vulnerabilities in different trust setups.
 
-### Example of Tool Usage
+## References
+- [Lab Setup](Lab_Setup.md): Detailed instructions for setting up a virtual lab environment on Hyper-V, designed for SAMR enumeration testing across multiple Active Directory forests. This setup includes six forest trusts with various configurations to analyze SAMR’s enumeration capabilities under different trust relationships and authentication scopes.
+
+- [SAMR Tools Comparison](SAMR_Tools_Comparison.md): A comparative analysis of existing tools used for SAMR enumeration, focusing on factors like OpNum coverage, multi-forest support, permissions compliance, and error handling. This document evaluates tools such as Impacket, CrackMapExec, and rpcclient, identifying limitations and gaps that led to the development of a new enumeration tool.
+  
+## Example of Tool Usage
 The following is an example of how to run the SAMR enumeration tool:
 
 ```bash
