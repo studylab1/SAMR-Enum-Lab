@@ -144,7 +144,7 @@ The computer names follow this convention (excluding router server):
 - `bws1`: Workstation 1 in domain "B".
 
 #### Special hosts:
-- `xdc1`: domain controller that contains a dataset for replication to other domains.
+- `xdc1`: domain controller that contains a datas for replication to other domains.
 - `xws1`: Linux client used to execute the enumeration scan with tools available only on Linux.
 - `zdc1`: domain controller used to execute enumeration scans for comparing existing tools.
 - `yws1`: workstation from which the enumeration scan is executed to compare existing tools.
