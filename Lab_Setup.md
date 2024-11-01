@@ -148,8 +148,7 @@ The following table outlines the IP addressing scheme used for the lab environme
 
 | **Role**             | **Hostname**       | **Domain**      | **VLAN ID** | **IP Address/Subnet** | **Gateway (Routing Server)** |
 |----------------------|--------------------|-----------------|-------------|-----------------------|------------------------------|
-| **Routing Server**   | router             | N/A             | 5           | 192.168.0.1/24         | N/A                          |
-|                      |                    |                 | 10          | 192.168.1.1/24         | N/A                          |
+| **Routing Server**   | router             | N/A             | 10          | 192.168.1.1/24         | N/A                          |
 |                      |                    |                 | 20          | 192.168.2.1/24         | N/A                          |
 |                      |                    |                 | 30          | 192.168.3.1/24         | N/A                          |
 |                      |                    |                 | 40          | 192.168.4.1/24         | N/A                          |
