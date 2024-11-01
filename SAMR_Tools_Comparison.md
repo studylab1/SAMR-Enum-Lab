@@ -16,10 +16,10 @@ This page provides a comparison of tools used for SAMR enumeration in Active Dir
 This comparison covers tools used for Active Directory reconnaissance through the SAMR protocol, which retrieves information on users, groups, domains, and other security settings.
 
 ## System Confiration and Enumeration vector
-The detailed configuration of the lab is specified on the Lab_Setup page. 
-Other aspects to specify are as follows:
-**Domain Functional Level**: Windows Server 2016.
-**Forest Functional Level**: Windows Server 2016.
+The detailed configuration of the lab is specified on the Lab_Setup page.  
+Other aspects to specify are as follows:  
+- **Domain Functional Level**: Windows Server 2016.
+- **Forest Functional Level**: Windows Server 2016.
 
 The SAMR enumeration scan is conducted from yws1.domain-y.local to zdc1.domain-z.local.
 
