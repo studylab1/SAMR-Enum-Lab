@@ -1,11 +1,11 @@
 # Laboratory Setup for SAMR Enumeration in Multi-Forest Trust Configurations
 
-This page outlines the laboratory environment created to simulate multiple Active Directory forest trust configurations for investigating SAMR (Security Account Manager Remote) enumeration attacks. The setup is specifically designed to analyze how various trust relationships between forests impact SAMR enumeration, with a focus on identifying security risks related to cross-forest reconnaissance and privilege escalation. Rather than providing a step-by-step guide for building the lab, the page describes the essential components and the final structure of the environment, allowing flexibility in how the implementation is carried out. Administrators may choose different methods to achieve the same configuration, depending on their tools and expertise. This approach highlights the intended outcome rather than the specific steps, as there are multiple ways to set up the lab while arriving at an identical result.
+This page outlines the laboratory environment created to simulate multiple Active Directory forest trust configurations for investigating SAMR (Security Account Manager Remote) enumeration attacks. The setup is specifically designed to analyze how various trust relationships between forests impact SAMR enumeration, with a focus on identifying security risks related to cross-forest reconnaissance and privilege escalation. Rather than providing a step-by-step guide for building the lab, this page describes the essential components and the final structure of the environment, allowing flexibility in how the implementation is carried out. Administrators may choose different methods to achieve the same configuration, depending on their tools and expertise. This approach highlights the intended outcome rather than the specific steps, as there are multiple ways to set up the lab while arriving at an identical result.
 
 ## Security Considerations.
 **⚠️ Important Security Note:**
 
-> **⚠️ This laboratory setup includes certain configurations that are intentionally _**not secure for production environments**_. These insecure settings, such as disabling encryption in the SMB protocol or relaxing security controls, have been applied for research purposes. Specifically, these settings allow for easier analysis of network traffic and testing SAMR enumeration techniques in a controlled environment.**
+> **⚠️ This laboratory setup includes certain configurations that are intentionally _**not secure for production environments**_. These insecure settings, such as disabling encryption in the SMB protocol or relaxing security controls, are applied for research purposes. Specifically, these settings allow for easier analysis of network traffic and testing of SAMR enumeration techniques in a controlled environment.**
 > 
 > **💡 These configurations are solely meant to facilitate research and should _not_ be used in live or production environments.** Using them outside of this context could expose critical vulnerabilities in your network. It is essential to ensure that production systems always follow secure configurations that align with best practices for security.
 
@@ -143,8 +143,11 @@ The computer names follow this convention (excluding router server):
 - `adc1`: Domain Controller 1 in domain "A".
 - `bws1`: Workstation 1 in domain "B".
 
-The xdc1 host is a domain controller which contains a dataset to replicating to other domains.
-The xws1 workstation is a Linux client to execute the enumeration scan with tools which are available only for Linux.
+#### Special hosts:
+- `xdc1`: domain controller that contains a dataset for replication to other domains.
+- `xws1`: Linux client used to execute the enumeration scan with tools available only on Linux.
+- `zdc1`: domain controller used to execute enumeration scans for comparing existing tools.
+- `yws1`: workstation from which the enumeration scan is executed to compare existing tools.
 
 ### Network Setup
 
@@ -159,20 +162,27 @@ The following table outlines the IP addressing scheme used for the lab environme
 |                      |                    |                 | 40          | 192.168.4.1/24         | N/A                          |
 |                      |                    |                 | 50          | 192.168.5.1/24         | N/A                          |
 |                      |                    |                 | 60          | 192.168.6.1/24         | N/A                          |
-| **Domain Controller** | xdc1                 | domain-x.local  | 5        | 192.168.0.10/24        | 192.168.0.1                  |
-| **Workstation**       | xws1                 | N/A             | 5        | 192.168.0.100/24        | 192.168.0.1                  |
-| **Domain Controller** | adc1                 | domain-a.local  | 10       | 192.168.1.10/24        | 192.168.1.1                  |
-| **Workstation**       | aws1                 | domain-a.local  | 10       | 192.168.1.100/24       | 192.168.1.1                  |
-| **Domain Controller** | bdc1                 | domain-b.local  | 20       | 192.168.2.10/24        | 192.168.2.1                  |
-| **Workstation**       | bws1                 | domain-b.local  | 20       | 192.168.2.100/24       | 192.168.2.1                  |
-| **Domain Controller** | cdc1                 | domain-c.local  | 30       | 192.168.3.10/24        | 192.168.3.1                  |
-| **Workstation**       | cws1                 | domain-c.local  | 30       | 192.168.3.100/24       | 192.168.3.1                  |
-| **Domain Controller** | ddc1                 | domain-d.local  | 40       | 192.168.4.10/24        | 192.168.4.1                  |
-| **Workstation**       | dws1                 | domain-d.local  | 40       | 192.168.4.100/24       | 192.168.4.1                  |
-| **Domain Controller** | edc1                 | domain-e.local  | 50       | 192.168.5.10/24        | 192.168.5.1                  |
-| **Workstation**       | ews1                 | domain-e.local  | 50       | 192.168.5.100/24       | 192.168.5.1                  |
-| **Domain Controller** | fdc1                 | domain-f.local  | 60       | 192.168.6.10/24        | 192.168.6.1                  |
-| **Workstation**       | fws1                 | domain-f.local  | 60       | 192.168.6.100/24       | 192.168.6.1                  |
+|                      |                    |                 | 100         | 192.168.10.1/24        | N/A                          |
+|                      |                    |                 | 110         | 192.168.11.1/24        | N/A                          |
+|                      |                    |                 | 120         | 192.168.12.1/24        | N/A                          |
+| **Domain Controller** | adc1              | domain-a.local  | 10          | 192.168.1.10/24        | 192.168.1.1                  |
+| **Workstation**       | aws1              | domain-a.local  | 10          | 192.168.1.100/24       | 192.168.1.1                  |
+| **Domain Controller** | bdc1              | domain-b.local  | 20          | 192.168.2.10/24        | 192.168.2.1                  |
+| **Workstation**       | bws1              | domain-b.local  | 20          | 192.168.2.100/24       | 192.168.2.1                  |
+| **Domain Controller** | cdc1              | domain-c.local  | 30          | 192.168.3.10/24        | 192.168.3.1                  |
+| **Workstation**       | cws1              | domain-c.local  | 30          | 192.168.3.100/24       | 192.168.3.1                  |
+| **Domain Controller** | ddc1              | domain-d.local  | 40          | 192.168.4.10/24        | 192.168.4.1                  |
+| **Workstation**       | dws1              | domain-d.local  | 40          | 192.168.4.100/24       | 192.168.4.1                  |
+| **Domain Controller** | edc1              | domain-e.local  | 50          | 192.168.5.10/24        | 192.168.5.1                  |
+| **Workstation**       | ews1              | domain-e.local  | 50          | 192.168.5.100/24       | 192.168.5.1                  |
+| **Domain Controller** | fdc1              | domain-f.local  | 60          | 192.168.6.10/24        | 192.168.6.1                  |
+| **Workstation**       | fws1              | domain-f.local  | 60          | 192.168.6.100/24       | 192.168.6.1                  |
+| **Domain Controller** | xdc1              | domain-x.local  | 100         | 192.168.10.10/24       | 192.168.10.1                |
+| **Workstation**       | xws1              | N/A             | 100         | 192.168.10.100/24      | 192.168.10.1                |
+| **Domain Controller** | ydc1              | domain-y.local  | 110         | 192.168.11.10/24       | 192.168.11.1                |
+| **Workstation**       | yws1              | domain-y.local  | 110         | 192.168.11.100/24      | 192.168.11.1                |
+| **Domain Controller** | zdc1              | domain-z.local  | 120         | 192.168.12.10/24       | 192.168.12.1                |
+
 
 The entire network is configured to be **isolated** from the host machine to ensure a controlled and contained environment. No traffic can enter or exit the lab network from the host server, preventing external interference and ensuring accurate testing conditions.
 
