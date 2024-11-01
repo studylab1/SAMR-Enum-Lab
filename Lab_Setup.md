@@ -34,13 +34,6 @@ Various trust relationships between the forests are established to test the impa
 ### SAMR Enumeration
 The SAMR protocol is used to perform enumeration of users, groups, and domain structure across forest boundaries. This setup allows researchers to investigate how trust configurations affect the data exposed by SAMR, which is critical for identifying potential security vulnerabilities.
 
-## Objectives
-The laboratory setup aims to provide insights into:
-
-- The extent of data leakage via SAMR enumeration in different trust configurations.
-- How forest trust types influence enumeration attack surfaces.
-- Strategies for mitigating SAMR-based attacks in multi-forest environments.
-
 ## Virtual Environment Configuration
 
 The virtual laboratory is hosted using Microsoft Hyper-V virtualization technology.
