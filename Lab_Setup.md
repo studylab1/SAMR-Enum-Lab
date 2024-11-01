@@ -184,3 +184,27 @@ Additionally, **no traffic filtering** is applied within the lab. This means tha
 - **No host-based firewalls** are enabled on the domain controllers or workstations.
 
 This unfiltered setup allows for unrestricted communication between all systems in the lab, which is essential for testing enumeration techniques and observing network traffic without interference from security controls. The isolated and unfiltered network ensures that the focus remains on the behavior of the enumeration techniques and attack vectors within the controlled lab environment.
+
+
+### Traffic Capture and Analysis
+
+In this lab environment, traffic analysis is essential for monitoring and understanding SAMR enumeration activities across different domains and trust boundaries. The **`router`** system, which manages traffic flow between all subnets, is configured to capture and log data for inspection. The following setup and tools ensure visibility and facilitate packet analysis:
+
+1. **Router Configuration for Traffic Visibility**:
+   - The **router** system, responsible for routing traffic between the isolated subnets, provides a single point of visibility for all inter-subnet communications. This centralized routing design allows all data exchanged between different domains to be captured without needing individual monitoring on each system.
+   - Since this is a lab setup, there are no firewall rules or security policies configured on the router, allowing unrestricted traffic flow for accurate traffic analysis. This setup is essential for observing SAMR enumeration and related cross-domain interactions without interference from security controls.
+
+2. **Traffic Capture with Wireshark**:
+   - **Wireshark v4.2.0** is installed on the router system to capture network packets. Wireshark is configured to capture traffic on all interfaces associated with the Hyper-V virtual networks, covering each VLAN and subnet.
+   - **Capture Filters**: Custom capture filters focus on specific protocols (e.g., SAMR, SMB) or IP ranges, allowing targeted analysis of SAMR enumeration behavior. This minimizes unnecessary data and focuses on packets relevant to cross-forest trust and enumeration.
+   - **Protocol Analysis**: Wireshark enables inspection of protocols such as SAMR, SMB, and RPC, helping to understand how enumeration requests traverse trust boundaries and which types of requests reveal the most information across different trust configurations.
+
+3. **Data Logging and Exporting**:
+   - Traffic logs are saved to disk for post-analysis. The logs are exported in **PCAP** format, allowing for later review and analysis. This is useful for studying historical traffic and analyzing SAMR requests without real-time constraints.
+   - **Segmentation by Subnet**: Captures are separated by subnet to isolate traffic specific to each domain. This segmentation helps compare enumeration results across forests and assess differences in traffic patterns when trust configurations change.
+
+4. **Analysis of Enumeration Techniques**:
+   - The captured traffic allows analysis of how SAMR requests and responses vary depending on trust direction (e.g., one-way vs. two-way), authentication scope (e.g., selective vs. forest-wide), and transitivity (e.g., transitive vs. non-transitive trusts).
+   - **Identification of Exposed Data**: By inspecting SAMR response packets, it’s possible to identify which types of Active Directory objects (users, groups, computers) and attributes are exposed across different trust relationships. This analysis highlights potential security risks tied to specific trust configurations and reveals how much data is exposed to external domains.
+
+This unfiltered, isolated, and documented setup ensures that traffic capture provides a picture of SAMR enumeration behavior within the lab environment. The focus remains on observing and understanding the interaction between trusted domains and the potential security risks associated with enumeration techniques.
