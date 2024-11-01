@@ -5,6 +5,12 @@
 ## What the project does
 This project investigates SAMR enumeration attacks in multi-forest Active Directory environments. It develops a Python tool to explore the full capabilities of the SAMR protocol and analyzes how different forest trust configurations impact the amount of accessible data, which could be exploited by attackers.
 
+The laboratory setup aims to provide insights into:
+
+- The extent of data leakage via SAMR enumeration in different trust configurations.
+- How forest trust types influence enumeration attack surfaces.
+- Strategies for mitigating SAMR-based attacks in multi-forest environments.
+
 ## Why the project is useful
 The SAMR protocol allows attackers to gather critical information about users, groups, and domain structures, even from non-privileged accounts. This research develops a tool that simulates these attacks in various Active Directory trust configurations, providing insights into how attackers could exploit trust relationships during lateral movement. The findings will guide organizations in optimizing their security configurations, improving risk management, and developing countermeasures and detection tools.
 
