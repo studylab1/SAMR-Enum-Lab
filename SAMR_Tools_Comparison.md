@@ -21,7 +21,7 @@ Other aspects to specify are as follows:
 - **Domain Functional Level**: Windows Server 2016.
 - **Forest Functional Level**: Windows Server 2016.
 
-The SAMR enumeration scan is conducted from yws1.domain-y.local to zdc1.domain-z.local.
+The lab environment was established with two one-way forest trusts between domain-y.local and domain-z.local, configured with forest-wide authentication. The SAMR enumeration scan is conducted from workstation yws1.domain-y.local to zdc1.domain-z.local domain controller.
 
 ## Criteria for Tool Evaluation
 
