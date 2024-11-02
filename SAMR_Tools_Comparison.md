@@ -76,20 +76,19 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 ## Tool Comparison Table
 
-| Tool                 | Version | OpNum Coverage (%) | Multi-Forest Support | Permissions Compliance | Error Handling | Authentication Methods | Access Level Requirements | Supported OS |
-|----------------------|---------|--------------------|-----------------------|------------------------|----------------|------------------------|---------------------------|---------------|
-| net user             |         |                    |                       |                        |                |                        |                           |               |
-| PowerShell           |         |                    |                       |                        |                |                        |                           |               |
-| Impacket             |         |                    |                       |                        |                |                        |                           |               |
-| CrackMapExec         |         |                    |                       |                        |                |                        |                           |               |
-| rpcclient (Samba)    |         |                    |                       |                        |                |                        |                           |               |
-| smbclient (Samba)    |         |                    |                       |                        |                |                        |                           |               |
-| BloodHound           |         |                    |                       |                        |                |                        |                           |               |
-| Nmap (NSE Scripts)   |         |                    |                       |                        |                |                        |                           |               |
-| Enum4linux           |         |                    |                       |                        |                |                        |                           |               |
-| Enum4linux-ng        |         |                    |                       |                        |                |                        |                           |               |
-| Metasploit Framework |         |                    |                       |                        |                |                        |                           |               |
-| PowerSploit          |         |                    |                       |                        |                |                        |                           |               |
-| SAMRi10              |         |                    |                       |                        |                |                        |                           |               |
-| RPC Investigator     |         |                    |                       |                        |                |                        |                           |               |
----
+| Tool                 | Version                     | OpNum Coverage (%) | Multi-Forest Support | Permissions Compliance | Error Handling | Authentication Methods | Access Level Requirements | Supported OS       |
+|----------------------|-----------------------------|--------------------|-----------------------|------------------------|----------------|------------------------|---------------------------|---------------------|
+| net user             | Windows 11 23H2, OS build 22631.4317 |                    | No                    | Least-privilege        |                | NTLM                   | Regular                  | Windows            |
+| PowerShell           |                             |                    |                       |                        |                |                        |                           |                     |
+| Impacket             |                             |                    |                       |                        |                |                        |                           |                     |
+| CrackMapExec         |                             |                    |                       |                        |                |                        |                           |                     |
+| rpcclient (Samba)    |                             |                    |                       |                        |                |                        |                           |                     |
+| smbclient (Samba)    |                             |                    |                       |                        |                |                        |                           |                     |
+| BloodHound           |                             |                    |                       |                        |                |                        |                           |                     |
+| Nmap (NSE Scripts)   |                             |                    |                       |                        |                |                        |                           |                     |
+| Enum4linux           |                             |                    |                       |                        |                |                        |                           |                     |
+| Enum4linux-ng        |                             |                    |                       |                        |                |                        |                           |                     |
+| Metasploit Framework |                             |                    |                       |                        |                |                        |                           |                     |
+| PowerSploit          |                             |                    |                       |                        |                |                        |                           |                     |
+| SAMRi10              |                             |                    |                       |                        |                |                        |                           |                     |
+| RPC Investigator     |                             |                    |                       |                        |                |                        |                           |                     |
