@@ -139,7 +139,7 @@ The computer names follow this convention (excluding router server):
 #### Special hosts:
 - `xdc1`: domain controller that contains a datas for replication to other domains.
 - `xws1`: Linux client used to execute the enumeration scan with tools available only on Linux.
-- `zdc1`: domain controller used to execute enumeration scans for comparing existing tools.
+- `ydc1` and `zdc1`: domain controllers used to execute enumeration scans for comparing existing tools.
 - `yws1`: workstation from which the enumeration scan is executed to compare existing tools.
 
 ### Network Setup
@@ -194,16 +194,19 @@ In this lab environment, traffic analysis is essential for monitoring and unders
    - The **router** system, responsible for routing traffic between the isolated subnets, provides a single point of visibility for all inter-subnet communications. This centralized routing design allows all data exchanged between different domains to be captured without needing individual monitoring on each system.
    - Since this is a lab setup, there are no firewall rules or security policies configured on the router, allowing unrestricted traffic flow for accurate traffic analysis. This setup is essential for observing SAMR enumeration and related cross-domain interactions without interference from security controls.
 
-2. **Traffic Capture with Wireshark**:
+2. **Domain Cotrollers in Tools Comparison Analysis**  
+Another instance of Wireshark was installed on the `ydc1` and `zdc1` domain controllers. Installation on both is required because some tools do not support cross-forest requests, making it necessary to capture traffic on the local domain controller ydc1.
+
+3. **Traffic Capture with Wireshark**:
    - **Wireshark v4.2.0** is installed on the router system to capture network packets. Wireshark is configured to capture traffic on all interfaces associated with the Hyper-V virtual networks, covering each VLAN and subnet.
    - **Capture Filters**: Custom capture filters focus on specific protocols (e.g., SAMR, SMB) or IP ranges, allowing targeted analysis of SAMR enumeration behavior. This minimizes unnecessary data and focuses on packets relevant to cross-forest trust and enumeration.
    - **Protocol Analysis**: Wireshark enables inspection of protocols such as SAMR, SMB, and RPC, helping to understand how enumeration requests traverse trust boundaries and which types of requests reveal the most information across different trust configurations.
 
-3. **Data Logging and Exporting**:
+4. **Data Logging and Exporting**:
    - Traffic logs are saved to disk for post-analysis. The logs are exported in **PCAP** format, allowing for later review and analysis. This is useful for studying historical traffic and analyzing SAMR requests without real-time constraints.
    - **Segmentation by Subnet**: Captures are separated by subnet to isolate traffic specific to each domain. This segmentation helps compare enumeration results across forests and assess differences in traffic patterns when trust configurations change.
 
-4. **Analysis of Enumeration Techniques**:
+5. **Analysis of Enumeration Techniques**:
    - The captured traffic allows analysis of how SAMR requests and responses vary depending on trust direction (e.g., one-way vs. two-way), authentication scope (e.g., selective vs. forest-wide), and transitivity (e.g., transitive vs. non-transitive trusts).
    - **Identification of Exposed Data**: By inspecting SAMR response packets, it’s possible to identify which types of Active Directory objects (users, groups, computers) and attributes are exposed across different trust relationships. This analysis highlights potential security risks tied to specific trust configurations and reveals how much data is exposed to external domains.
 
