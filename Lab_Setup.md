@@ -119,6 +119,10 @@ The purpuse of the service is to route the network traffic between lab internal 
 `Set-SmbServerConfiguration -EncryptData $false`
 - **Latest Patches on October 10, 2024.** The result is verified on the systems patched until October 22, 2024.
 - **Data Population**. This lab utilizes the BadBlood tool (released on May 18, 2023) to populate synthetic data in Active Directory.
+- **Logging**. For auditing clients' requests the domain controllers have following configurations, for both `Success` and `Failure` in `Local Security Policy > Advanced Audit Policy Configuration > System Audit Policies - Local Group Policy Object`:
+  - `Object Access - Audit SAM`
+  - `Detailed Tracking - Audit RPC Events`
+  - `DC Access - Audit Directory Service Access`
 
 ### Computer Naming Convention
 
