@@ -125,7 +125,8 @@ The order of operations is based on the sequence in the traffic capture. Duplica
 | `SamrCloseHandle` | Close | 1 | Access is not requested | --- | N/A | N/A | 
 |  `SamrOpenDomain`  | `OpenDomain`    | 7  |  `0x00000205` | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`),<br> `DOMAIN_READ_OTHER_PARAMETERS` (`0x00000004`),<br> `DOMAIN_LOOKUP` (`0x00000200`)  |  Yes |  Compliant |
 | `SamrQueryInformationDomain` | `QueryDomainInfo` | 8 | Access is not requested | --- | N/A | N/A | 
-| `SamrConnect5`   | `Connect5`        |  64   | `0x00020031` | `SAM_SERVER_CONNECT` (`0x00000001`),<br>`SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`),<br> `SAM_SERVER_LOOKUP_DOMAIN` (`0x00000020`) | Yes                 | Compliant                       |
-| | | | | | | | 
+| `SamrConnect5`   | `Connect5`        |  64   | `0x00020031` | `SAM_SERVER_CONNECT` (`0x00000001`),<br>`SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`),<br> `SAM_SERVER_LOOKUP_DOMAIN` (`0x00000020`),<br> `READ_CONTROL` (`0x00020000`) | Yes                 | Compliant                       |
+|  `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00020385` | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`),<br> `DOMAIN_READ_OTHER_PARAMETERS` (`0x00000004`),<br> **`DOMAIN_GET_ALIAS_MEMBERSHIP` (`0x00000080`)**, <br>`DOMAIN_LIST_ACCOUNTS` (`0x00000100`),<br> `DOMAIN_LOOKUP` (`0x00000200`), <br>`READ_CONTROL` (`0x00020000`) |  No | Not Compliant |
+| `SamrGetAliasMembership` | `GetAliasMembership` | | | | | | 
 | | | | | | | | 
 | | | | | | | | 
