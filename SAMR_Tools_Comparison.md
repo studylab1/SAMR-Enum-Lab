@@ -37,7 +37,44 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 ---
 
+## Tool Comparison Table
+
+| Tool                 | Version                     | OpNum Coverage (%) | Multi-Forest Support | Permissions Compliance | Error Handling | Authentication Methods | Access Level Requirements | Supported OS       |
+|----------------------|-----------------------------|--------------------|-----------------------|------------------------|----------------|------------------------|---------------------------|---------------------|
+| net user             | Windows 11 23H2, OS build 22631.4317 |                    | No                    | Least-privilege        |                | NTLM                   | Regular                  | Windows            |
+| PowerShell           |                             |                    |                       |                        |                |                        |                           |                     |
+| Impacket             |                             |                    |                       |                        |                |                        |                           |                     |
+| CrackMapExec         |                             |                    |                       |                        |                |                        |                           |                     |
+| rpcclient (Samba)    |                             |                    |                       |                        |                |                        |                           |                     |
+| smbclient (Samba)    |                             |                    |                       |                        |                |                        |                           |                     |
+| BloodHound           |                             |                    |                       |                        |                |                        |                           |                     |
+| Nmap (NSE Scripts)   |                             |                    |                       |                        |                |                        |                           |                     |
+| Enum4linux           |                             |                    |                       |                        |                |                        |                           |                     |
+| Enum4linux-ng        |                             |                    |                       |                        |                |                        |                           |                     |
+| Metasploit Framework |                             |                    |                       |                        |                |                        |                           |                     |
+| PowerSploit          |                             |                    |                       |                        |                |                        |                           |                     |
+| SAMRi10              |                             |                    |                       |                        |                |                        |                           |                     |
+| RPC Investigator     |                             |                    |                       |                        |                |                        |                           |                     |
+
 ## OpNum Coverage Table
+
+### OpNum Descriptions
+
+- **OpNum 6**: `SamrEnumerateDomainsInSamServer` – Lists all domains managed by the SAM server.
+- **OpNum 11**: `SamrEnumerateGroupsInDomain` – Retrieves a list of groups within a specific domain.
+- **OpNum 13**: `SamrEnumerateUsersInDomain` – Retrieves user accounts within a specific domain.
+- **OpNum 15**: `SamrEnumerateAliasesInDomain` – Lists alias groups within a domain.
+- **OpNum 16**: `SamrGetAliasMembership` – Shows alias memberships for a specific user or SID.
+- **OpNum 17**: `SamrLookupNamesInDomain` – Converts account names into SIDs within a domain.
+- **OpNum 18**: `SamrLookupIdsInDomain` – Maps SIDs back to account names.
+- **OpNum 36**: `SamrQueryInformationUser` – Retrieves detailed information on a specific user account.
+- **OpNum 39**: `SamrGetGroupsForUser` – Lists all group memberships for a specified user.
+- **OpNum 40**: `SamrQueryDisplayInformation` – Provides display information in a paginated format.
+- **OpNum 41**: `SamrGetDisplayEnumerationIndex` – Retrieves the display index for paginated enumerations.
+- **OpNum 51**: `SamrQueryDisplayInformation3` – Enables detailed and filtered queries for large-scale user, group, or machine account enumeration.
+- **OpNum 56**: `SamrGetDomainPasswordInformation` – Retrieves password policy information for the domain.
+
+### Evaluation of OpNum Coverage
 
 | Tool                 | 6  | 11 | 13 | 15 | 16 | 17 | 18 | 36 | 39 | 40 | 41 | 51 | 56 |
 |----------------------|----|----|----|----|----|----|----|----|----|----|----|----|----|
@@ -58,37 +95,13 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 ---
 
-### OpNum Descriptions
+## Evaluation for "Desired Access" Compliance
 
-- **OpNum 6**: `SamrEnumerateDomainsInSamServer` – Lists all domains managed by the SAM server.
-- **OpNum 11**: `SamrEnumerateGroupsInDomain` – Retrieves a list of groups within a specific domain.
-- **OpNum 13**: `SamrEnumerateUsersInDomain` – Retrieves user accounts within a specific domain.
-- **OpNum 15**: `SamrEnumerateAliasesInDomain` – Lists alias groups within a domain.
-- **OpNum 16**: `SamrGetAliasMembership` – Shows alias memberships for a specific user or SID.
-- **OpNum 17**: `SamrLookupNamesInDomain` – Converts account names into SIDs within a domain.
-- **OpNum 18**: `SamrLookupIdsInDomain` – Maps SIDs back to account names.
-- **OpNum 36**: `SamrQueryInformationUser` – Retrieves detailed information on a specific user account.
-- **OpNum 39**: `SamrGetGroupsForUser` – Lists all group memberships for a specified user.
-- **OpNum 40**: `SamrQueryDisplayInformation` – Provides display information in a paginated format.
-- **OpNum 41**: `SamrGetDisplayEnumerationIndex` – Retrieves the display index for paginated enumerations.
-- **OpNum 51**: `SamrQueryDisplayInformation3` – Enables detailed and filtered queries for large-scale user, group, or machine account enumeration.
-- **OpNum 56**: `SamrGetDomainPasswordInformation` – Retrieves password policy information for the domain.
+### "Net User"
 
-## Tool Comparison Table
-
-| Tool                 | Version                     | OpNum Coverage (%) | Multi-Forest Support | Permissions Compliance | Error Handling | Authentication Methods | Access Level Requirements | Supported OS       |
-|----------------------|-----------------------------|--------------------|-----------------------|------------------------|----------------|------------------------|---------------------------|---------------------|
-| net user             | Windows 11 23H2, OS build 22631.4317 |                    | No                    | Least-privilege        |                | NTLM                   | Regular                  | Windows            |
-| PowerShell           |                             |                    |                       |                        |                |                        |                           |                     |
-| Impacket             |                             |                    |                       |                        |                |                        |                           |                     |
-| CrackMapExec         |                             |                    |                       |                        |                |                        |                           |                     |
-| rpcclient (Samba)    |                             |                    |                       |                        |                |                        |                           |                     |
-| smbclient (Samba)    |                             |                    |                       |                        |                |                        |                           |                     |
-| BloodHound           |                             |                    |                       |                        |                |                        |                           |                     |
-| Nmap (NSE Scripts)   |                             |                    |                       |                        |                |                        |                           |                     |
-| Enum4linux           |                             |                    |                       |                        |                |                        |                           |                     |
-| Enum4linux-ng        |                             |                    |                       |                        |                |                        |                           |                     |
-| Metasploit Framework |                             |                    |                       |                        |                |                        |                           |                     |
-| PowerSploit          |                             |                    |                       |                        |                |                        |                           |                     |
-| SAMRi10              |                             |                    |                       |                        |                |                        |                           |                     |
-| RPC Investigator     |                             |                    |                       |                        |                |                        |                           |                     |
+| SAMR Operation   | OpNum | Access Mask Requested     | Required for Task?  | Compliance with Desired Access |
+|------------------|-------|---------------------------|---------------------|--------------------------------|
+| `SamrConnect`    |       |                           |                     |                                |
+| `SamrOpenUser`   |       |                           |                     |                                |
+| `SamrOpenAlias`  |       |                           |                     |                                |
+ 
