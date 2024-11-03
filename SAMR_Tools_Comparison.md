@@ -61,9 +61,12 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 ### OpNum Descriptions
 
 
+- **OpNum 1**: `SamrCloseHandle` – Closes an open handle to a SAM object, releasing the associated resources. 
+- **OpNum 3**: `SamrQuerySecurityObject` – Retrieves security information for a specified SAM object, such as permissions and access control details. 
 - **OpNum 5**: `SamrLookupDomainInSamServer` – Resolves a domain name to its corresponding SID within the SAM server. (Mandatory for SAMR communication?) - MISSING IN THE TABLE
 - **OpNum 6**: `SamrEnumerateDomainsInSamServer` – Lists all domains managed by the SAM server. (Mandatory for SAMR communication?)
 - **OpNum 7**: `SamrOpenDomain` – Converts a list of account or domain names within a domain to their corresponding SIDs
+- **OpNum 8**: `SamrQueryInformationDomain` – Retrieves specific information about a domain, such as security policies or account statistics, based on the requested information level.  
 - **OpNum 11**: `SamrEnumerateGroupsInDomain` – Retrieves a list of groups within a specific domain. (Mandatory for SAMR communication?)
 - **OpNum 13**: `SamrEnumerateUsersInDomain` – Retrieves user accounts within a specific domain. (Mandatory for SAMR communication?)
 - **OpNum 15**: `SamrEnumerateAliasesInDomain` – Lists alias groups within a domain.
@@ -102,15 +105,27 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 ## Evaluation for "Desired Access" Compliance
 
+The order of operations is based on the sequence in the traffic capture. Duplicates with the same requested permissions are omitted.
+
 ### "Net User"
 
-| SAMR Operation | Wireshark Label | OpNum | Access Mask (Hex) | Access Rights (Description) | Required for Operation? | Compliance with Desired Access |
+| SAMR Operation | Wireshark Label | OpNum | Requested Access Rights (Hex) | Rights Description | Required for Operation? | Compliance with Requested Access |
 |------------------|-----------------|-------|--------------------|-----------------------------|---------------------|--------------------------------|
-| `SamrConnect5`   | `Connect5`        |  64   | `0x00000030` | SAM_SERVER_ENUMERATE_DOMAINS (`0x00000020`), SAM_SERVER_LOOKUP_DOMAIN (`0x00000010`)             | Yes                 | Compliant                       |
-|  `SamrEnumerateDomainsInSamServer` | `EnumDomains`   | 6  | Access is not requested  | ---  | N/A  | N/A  |
-|  `SamrLookupDomainInSamServer`     | `LookupDomain`  | 5  | Access is not requested  | ---  | N/A  | N/A  |
-|  `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000200` | DOMAIN_LOOKUP  |  Yes |  Compliant |
-|  `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000280` | DOMAIN_GET_ALIAS_MEMBERSHIP (`0x00000080`), DOMAIN_LOOKUP (`0x00000200`) |  No | Not Compliant |
+| `SamrConnect5`   | `Connect5`        |  64   | `0x00000030` | `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`), `SAM_SERVER_LOOKUP_DOMAIN` (`0x00000020`)             | Yes                 | Compliant                       |
+|  `SamrEnumerateDomainsInSamServer` | `EnumDomains`   | 6  | Access is not requested  | --- | N/A  | N/A  |
+|  `SamrLookupDomainInSamServer`     | `LookupDomain`  | 5  | Access is not requested  | --- | N/A  | N/A  |
+|  `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000200` | `DOMAIN_LOOKUP`  |  Yes |  Compliant |
+|  `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000280` | `DOMAIN_GET_ALIAS_MEMBERSHIP` (`0x00000080`), `DOMAIN_LOOKUP` (`0x00000200`) |  No | Not Compliant |
 |  `SamrLookupNamesInDomain`         | `LookupNames`   | 17  |  Access is not requested | ---  |  N/A | N/A |
-|  `SamrOpenUser`                    | `OpenUser`      | 34  |  0x0002011b | USER_READ_GENERAL (`0x00000001`),<br> USER_READ_PREFERENCES (`0x00000002`),<br> USER_READ_LOGON (`0x00000008`),<br> USER_READ_ACCOUNT (`0x00000010`),<br> USER_LIST_GROUPS (`0x00000100`),<br> READ_CONTROL (`0x00020000`) |  Compliant | Compliant |
-|  `SamrOpenUser`                    | `OpenUser`      | 34  |  0x0002011b | USER_READ_GENERAL (`0x00000001`),<br> USER_READ_PREFERENCES (`0x00000002`),<br> USER_READ_LOGON (`0x00000008`),<br> USER_READ_ACCOUNT (`0x00000010`),<br> USER_LIST_GROUPS (`0x00000100`),<br> READ_CONTROL (`0x00020000`) |  Compliant | Compliant |
+|  `SamrOpenUser`                    | `OpenUser`      | 34  |  `0x0002011b` | `USER_READ_GENERAL` (`0x00000001`),<br> `USER_READ_PREFERENCES` (`0x00000002`),<br> `USER_READ_LOGON` (`0x00000008`),<br> `USER_READ_ACCOUNT` (`0x00000010`),<br> `USER_LIST_GROUPS` (`0x00000100`),<br> `READ_CONTROL` (`0x00020000`) |  Compliant | Compliant |
+|  `SamrQueryInformationUser`                    | `QueryUserInfo`      | 36  | Access is not requested | --- |  N/A | N/A |
+|  `SamrQuerySecurityObject`  | `QuerySecurity` | 3 | Access is not requested | --- | N/A | N/A | 
+| `SamrGetGroupsForUser` | `GetGroupForUser`| 39| Access is not requested | --- | N/A | N/A | 
+| `SamrGetAliasMembership`| `GetAliasMembership` | 16 | Access is not requested| --- | N/A | N/A | 
+| `SamrCloseHandle` | Close | 1 | Access is not requested | --- | N/A | N/A | 
+|  `SamrOpenDomain`  | `OpenDomain`    | 7  |  `0x00000205` | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`),<br> `DOMAIN_READ_OTHER_PARAMETERS` (`0x00000004`),<br> `DOMAIN_LOOKUP` (`0x00000200`)  |  Yes |  Compliant |
+| `SamrQueryInformationDomain` | `QueryDomainInfo` | 8 | Access is not requested | --- | N/A | N/A | 
+| `SamrConnect5`   | `Connect5`        |  64   | `0x00020031` | `SAM_SERVER_CONNECT (`0x00000001`),<br>`SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`),<br> `SAM_SERVER_LOOKUP_DOMAIN` (`0x00000020`) | Yes                 | Compliant                       |
+| | | | | | | | 
+| | | | | | | | 
+| | | | | | | | 
