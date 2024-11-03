@@ -99,9 +99,6 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 ### "Net User"
 
-| SAMR Operation   | OpNum | Access Mask Requested     | Required for Task?  | Compliance with Desired Access |
-|------------------|-------|---------------------------|---------------------|--------------------------------|
-| `SamrConnect`    |       |                           |                     |                                |
-| `SamrOpenUser`   |       |                           |                     |                                |
-| `SamrOpenAlias`  |       |                           |                     |                                |
- 
+| SAMR Operation | Wireshark Label | OpNum | Access Mask (Hex) | Access Rights (Description) | Required for Task? | Compliance with Desired Access |
+|------------------|-----------------|-------|--------------------|-----------------------------|---------------------|--------------------------------|
+| `SamrConnect5`   | `Connect5`        |  64   | `0x00000030`      | SAM_SERVER_LOOKUP_DOMAIN, SAM_SERVER_ENUMERATE_DOMAINS             | Yes                 | Compliant                       |
