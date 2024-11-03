@@ -109,4 +109,5 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 |  `SamrEnumerateDomainsInSamServer` | `EnumDomains`   | 6  | Access is not requested  | ---  | N/A  | N/A  |
 |  `SamrLookupDomainInSamServer`     | `LookupDomain`  | 5  | Access is not requested  | ---  | N/A  | N/A  |
 |  `SamrLookupNamesInDomain`         | `OpenDomain`    | 7  |  `0x00000200` | DOMAIN_LOOKUP  |  Yes |  Yes |
+|  `SamrLookupNamesInDomain`         | `OpenDomain`    | 7  |  `0x00000280` | DOMAIN_GET_ALIAS_MEMBERSHIP (`0x00000080`), DOMAIN_LOOKUP (`0x00000200`) |  Yes |  Yes |
 
