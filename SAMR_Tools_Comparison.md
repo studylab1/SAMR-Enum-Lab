@@ -60,19 +60,21 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 ### OpNum Descriptions
 
-- **OpNum 6**: `SamrEnumerateDomainsInSamServer` – Lists all domains managed by the SAM server.
-- **OpNum 11**: `SamrEnumerateGroupsInDomain` – Retrieves a list of groups within a specific domain.
-- **OpNum 13**: `SamrEnumerateUsersInDomain` – Retrieves user accounts within a specific domain.
+
+- **OpNum 6**: `SamrEnumerateDomainsInSamServer` – Lists all domains managed by the SAM server. (Mandatory for SAMR communication?)
+- **OpNum 11**: `SamrEnumerateGroupsInDomain` – Retrieves a list of groups within a specific domain. (Mandatory for SAMR communication?)
+- **OpNum 13**: `SamrEnumerateUsersInDomain` – Retrieves user accounts within a specific domain. (Mandatory for SAMR communication?)
 - **OpNum 15**: `SamrEnumerateAliasesInDomain` – Lists alias groups within a domain.
-- **OpNum 16**: `SamrGetAliasMembership` – Shows alias memberships for a specific user or SID.
-- **OpNum 17**: `SamrLookupNamesInDomain` – Converts account names into SIDs within a domain.
-- **OpNum 18**: `SamrLookupIdsInDomain` – Maps SIDs back to account names.
+- **OpNum 16**: `SamrGetAliasMembership` – Shows alias memberships for a specific user or SID. (Mandatory for SAMR communication?)
+- **OpNum 17**: `SamrLookupNamesInDomain` – Converts account names into SIDs within a domain. (Mandatory for SAMR communication?)
+- **OpNum 18**: `SamrLookupIdsInDomain` – Maps SIDs back to account names. (Mandatory for SAMR communication?)
 - **OpNum 36**: `SamrQueryInformationUser` – Retrieves detailed information on a specific user account.
 - **OpNum 39**: `SamrGetGroupsForUser` – Lists all group memberships for a specified user.
 - **OpNum 40**: `SamrQueryDisplayInformation` – Provides display information in a paginated format.
 - **OpNum 41**: `SamrGetDisplayEnumerationIndex` – Retrieves the display index for paginated enumerations.
 - **OpNum 51**: `SamrQueryDisplayInformation3` – Enables detailed and filtered queries for large-scale user, group, or machine account enumeration.
 - **OpNum 56**: `SamrGetDomainPasswordInformation` – Retrieves password policy information for the domain.
+- **OpNum 64**: `SamrConnect5` – Establishes a connection to the SAM server for domain enumeration and lookup. (Mandatory for SAMR communication?)
 
 ### Evaluation of OpNum Coverage
 
@@ -99,6 +101,9 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 ### "Net User"
 
-| SAMR Operation | Wireshark Label | OpNum | Access Mask (Hex) | Access Rights (Description) | Required for Task? | Compliance with Desired Access |
+| SAMR Operation | Wireshark Label | OpNum | Access Mask (Hex) | Access Rights (Description) | Required for Operation? | Compliance with Desired Access |
 |------------------|-----------------|-------|--------------------|-----------------------------|---------------------|--------------------------------|
 | `SamrConnect5`   | `Connect5`        |  64   | `0x00000030`      | SAM_SERVER_LOOKUP_DOMAIN, SAM_SERVER_ENUMERATE_DOMAINS             | Yes                 | Compliant                       |
+|  `SamrEnumerateDomainsInSamServer` | `EnumDomains`   | 6  | Access is not requested  | ---  | N/A  | N/A  |
+|   |   |   |   |   |   |   |
+
