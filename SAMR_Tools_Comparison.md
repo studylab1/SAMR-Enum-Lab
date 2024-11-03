@@ -61,7 +61,9 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 ### OpNum Descriptions
 
 
+- **OpNum 5**: `SamrLookupDomainInSamServer` – Resolves a domain name to its corresponding SID within the SAM server. (Mandatory for SAMR communication?) - MISSING IN THE TABLE
 - **OpNum 6**: `SamrEnumerateDomainsInSamServer` – Lists all domains managed by the SAM server. (Mandatory for SAMR communication?)
+- **OpNum 7**: `SamrLookupNamesInDomain` – Converts a list of account or domain names within a domain to their corresponding SIDs
 - **OpNum 11**: `SamrEnumerateGroupsInDomain` – Retrieves a list of groups within a specific domain. (Mandatory for SAMR communication?)
 - **OpNum 13**: `SamrEnumerateUsersInDomain` – Retrieves user accounts within a specific domain. (Mandatory for SAMR communication?)
 - **OpNum 15**: `SamrEnumerateAliasesInDomain` – Lists alias groups within a domain.
@@ -103,7 +105,8 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 | SAMR Operation | Wireshark Label | OpNum | Access Mask (Hex) | Access Rights (Description) | Required for Operation? | Compliance with Desired Access |
 |------------------|-----------------|-------|--------------------|-----------------------------|---------------------|--------------------------------|
-| `SamrConnect5`   | `Connect5`        |  64   | `0x00000030`      | SAM_SERVER_LOOKUP_DOMAIN, SAM_SERVER_ENUMERATE_DOMAINS             | Yes                 | Compliant                       |
+| `SamrConnect5`   | `Connect5`        |  64   | `0x00000030` | SAM_SERVER_ENUMERATE_DOMAINS (`0x00000020`), SAM_SERVER_LOOKUP_DOMAIN (`0x00000010`)             | Yes                 | Compliant                       |
 |  `SamrEnumerateDomainsInSamServer` | `EnumDomains`   | 6  | Access is not requested  | ---  | N/A  | N/A  |
-|   |   |   |   |   |   |   |
+|  `SamrLookupDomainInSamServer`     | `LookupDomain`  | 5  | Access is not requested  | ---  | N/A  | N/A  |
+|  `SamrLookupNamesInDomain`         | `OpenDomain`    | 7  |  `0x00000200` | DOMAIN_LOOKUP  |  Yes |  Yes |
 
