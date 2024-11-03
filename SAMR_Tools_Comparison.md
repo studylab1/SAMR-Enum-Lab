@@ -112,5 +112,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 |  `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000200` | DOMAIN_LOOKUP  |  Yes |  Compliant |
 |  `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000280` | DOMAIN_GET_ALIAS_MEMBERSHIP (`0x00000080`), DOMAIN_LOOKUP (`0x00000200`) |  No | Not Compliant |
 |  `SamrLookupNamesInDomain`         | `LookupNames`   | 17  |  Access is not requested | ---  |  N/A | N/A |
+
 |  `SamrOpenUser`                    | `OpenUser`      | 34  |  0x0002011b | USER_READ_GENERAL (`0x00000001`),<br> USER_READ_PREFERENCES (`0x00000002`),<br> USER_READ_LOGON (`0x00000008`),<br> USER_READ_ACCOUNT (`0x00000010`),<br> USER_LIST_GROUPS (`0x00000100`),<br> READ_CONTROL (`0x00020000`) |  Compliant | Compliant |
 
+|  `SamrOpenUser`                    | `OpenUser`      | 34  |  0x0002011b | USER_READ_GENERAL (`0x00000001`),<br> USER_READ_PREFERENCES (`0x00000002`),<br> USER_READ_LOGON (`0x00000008`),<br> USER_READ_ACCOUNT (`0x00000010`),<br> USER_LIST_GROUPS (`0x00000100`),<br> READ_CONTROL (`0x00020000`) |  Compliant | Compliant |
