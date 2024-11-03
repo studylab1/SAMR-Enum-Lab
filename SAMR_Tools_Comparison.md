@@ -41,7 +41,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 | Tool                 | Version                     | OpNum Coverage (%) | Multi-Forest Support | Permissions Compliance | Error Handling | Authentication Methods | Access Level Requirements | Supported OS       |
 |----------------------|-----------------------------|--------------------|-----------------------|------------------------|----------------|------------------------|---------------------------|---------------------|
-| net user             | Windows 11 23H2, OS build 22631.4317 |                    | No                    | Least-privilege        |                | NTLM                   | Regular                  | Windows            |
+| net user             | Windows 11 23H2, OS build 22631.4317 |                    | No                    | Least-privilege        |                | Protocol Adaptability     | Regular                  | Windows            |
 | PowerShell           |                             |                    |                       |                        |                |                        |                           |                     |
 | Impacket             |                             |                    |                       |                        |                |                        |                           |                     |
 | CrackMapExec         |                             |                    |                       |                        |                |                        |                           |                     |
@@ -63,13 +63,14 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 - **OpNum 5**: `SamrLookupDomainInSamServer` – Resolves a domain name to its corresponding SID within the SAM server. (Mandatory for SAMR communication?) - MISSING IN THE TABLE
 - **OpNum 6**: `SamrEnumerateDomainsInSamServer` – Lists all domains managed by the SAM server. (Mandatory for SAMR communication?)
-- **OpNum 7**: `SamrLookupNamesInDomain` – Converts a list of account or domain names within a domain to their corresponding SIDs
+- **OpNum 7**: `SamrOpenDomain` – Converts a list of account or domain names within a domain to their corresponding SIDs
 - **OpNum 11**: `SamrEnumerateGroupsInDomain` – Retrieves a list of groups within a specific domain. (Mandatory for SAMR communication?)
 - **OpNum 13**: `SamrEnumerateUsersInDomain` – Retrieves user accounts within a specific domain. (Mandatory for SAMR communication?)
 - **OpNum 15**: `SamrEnumerateAliasesInDomain` – Lists alias groups within a domain.
 - **OpNum 16**: `SamrGetAliasMembership` – Shows alias memberships for a specific user or SID. (Mandatory for SAMR communication?)
 - **OpNum 17**: `SamrLookupNamesInDomain` – Converts account names into SIDs within a domain. (Mandatory for SAMR communication?)
 - **OpNum 18**: `SamrLookupIdsInDomain` – Maps SIDs back to account names. (Mandatory for SAMR communication?)
+- **OpNum 34**: `SamrOpenUser` – Opens a handle to a specific user account within a domain, allowing for further operations on the user object.
 - **OpNum 36**: `SamrQueryInformationUser` – Retrieves detailed information on a specific user account.
 - **OpNum 39**: `SamrGetGroupsForUser` – Lists all group memberships for a specified user.
 - **OpNum 40**: `SamrQueryDisplayInformation` – Provides display information in a paginated format.
@@ -108,7 +109,8 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | `SamrConnect5`   | `Connect5`        |  64   | `0x00000030` | SAM_SERVER_ENUMERATE_DOMAINS (`0x00000020`), SAM_SERVER_LOOKUP_DOMAIN (`0x00000010`)             | Yes                 | Compliant                       |
 |  `SamrEnumerateDomainsInSamServer` | `EnumDomains`   | 6  | Access is not requested  | ---  | N/A  | N/A  |
 |  `SamrLookupDomainInSamServer`     | `LookupDomain`  | 5  | Access is not requested  | ---  | N/A  | N/A  |
-|  `SamrLookupNamesInDomain`         | `OpenDomain`    | 7  |  `0x00000200` | DOMAIN_LOOKUP  |  Yes |  Compliant |
-|  `SamrLookupNamesInDomain`         | `OpenDomain`    | 7  |  `0x00000280` | DOMAIN_GET_ALIAS_MEMBERSHIP (`0x00000080`), DOMAIN_LOOKUP (`0x00000200`) |  No | Not Compliant |
-
+|  `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000200` | DOMAIN_LOOKUP  |  Yes |  Compliant |
+|  `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000280` | DOMAIN_GET_ALIAS_MEMBERSHIP (`0x00000080`), DOMAIN_LOOKUP (`0x00000200`) |  No | Not Compliant |
+|  `SamrLookupNamesInDomain`         | `LookupNames`   | 17  |  Access is not requested | ---  |  N/A | N/A |
+|  `SamrOpenUser`                    | `OpenUser`      | 34  |  0x0002011b | USER_READ_GENERAL (`0x00000001`),<br> USER_READ_PREFERENCES (`0x00000002`),<br> USER_READ_LOGON (`0x00000008`),<br> USER_READ_ACCOUNT (`0x00000010`),<br> USER_LIST_GROUPS (`0x00000100`),<br> READ_CONTROL (`0x00020000`) |  Compliant | Compliant |
 
