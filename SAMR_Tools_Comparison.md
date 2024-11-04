@@ -61,10 +61,8 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | SAMRi10              |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | RPC Investigator     |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 
-## OpNum Coverage Table
 
 ### OpNum Descriptions
-
 
 - **OpNum 1**: `SamrCloseHandle` – Closes an open handle to a SAM object, releasing the associated resources. 
 - **OpNum 3**: `SamrQuerySecurityObject` – Retrieves security information for a specified SAM object, such as permissions and access control details. 
@@ -86,27 +84,6 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 - **OpNum 51**: `SamrQueryDisplayInformation3` – Enables detailed and filtered queries for large-scale user, group, or machine account enumeration.
 - **OpNum 56**: `SamrGetDomainPasswordInformation` – Retrieves password policy information for the domain.
 - **OpNum 64**: `SamrConnect5` – Establishes a connection to the SAM server for domain enumeration and lookup. (Mandatory for SAMR communication?)
-
-### Evaluation of OpNum Coverage
-
-| Tool                 | 6  | 11 | 13 | 15 | 16 | 17 | 18 | 36 | 39 | 40 | 41 | 51 | 56 |
-|----------------------|----|----|----|----|----|----|----|----|----|----|----|----|----|
-| net user             |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| PowerShell           |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| Impacket             |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| CrackMapExec         |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| rpcclient (Samba)    |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| smbclient (Samba)    |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| BloodHound           |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| Nmap (NSE Scripts)   |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| Enum4linux           |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| Enum4linux-ng        |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| Metasploit Framework |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| PowerSploit          |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| SAMRi10              |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| RPC Investigator     |    |    |    |    |    |    |    |    |    |    |    |    |    |
-
----
 
 ## Evaluation for "Desired Access" Compliance
 
