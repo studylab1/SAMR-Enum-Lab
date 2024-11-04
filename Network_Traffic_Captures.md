@@ -2,5 +2,5 @@ This page provides downloadable traffic capture files generated during the resea
 
 | Tool Name       | Download Link                                      | Comments            |
 |-----------------|----------------------------------------------------|---------------------|
-| net user        | [Download](Capture_Files/net_user_administrator__domain.pcapng) | Executed: 'net user administrator /domain' |
-| net user        | [Download](Capture_Files/net_user__domain.pcapng)                           | Executed: 'net user /domain'   |
+| net user        | [Download](https://github.com/studylab1/SAMR-Enum-Lab/blob/32278dd7bb26d31083e243787b1a66c8bc42f1e7/Capture_Files/net_user_administrator__domain.pcapng) | Executed: 'net user administrator /domain' |
+| net user        | [Download](https://github.com/studylab1/SAMR-Enum-Lab/blob/32278dd7bb26d31083e243787b1a66c8bc42f1e7/Capture_Files/net_user__domain.pcapng)                           | Executed: 'net user /domain'   |
