@@ -39,7 +39,30 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 ## Tool Comparison Results 
 
-### Evaluation of OpNum Coverage
+### Evaluation of Tool Comparison Criteria
+
+"⚫️" - Supported
+"○" - Not Supported
+
+| Tool Name |OpNum Coverage| Multi-Forest Support| Access Rights Evaluation| Error Handling |Authentication Methods| Access Level Requirements |
+|-----------|--------------|---------------------|------------------------|----------------|---------------------|---------------------------|
+| net user  | 70%            | ○                   |                        |                |                        |                           |
+| PowerShell           |                      |                        |                          |                          |                          |                           |
+| Impacket             |                      |                        |                          |                          |                          |                           |
+| CrackMapExec         |                      |                        |                          |                          |                          |                           |
+| rpcclient (Samba)    |                      |                        |                          |                          |                          |                           |
+| smbclient (Samba)    |                      |                        |                          |                          |                          |                           |
+| BloodHound           |                      |                        |                          |                          |                          |                           |
+| Nmap (NSE Scripts)   |                      |                        |                          |                          |                          |                           |
+| Enum4linux           |                      |                        |                          |                          |                          |                           |
+| Enum4linux-ng        |                      |                        |                          |                          |                          |                           |
+| Metasploit Framework |                      |                        |                          |                          |                          |                           |
+| PowerSploit          |                      |                        |                          |                          |                          |                           |
+| SAMRi10              |                      |                        |                          |                          |                          |                           |
+| RPC Investigator     |                      |                        |                          |                          |                          |                           |
+
+
+### Evaluation of OpNum Coverage in Detail
 
 "⚫️" - Supported  
 "○" - Not Supported
@@ -86,7 +109,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 - **OpNum 56**: `SamrGetDomainPasswordInformation` – Retrieves password policy information for the domain.
 - **OpNum 64**: `SamrConnect5` – Establishes a connection to the SAM server for domain enumeration and lookup. (Mandatory for SAMR communication?)
 
-## Evaluation of "Desired Access" Compliance
+## Evaluation of "Desired Access" Compliance in Detail
 
 The order of operations is based on the sequence in the traffic capture. Duplicates with the same requested permissions are omitted. The accesses marked in bold are not compliant with the protocol specification.
 
