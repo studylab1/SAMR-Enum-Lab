@@ -1,3 +1,6 @@
 This page provides downloadable traffic capture files generated during the research. Each capture file corresponds to specific enumeration and protocol analysis scenarios explored in the study.
 
-LINKS TO BE ADDED
+| Tool Name       | Download Link                                      | Comments            |
+|-----------------|----------------------------------------------------|---------------------|
+| net user        | [Download](Capture_Files/net_user_administrator__domain.pcapng) | Executed: 'net user administrator /domain' |
+| net user        | [Download](Capture_Files/net_user__domain.pcapng)                           | Executed: 'net user /domain'   |

@@ -86,7 +86,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 - **OpNum 56**: `SamrGetDomainPasswordInformation` – Retrieves password policy information for the domain.
 - **OpNum 64**: `SamrConnect5` – Establishes a connection to the SAM server for domain enumeration and lookup. (Mandatory for SAMR communication?)
 
-## Evaluation for "Desired Access" Compliance
+## Evaluation of "Desired Access" Compliance
 
 The order of operations is based on the sequence in the traffic capture. Duplicates with the same requested permissions are omitted. The accesses marked in bold are not compliant with the protocol specification.
 
