@@ -41,13 +41,13 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 ### Evaluation of OpNum Coverage
 
-"Y" - Supported  
-"N" - Not Supported
+"⚫️" - Supported  
+"○" - Not Supported
 
 
 | Tool \ OpNum         | 1  | 3  | 5  | 6  | 7  | 8  | 11 | 13 | 15 | 16 | 17 | 18 | 34 | 36 | 39 | 40 | 41 | 51 | 56 | 64 |
 |----------------------|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
-| net user             | ⚫️ | ⚫️ |  Y | Y  | Y  | Y  |  N | Y  | N  | Y  | Y  | Y  | Y  | Y  | Y  | N  | N  | N  | N  |  Y |
+| net user             | ⚫️ | ⚫️ | ⚫️ | ⚫️ | ⚫️ | ⚫️ |  ○ | ⚫️ | ○  | ⚫️ | ⚫️ | ⚫️ | ⚫️ | ⚫️ | ⚫️ | ○  | ○  | ○  | ○  | ⚫️ |
 | PowerShell           |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | Impacket             |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | CrackMapExec         |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
