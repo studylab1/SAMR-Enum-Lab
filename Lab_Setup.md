@@ -16,10 +16,12 @@ This page outlines the laboratory environment created to simulate multiple Activ
 ### Active Directory Forests
 The lab consists of multiple Active Directory (AD) forests, each configured with different trust types, including:
 
+- **Forest and External Trusts**
 - **One-Way Trusts** (inbound and outbound)
-- **Two-Way Trusts**
-- **Transitive and Non-Transitive Trusts**
 - **Selective and Forest-Wide Authentication Scopes**
+- **Windows Server 2016 and Windows Server 2012 R2 Forest Functional Level**
+
+<img width="976" alt="image" src="https://github.com/user-attachments/assets/d63d2445-c354-4dc3-8eec-99b7f9021372">
 
 ### Domain Controllers
 Each forest includes domain controllers (DCs) running the latest version of Windows Server to ensure a realistic and up-to-date testing environment. The domain controllers facilitate SAMR enumeration by simulating real-world trust configurations across forests.
