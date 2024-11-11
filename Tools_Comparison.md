@@ -44,10 +44,10 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 "⚫️" - Supported  
 "○" - Not Supported
 
-| Tool Name |OpNum Coverage| Multi-Forest Support| Access Rights Evaluation| Error Handling |Authentication Methods| Access Level Requirements |
+| Tool Name |Multi-Forest Support|OpNum Coverage| Access Rights Evaluation| Error Handling |Authentication Methods| Access Level Requirements |
 |-----------|--------------|---------------------|------------------------|----------------|---------------------|---------------------------|
-| net user  |       0%     | ○                   |                        |                |                        |                           |
-| PowerShell           |                      |                        |                          |                          |                          |                           |
+| net user  |    ○         | N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
+| PowerShell|              |                     |                        |                |                     |                           |
 | Impacket             |                      |                        |                          |                          |                          |                           |
 | CrackMapExec         |                      |                        |                          |                          |                          |                           |
 | rpcclient (Samba)    |                      |                        |                          |                          |                          |                           |
