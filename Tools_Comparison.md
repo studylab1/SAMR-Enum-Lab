@@ -114,6 +114,9 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 The order of operations is based on the sequence in the traffic capture. Duplicates with the same requested permissions are omitted. The accesses marked in bold are not compliant with the protocol specification.
 
 ### "Net User"
+Following commands were executed:
+- `net user /domain`
+- `net user administrator /domain`
 
 | SAMR Operation | Wireshark Label | OpNum | Requested Access Rights (Hex) | Rights Description | Required for Operation? | Compliance with Requested Access |
 |------------------|-----------------|-------|--------------------|-----------------------------|---------------------|--------------------------------|
@@ -137,5 +140,11 @@ The order of operations is based on the sequence in the traffic capture. Duplica
 | `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000304` | `DOMAIN_READ_OTHER_PARAMETERS` (`0x00000004`),<br>`DOMAIN_LIST_ACCOUNTS` (`0x00000100`),<br>`DOMAIN_LOOKUP` (`0x00000200`) |  Yes | Compliant |
 | `SamrEnumerateUsersInDomain` | `EnumDomainUsers` | 13 | Access is not requested | --- | N/A | N/A | 
 
+### "Net Group"
+Following commands were executed:
+- `net group /domain`
+- `net group administrator /domain`
 
-
+| SAMR Operation | Wireshark Label | OpNum | Requested Access Rights (Hex) | Rights Description | Required for Operation? | Compliance with Requested Access |
+|------------------|-----------------|-------|--------------------|-----------------------------|---------------------|-----------------------|
+| `SamrConnect5`   | `Connect5`        |  64   |  |       |                  |                       |
