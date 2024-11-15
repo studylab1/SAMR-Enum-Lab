@@ -40,29 +40,29 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 ## Tool Comparison Results 
 
 ### Evaluation of Tool Comparison Criteria
+> **Note:** The evaluation results in this section are based on cross-forest SAMR requests. If a tool does not support cross-forest requests, the corresponding criteria are marked as `N/A`.
 
-"⚫️" - Supported  
-"○" - Not Supported
 
-| Tool Name |Multi-forest Support|OpNum Coverage| Access Rights Evaluation| Error Handling |Authentication Methods| Access Level Requirements |
-|-----------|--------------|---------------------|------------------------|----------------|---------------------|---------------------------|
-| net user  |    ○         | N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
-| PowerShell|              |                     |                        |                |                     |                           |
-| Impacket             |                      |                        |                          |                          |                          |                           |
-| CrackMapExec         |                      |                        |                          |                          |                          |                           |
-| rpcclient (Samba)    |                      |                        |                          |                          |                          |                           |
-| smbclient (Samba)    |                      |                        |                          |                          |                          |                           |
-| BloodHound           |                      |                        |                          |                          |                          |                           |
-| Nmap (NSE Scripts)   |                      |                        |                          |                          |                          |                           |
-| Enum4linux           |                      |                        |                          |                          |                          |                           |
-| Enum4linux-ng        |                      |                        |                          |                          |                          |                           |
-| Metasploit Framework |                      |                        |                          |                          |                          |                           |
-| PowerSploit          |                      |                        |                          |                          |                          |                           |
-| SAMRi10              |                      |                        |                          |                          |                          |                           |
-| RPC Investigator     |                      |                        |                          |                          |                          |                           |
+| Tool Name |OpNum Coverage| Access Rights Evaluation| Error Handling |Authentication Methods| Access Level Requirements |
+|-----------|---------------------|------------------------|----------------|---------------------|---------------------------|
+| net user  | N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
+| PowerShell|                     |                        |                |                     |                           |
+| Impacket  |                     |                        |                |                     |                           |
+| CrackMapExec         |          |                        |                |                     |                           |
+| rpcclient (Samba)    |                        |                          |                          |                          |                           |
+| smbclient (Samba)    |                        |                          |                          |                          |                           |
+| BloodHound           |                        |                          |                          |                          |                           |
+| Nmap (NSE Scripts)    |                        |                          |                          |                          |                           |
+| Enum4linux            |                        |                          |                          |                          |                           |
+| Enum4linux-ng        |                        |                          |                          |                          |                           |
+| Metasploit Framework |                        |                          |                          |                          |                           |
+| PowerSploit          |                        |                          |                          |                          |                           |
+| SAMRi10              |                        |                          |                          |                          |                           |
+| RPC Investigator     |                        |                          |                          |                          |                           |
 
 
 ### Detailed Evaluation of OpNum Coverage
+> **Note:** The evaluation results in this section are based on cross-forest SAMR requests.  
 
 "⚫️" - Supported  
 "○" - Not Supported
@@ -70,7 +70,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 | Tool \ OpNum         | 1  | 3  | 5  | 6  | 7  | 8  | 11 | 13 | 15 | 16 | 17 | 18 | 34 | 36 | 39 | 40 | 41 | 51 | 56 | 64 |
 |----------------------|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
-| net user             | ○  | ○  |  ○ | ○  | ○  | ○  |  ○ | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
+| "net user", "net group"                  | ○  | ○  |  ○ | ○  | ○  | ○  |  ○ | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | PowerShell           |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | Impacket             |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | CrackMapExec         |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
@@ -142,9 +142,9 @@ Following commands were executed:
 | `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000304` | `DOMAIN_READ_OTHER_PARAMETERS` (`0x00000004`),<br>`DOMAIN_LIST_ACCOUNTS` (`0x00000100`),<br>`DOMAIN_LOOKUP` (`0x00000200`) |  Yes | Compliant |
 | `SamrEnumerateUsersInDomain` | `EnumDomainUsers` | 13 | Access is not requested | --- | N/A | N/A | 
 
-### "Net Group" (to local domain controller)
+### "net group" (to local domain controller)
 
-The `Net group` command was used in the local domain. As with `net user`, SAMR traffic was directed solely from `yws1` to `ydc1`. This section highlights the behavior of SAMR when scoped to a single domain environment.  
+The `net group` command was used in the local domain. As with `net user`, SAMR traffic was directed solely from `yws1` to `ydc1`. This section highlights the behavior of SAMR when scoped to a single domain environment.  
 Following commands were executed:
 - `net group /domain`
 - `net group administrator /domain`
