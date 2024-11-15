@@ -163,4 +163,7 @@ Following commands were executed:
 |  `SamrOpenDomain`  | `OpenDomain`  | 7  |  `0x00000200` | `DOMAIN_LOOKUP` (`0x00000200`) |  Yes |  Compliant |
 |  `SamrLookupNamesInDomain`  | `LookupNma`  | 17  | Access is not requested | N/A | N/A | N/A |
 |  `SamrOpenGroup`  | `OpenGroup`  | 19  | `0x00000001`| `GROUP_READ_INFORMATION` (`0x00000001`) | Yes | Yes |
-
+|  `SamrQueryInformationGroup`  | `QueryGroupInfo`  | Access is not requested | N/A | N/A | N/A |
+|  `SamrOpenGroup`  | `OpenGroup`  | 19  | `0x00000010`| `GROUP_LIST_MEMBERS` (`0x00000010`) | Yes | Yes |
+|  `SamrGetMembersInGroup`  | `QueryGroupMember`  | 25  | Access is not requested | N/A | N/A | N/A |
+| `SamrLookupIdsInDomain` | `LookupRids` | 18 | Access is not requested | N/A |  N/A | N/A |
