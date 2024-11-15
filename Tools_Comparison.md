@@ -15,21 +15,21 @@ This page provides a comparison of tools used for SAMR enumeration in Active Dir
 
 This comparison covers tools used for Active Directory reconnaissance through the SAMR protocol, which retrieves information on users, groups, domains, and other security settings.
 
-## System Configuration and Enumeration vector
-The detailed configuration of the lab is specified on the Lab_Setup page.  
+## System Configuration and Enumeration Vector
+The detailed configuration of the lab is specified on the Lab Setup page.  
 Other aspects to specify are as follows:  
 - **Domain Functional Level**: Windows Server 2016.
 - **Forest Functional Level**: Windows Server 2016.
 
-The lab environment was established with two one-way forest trusts between `domain-y.local` and `domain-z.local`, configured with forest-wide authentication. The SAMR enumeration scan is conducted from workstation `yws1` to `zdc1` domain controller in cases where tools support cross-forest requests and from workstation `yws1` to `ydc1` where they do not.
-The data on the `ydc1` and `zdc1` are populated with BadBlood tool.
+The lab environment was established with two one-way forest trusts between `domain-y.local` and `domain-z.local`, configured with forest-wide authentication. The SAMR enumeration scan was conducted from workstation `yws1` to `zdc1` domain controller in cases where tools supported cross-forest requests and from workstation `yws1` to `ydc1` domain controller where they did not.
+The data on `ydc1` and `zdc1` were populated using the BadBlood tool.
 
 ## Criteria for Tool Evaluation
 
 The following criteria were used to evaluate each tool's SAMR enumeration capabilities:
 
 - **OpNum Coverage**: Lists supported SAMR operation numbers.
-- **Multi-Forest Support**: Indicates if the tool can perform enumeration across domains within a forest trust.
+- **Multi-forest Support**: Indicates if the tool can perform enumeration across domains within a forest trust.
 - **Permissions Compliance**: Specifies the default access permissions required by each tool.
 - **Error Handling**: Describes the tool’s ability to handle restricted permissions or errors.
 - **Authentication Methods**: Details whether NTLM, Kerberos, or both protocols are supported.
@@ -44,7 +44,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 "⚫️" - Supported  
 "○" - Not Supported
 
-| Tool Name |Multi-Forest Support|OpNum Coverage| Access Rights Evaluation| Error Handling |Authentication Methods| Access Level Requirements |
+| Tool Name |Multi-forest Support|OpNum Coverage| Access Rights Evaluation| Error Handling |Authentication Methods| Access Level Requirements |
 |-----------|--------------|---------------------|------------------------|----------------|---------------------|---------------------------|
 | net user  |    ○         | N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
 | PowerShell|              |                     |                        |                |                     |                           |
@@ -62,7 +62,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | RPC Investigator     |                      |                        |                          |                          |                          |                           |
 
 
-### Evaluation of OpNum Coverage in Detail
+### Detailed Evaluation of OpNum Coverage
 
 "⚫️" - Supported  
 "○" - Not Supported
@@ -111,9 +111,11 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 ## Evaluation of "Desired Access" Compliance in Detail
 
-The order of operations is based on the sequence in the traffic capture. Duplicates with the same requested permissions are omitted. The accesses marked in bold are not compliant with the protocol specification.
+The order of operations is based on the sequence in the traffic capture. Duplicate entries with identical requested permissions were omitted. The accesses marked in bold are not compliant with the protocol specification.
 
-### "Net User"
+### "net user" (to local domain controller)
+
+The `net user` command was executed in the local domain, with all SAMR requests sent from `yws1` (workstation) to `ydc1` (domain controller)  
 Following commands were executed:
 - `net user /domain`
 - `net user administrator /domain`
@@ -131,7 +133,7 @@ Following commands were executed:
 |  `SamrQuerySecurityObject`  | `QuerySecurity` | 3 | Access is not requested | --- | N/A | N/A | 
 | `SamrGetGroupsForUser` | `GetGroupForUser`| 39| Access is not requested | --- | N/A | N/A | 
 | `SamrGetAliasMembership`| `GetAliasMembership` | 16 | Access is not requested| --- | N/A | N/A | 
-| `SamrCloseHandle` | Close | 1 | Access is not requested | --- | N/A | N/A | 
+| `SamrCloseHandle` | `Close` | 1 | Access is not requested | --- | N/A | N/A | 
 |  `SamrOpenDomain`  | `OpenDomain`    | 7  |  `0x00000205` | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`),<br> `DOMAIN_READ_OTHER_PARAMETERS` (`0x00000004`),<br> `DOMAIN_LOOKUP` (`0x00000200`)  |  Yes |  Compliant |
 | `SamrQueryInformationDomain` | `QueryDomainInfo` | 8 | Access is not requested | --- | N/A | N/A | 
 | `SamrConnect5`   | `Connect5`        |  64   | `0x00020031` | `SAM_SERVER_CONNECT` (`0x00000001`),<br>`SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`),<br> `SAM_SERVER_LOOKUP_DOMAIN` (`0x00000020`),<br> `READ_CONTROL` (`0x00020000`) | Yes                 | Compliant                       |
@@ -140,7 +142,9 @@ Following commands were executed:
 | `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000304` | `DOMAIN_READ_OTHER_PARAMETERS` (`0x00000004`),<br>`DOMAIN_LIST_ACCOUNTS` (`0x00000100`),<br>`DOMAIN_LOOKUP` (`0x00000200`) |  Yes | Compliant |
 | `SamrEnumerateUsersInDomain` | `EnumDomainUsers` | 13 | Access is not requested | --- | N/A | N/A | 
 
-### "Net Group"
+### "Net Group" (to local domain controller)
+
+The `Net group` command was used in the local domain. As with `net user`, SAMR traffic was directed solely from `yws1` to `ydc1`. This section highlights the behavior of SAMR when scoped to a single domain environment.  
 Following commands were executed:
 - `net group /domain`
 - `net group administrator /domain`
@@ -153,4 +157,4 @@ Following commands were executed:
 |  `SamrOpenDomain`  | `OpenDomain`  | 7  |  `0x00000304` | `DOMAIN_WRITE_OTHER_PARAMETERS` (`0x00000008`),<br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`),<br> `DOMAIN_LOOKUP` (`0x00000200`) |  Yes |  Compliant |
 | `SamrQueryInformationDomain` | `QueryDomainInfo` | 8 | Access is not requested | --- | N/A | N/A | 
 | `SamrQueryDisplayInformation2` | `QueryDisplayInfo2` | 48 | Access is not requested | --- | N/A | N/A | 
-| `SamrCloseHandle` | Close | 1 | Access is not requested | --- | N/A | N/A | 
+| `SamrCloseHandle` | `Close` | 1 | Access is not requested | --- | N/A | N/A | 
