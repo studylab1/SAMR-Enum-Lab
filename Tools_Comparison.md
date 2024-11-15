@@ -120,7 +120,7 @@ Following commands were executed:
 
 | SAMR Operation | Wireshark Label | OpNum | Requested Access Rights (Hex) | Rights Description | Required for Operation? | Compliance with Requested Access |
 |------------------|-----------------|-------|--------------------|-----------------------------|---------------------|--------------------------------|
-| `SamrConnect5`   | `Connect5`        |  64   | `0x00000030` | `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`), `SAM_SERVER_LOOKUP_DOMAIN` (`0x00000020`)             | Yes                 | Compliant                       |
+| `SamrConnect5`   | `Connect5`        |  64   | `0x00000030` | `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`), `SAM_SERVER_LOOKUP_DOMAIN` (`0x00000020`)             | Yes                 | Compliant |
 |  `SamrEnumerateDomainsInSamServer` | `EnumDomains`   | 6  | Access is not requested  | --- | N/A  | N/A  |
 |  `SamrLookupDomainInSamServer`     | `LookupDomain`  | 5  | Access is not requested  | --- | N/A  | N/A  |
 |  `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000200` | `DOMAIN_LOOKUP`  |  Yes |  Compliant |
@@ -146,5 +146,11 @@ Following commands were executed:
 - `net group administrator /domain`
 
 | SAMR Operation | Wireshark Label | OpNum | Requested Access Rights (Hex) | Rights Description | Required for Operation? | Compliance with Requested Access |
-|------------------|-----------------|-------|--------------------|-----------------------------|---------------------|-----------------------|
-| `SamrConnect5`   | `Connect5`        |  64   |  |       |                  |                       |
+|------------------|---------------|------|--------------|-----------------------------|---------------------|-----------------------|
+| `SamrConnect5`   | `Connect5`    |  64  | `0x00000030` | `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`), `SAM_SERVER_LOOKUP_DOMAIN` (`0x00000020`)   | Yes   | Compliant  |
+|  `SamrEnumerateDomainsInSamServer` | `EnumDomains`   | 6  | Access is not requested  | --- | N/A  | N/A  |
+|  `SamrLookupDomainInSamServer`     | `LookupDomain`  | 5  | Access is not requested  | --- | N/A  | N/A  |
+|  `SamrOpenDomain`  | `OpenDomain`  | 7  |  `0x00000304` | `DOMAIN_WRITE_OTHER_PARAMETERS` (`0x00000008`),<br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`),<br> `DOMAIN_LOOKUP` (`0x00000200`) |  Yes |  Compliant |
+| `SamrQueryInformationDomain` | `QueryDomainInfo` | 8 | Access is not requested | --- | N/A | N/A | 
+| `SamrQueryDisplayInformation2` | `QueryDisplayInfo2` | 48 | Access is not requested | --- | N/A | N/A | 
+| `SamrCloseHandle` | Close | 1 | Access is not requested | --- | N/A | N/A | 
