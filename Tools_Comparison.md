@@ -4,11 +4,16 @@ This page provides a comparison of tools used for SAMR enumeration in Active Dir
 
 ## Table of Contents
 1. [Introduction](#introduction)
-2. [Criteria for Tool Evaluation](#criteria-for-tool-evaluation)
-3. [Tool Comparison Table](#tool-comparison-table)
-4. [Detailed Tool Descriptions](#detailed-tool-descriptions)
-5. [Lab Setup](#lab-setup)
-
+2. [System Configuration and Enumeration Vector](#system-configuration-and-enumeration-vector)
+3. [Tool Versions and Specifications](#tool-versions-and-specifications)
+4. [Criteria for Tool Evaluation](#criteria-for-tool-evaluation)
+5. [Tool Comparison Results](#tool-comparison-results)
+   - [Evaluation of Tool Comparison Criteria](#evaluation-of-tool-comparison-criteria)
+   - [Detailed Evaluation of OpNum Coverage](#detailed-evaluation-of-opnum-coverage)
+6. [OpNum Descriptions](#opnum-descriptions)
+7. [Evaluation of "Desired Access" Compliance in Detail](#evaluation-of-desired-access-compliance-in-detail)
+   - ["net user" (to local domain controller)](#net-user-to-local-domain-controller)
+   - ["net group" (to local domain controller)](#net-group-to-local-domain-controller)
 ---
 
 ## Introduction
@@ -23,6 +28,28 @@ Other aspects to specify are as follows:
 
 The lab environment was established with two one-way forest trusts between `domain-y.local` and `domain-z.local`, configured with forest-wide authentication. The SAMR enumeration scan was conducted from workstation `yws1` to `zdc1` domain controller in cases where tools supported cross-forest requests and from workstation `yws1` to `ydc1` domain controller where they did not.
 The data on `ydc1` and `zdc1` were populated using the BadBlood tool.
+
+## Tool Versions and Specifications
+
+The following table provides version numbers for the tools evaluated during this research.
+
+| Tool Name           | Version       | Additional Notes                    |
+|---------------------|---------------|-------------------------------------|
+| net user            | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
+| net group           | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
+| PowerShell          |            |  |
+| Impacket            |         |          |
+| CrackMapExec        |          |  |
+| rpcclient (Samba)   |         |          |
+| smbclient (Samba)   |         |         |
+| BloodHound          |          |          |
+| Nmap (NSE Scripts)  |           |               |
+| Enum4linux          |          |    |
+| Enum4linux-ng       |          |      |
+| Metasploit Framework|     |                  |
+| PowerSploit         |          |             |
+| SAMRi10             |          |  |
+| RPC Investigator    |          |     |
 
 ## Criteria for Tool Evaluation
 
