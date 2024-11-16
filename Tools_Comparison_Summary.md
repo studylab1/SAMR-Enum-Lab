@@ -11,9 +11,7 @@ This page provides a comparison of tools used for SAMR enumeration in Active Dir
    - [Evaluation of Tool Comparison Criteria](#evaluation-of-tool-comparison-criteria)
    - [Detailed Evaluation of OpNum Coverage](#detailed-evaluation-of-opnum-coverage)
 6. [OpNum Descriptions](#opnum-descriptions)
-7. [Evaluation of "Desired Access" Compliance in Detail](#evaluation-of-desired-access-compliance-in-detail)
-   - ["net user" (to local domain controller)](#net-user-to-local-domain-controller)
-   - ["net group" (to local domain controller)](#net-group-to-local-domain-controller)
+
 ---
 
 ## Introduction
@@ -37,7 +35,7 @@ The following table provides version numbers for the tools evaluated during this
 |---------------------|---------------|-------------------------------------|
 | net user            | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
 | net group           | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
-| PowerShell          |            |  |
+| PowerShell ActiveDirectory Module         | 1.0.1.0           | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317) |
 | Impacket            |         |          |
 | CrackMapExec        |          |  |
 | rpcclient (Samba)   |         |          |
@@ -73,7 +71,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | Tool Name |OpNum Coverage| Access Rights Evaluation| Error Handling |Authentication Methods| Access Level Requirements |
 |-----------|---------------------|------------------------|----------------|---------------------|---------------------------|
 | net user  | N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
-| PowerShell| N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
+| PowerShell ActiveDirectory Module | N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
 | Impacket  |                     |                        |                |                     |                           |
 | CrackMapExec         |          |                        |                |                     |                           |
 | rpcclient (Samba)    |                        |                          |                          |                          |                           |
@@ -98,7 +96,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | Tool \ OpNum         | 1  | 3  | 5  | 6  | 7  | 8  | 11 | 13 | 15 | 16 | 17 | 18 | 34 | 36 | 39 | 40 | 41 | 51 | 56 | 64 |
 |----------------------|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
 | "net user", "net group"                  | ○  | ○  |  ○ | ○  | ○  | ○  |  ○ | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
-| PowerShell                           | ○  | ○  |  ○ | ○  | ○  | ○  |  ○ | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
+| PowerShell ActiveDirectory Module                            | ○  | ○  |  ○ | ○  | ○  | ○  |  ○ | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | Impacket             |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | CrackMapExec         |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | rpcclient (Samba)    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
@@ -136,61 +134,3 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 - **OpNum 56**: `SamrGetDomainPasswordInformation` – Retrieves password policy information for the domain.
 - **OpNum 64**: `SamrConnect5` – Establishes a connection to the SAM server for domain enumeration and lookup. (Mandatory for SAMR communication?)
 
-## Evaluation of "Desired Access" Compliance in Detail
-
-The order of operations is based on the sequence in the traffic capture. Duplicate entries with identical requested permissions were omitted. The accesses marked in bold are not compliant with the protocol specification.
-
-### "net user" (to local domain controller)
-
-The `net user` command was executed in the local domain, with all SAMR requests sent from `yws1` (workstation) to `ydc1` (domain controller)  
-Following commands were executed:
-- `net user /domain`
-- `net user administrator /domain`
-
-N/A - Not Applicable
-
-| SAMR Operation | Wireshark Label | OpNum | Requested Access Rights (Hex) | Rights Description | Required for Operation? | Compliance with Requested Access |
-|------------------|-----------------|-------|--------------------|-----------------------------|---------------------|--------------------------------|
-| `SamrConnect5`   | `Connect5`        |  64   | `0x00000030` | `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`), `SAM_SERVER_LOOKUP_DOMAIN` (`0x00000020`)             | Yes                 | Compliant |
-|  `SamrEnumerateDomainsInSamServer` | `EnumDomains`   | 6  | Access is not requested  | N/A | N/A  | N/A  |
-|  `SamrLookupDomainInSamServer`     | `LookupDomain`  | 5  | Access is not requested  | N/A | N/A  | N/A  |
-|  `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000200` | `DOMAIN_LOOKUP`  |  Yes |  Compliant |
-|  `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000280` | **`DOMAIN_GET_ALIAS_MEMBERSHIP` (`0x00000080`)**, `DOMAIN_LOOKUP` (`0x00000200`) |  No | Not Compliant |
-|  `SamrLookupNamesInDomain`         | `LookupNames`   | 17  |  Access is not requested | N/A  |  N/A | N/A |
-|  `SamrOpenUser`                    | `OpenUser`      | 34  |  `0x0002011b` | `USER_READ_GENERAL` (`0x00000001`),<br> `USER_READ_PREFERENCES` (`0x00000002`),<br> `USER_READ_LOGON` (`0x00000008`),<br> `USER_READ_ACCOUNT` (`0x00000010`),<br> `USER_LIST_GROUPS` (`0x00000100`),<br> `READ_CONTROL` (`0x00020000`) |  Compliant | Compliant |
-|  `SamrQueryInformationUser`                    | `QueryUserInfo`      | 36  | Access is not requested | N/A |  N/A | N/A |
-|  `SamrQuerySecurityObject`  | `QuerySecurity` | 3 | Access is not requested | N/A | N/A | N/A | 
-| `SamrGetGroupsForUser` | `GetGroupForUser`| 39| Access is not requested | N/A | N/A | N/A | 
-| `SamrGetAliasMembership`| `GetAliasMembership` | 16 | Access is not requested| N/A | N/A | N/A | 
-| `SamrCloseHandle` | `Close` | 1 | Access is not requested | N/A | N/A | N/A | 
-|  `SamrOpenDomain`  | `OpenDomain`    | 7  |  `0x00000205` | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`),<br> `DOMAIN_READ_OTHER_PARAMETERS` (`0x00000004`),<br> `DOMAIN_LOOKUP` (`0x00000200`)  |  Yes |  Compliant |
-| `SamrQueryInformationDomain` | `QueryDomainInfo` | 8 | Access is not requested | N/A | N/A | N/A | 
-| `SamrConnect5`   | `Connect5`        |  64   | `0x00020031` | `SAM_SERVER_CONNECT` (`0x00000001`),<br>`SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`),<br> `SAM_SERVER_LOOKUP_DOMAIN` (`0x00000020`),<br> `READ_CONTROL` (`0x00020000`) | Yes                 | Compliant                       |
-|  `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00020385` | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`),<br> `DOMAIN_READ_OTHER_PARAMETERS` (`0x00000004`),<br> **`DOMAIN_GET_ALIAS_MEMBERSHIP` (`0x00000080`)**, <br>`DOMAIN_LIST_ACCOUNTS` (`0x00000100`),<br> `DOMAIN_LOOKUP` (`0x00000200`), <br>`READ_CONTROL` (`0x00020000`) |  No | Not Compliant |
-| `SamrLookupIdsInDomain` | `LookupRids` | 18 | Access is not requested | N/A |  N/A | N/A |
-| `SamrOpenDomain`                  | `OpenDomain`    | 7  |  `0x00000304` | `DOMAIN_READ_OTHER_PARAMETERS` (`0x00000004`),<br>`DOMAIN_LIST_ACCOUNTS` (`0x00000100`),<br>`DOMAIN_LOOKUP` (`0x00000200`) |  Yes | Compliant |
-| `SamrEnumerateUsersInDomain` | `EnumDomainUsers` | 13 | Access is not requested | N/A | N/A | N/A | 
-
-### "net group" (to local domain controller)
-
-The `net group` command was used in the local domain. As with `net user`, SAMR traffic was directed solely from `yws1` to `ydc1`. This section highlights the behavior of SAMR when scoped to a single domain environment.  
-Following commands were executed:
-- `net group /domain`
-- `net group administrator /domain`
-
-| SAMR Operation | Wireshark Label | OpNum | Requested Access Rights (Hex) | Rights Description | Required for Operation? | Compliance with Requested Access |
-|------------------|---------------|------|--------------|-----------------------------|---------------------|-----------------------|
-| `SamrConnect5`   | `Connect5`    |  64  | `0x00000030` | `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`), `SAM_SERVER_LOOKUP_DOMAIN` (`0x00000020`)   | Yes   | Compliant  |
-|  `SamrEnumerateDomainsInSamServer` | `EnumDomains`   | 6  | Access is not requested  | N/A | N/A  | N/A  |
-|  `SamrLookupDomainInSamServer`     | `LookupDomain`  | 5  | Access is not requested  | N/A | N/A  | N/A  |
-|  `SamrOpenDomain`  | `OpenDomain`  | 7  |  `0x00000304` | `DOMAIN_WRITE_OTHER_PARAMETERS` (`0x00000008`),<br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`),<br> `DOMAIN_LOOKUP` (`0x00000200`) |  Yes |  Compliant |
-| `SamrQueryInformationDomain` | `QueryDomainInfo` | 8 | Access is not requested | N/A | N/A | N/A | 
-| `SamrQueryDisplayInformation2` | `QueryDisplayInfo2` | 48 | Access is not requested | N/A | N/A | N/A | 
-| `SamrCloseHandle` | `Close` | 1 | Access is not requested | N/A | N/A | N/A | 
-|  `SamrOpenDomain`  | `OpenDomain`  | 7  |  `0x00000200` | `DOMAIN_LOOKUP` (`0x00000200`) |  Yes |  Compliant |
-|  `SamrLookupNamesInDomain`  | `LookupNma`  | 17  | Access is not requested | N/A | N/A | N/A |
-|  `SamrOpenGroup`  | `OpenGroup`  | 19  | `0x00000001`| `GROUP_READ_INFORMATION` (`0x00000001`) | Yes | Yes |
-|  `SamrQueryInformationGroup`  | `QueryGroupInfo`  | Access is not requested | N/A | N/A | N/A |
-|  `SamrOpenGroup`  | `OpenGroup`  | 19  | `0x00000010`| `GROUP_LIST_MEMBERS` (`0x00000010`) | Yes | Yes |
-|  `SamrGetMembersInGroup`  | `QueryGroupMember`  | 25  | Access is not requested | N/A | N/A | N/A |
-| `SamrLookupIdsInDomain` | `LookupRids` | 18 | Access is not requested | N/A |  N/A | N/A |
