@@ -17,8 +17,6 @@ The cmdlets and parameters used during testing are listed below. These commands 
 
 ### Commands Executed
 
-```plaintext
-
 # List of Executed Commands with Parameters
 
 1. **Get-ADAccountAuthorizationGroup**
@@ -218,7 +216,7 @@ The cmdlets and parameters used during testing are listed below. These commands 
     - `-Server "zdc1.domain-z.local"`
     - `-Credential $Cred`
 
-42. ** Get-ADGroupMember**
+42. **Get-ADGroupMember**
     - `-Identity "Domain Admins"`
     - `-Server "zdc1.domain-z.local"`
     - `-Credential $Cred`
