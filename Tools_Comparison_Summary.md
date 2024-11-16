@@ -67,13 +67,13 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 ## Tool Comparison Results 
 
 ### Evaluation of Tool Comparison Criteria
-> **Note:** The evaluation results in this section are based on cross-forest SAMR requests. If a tool does not support cross-forest requests, the corresponding criteria are marked as `N/A` (Not Applicable).
+> **Note:** The evaluation results in this section are based on cross-forest SAMR requests. If a tool does not support cross-forest requests or uses a different protocol for cross-forest requests, the corresponding criteria are marked as N/A (Not Applicable).
 
 
 | Tool Name |OpNum Coverage| Access Rights Evaluation| Error Handling |Authentication Methods| Access Level Requirements |
 |-----------|---------------------|------------------------|----------------|---------------------|---------------------------|
 | net user  | N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
-| PowerShell|                     |                        |                |                     |                           |
+| PowerShell| N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
 | Impacket  |                     |                        |                |                     |                           |
 | CrackMapExec         |          |                        |                |                     |                           |
 | rpcclient (Samba)    |                        |                          |                          |                          |                           |
@@ -98,7 +98,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | Tool \ OpNum         | 1  | 3  | 5  | 6  | 7  | 8  | 11 | 13 | 15 | 16 | 17 | 18 | 34 | 36 | 39 | 40 | 41 | 51 | 56 | 64 |
 |----------------------|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
 | "net user", "net group"                  | ○  | ○  |  ○ | ○  | ○  | ○  |  ○ | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
-| PowerShell           |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
+| PowerShell                           | ○  | ○  |  ○ | ○  | ○  | ○  |  ○ | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | Impacket             |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | CrackMapExec         |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | rpcclient (Samba)    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
