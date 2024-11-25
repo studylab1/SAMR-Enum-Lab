@@ -35,16 +35,16 @@ The following table provides version numbers for the tools evaluated during this
 |---------------------|---------------|-------------------------------------|
 | net user            | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
 | net group           | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
-| PowerShell ActiveDirectory Module         | 1.0.1.0           | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317) |
+| PowerShell         | 1.0.1.0           | ActiveDirectory Module. Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317) |
 | Impacket            | 0.12.0    |          |
 | CrackMapExec        |          |  |
-| rpcclient (Samba)   |         |          |
-| smbclient (Samba)   |         |         |
+| rpcclient    |         | Part of the Samba suite          |
+| smbclient    |         | Part of the Samba suite        |
 | BloodHound          |          |          |
-| Nmap (NSE Scripts)  |           |               |
+| Nmap   |           | Part of the Nmap suite              |
 | Enum4linux          |          |    |
 | Enum4linux-ng       |          |      |
-| Metasploit Framework|     |                  |
+| Metasploit|     |  Part of the Metasploit Framework                |
 | PowerSploit         |          |             |
 | SAMRi10             |          |  |
 | RPC Investigator    |          |     |
@@ -65,47 +65,50 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 ## Tool Comparison Results 
 
 ### Evaluation of Tool Comparison Criteria
-> **Note:** The evaluation results in this section are based on cross-forest SAMR requests. If a tool does not support cross-forest requests or uses a different protocol for cross-forest requests, the corresponding criteria are marked as N/A (Not Applicable).
+> **Note:** The evaluation results focus on analyzing tools’ support for cross-forest SAMR requests. If a tool does not support multi-forest SAMR requests or uses a different protocol for such requests, other evaluation criteria are not assessed, and the corresponding values are marked as N/A (Not Applicable).
 
 
-| Tool Name |OpNum Coverage| Excessive Permission Detection| Data Parsing and Accuracy |Supported Authentication Types| Access Level Requirements |
-|-----------|---------------------|------------------------|----------------|---------------------|---------------------------|
-| net user  | N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
-| PowerShell| N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
-| Impacket  |                     |                        |                |                     |                           |
-| CrackMapExec         |          |                        |                |                     |                           |
-| rpcclient (Samba)    |                        |                          |                          |                          |                           |
-| smbclient (Samba)    |                        |                          |                          |                          |                           |
-| BloodHound           |                        |                          |                          |                          |                           |
-| Nmap (NSE Scripts)    |                        |                          |                          |                          |                           |
-| Enum4linux            |                        |                          |                          |                          |                           |
-| Enum4linux-ng        |                        |                          |                          |                          |                           |
-| Metasploit Framework |                        |                          |                          |                          |                           |
-| PowerSploit          |                        |                          |                          |                          |                           |
-| SAMRi10              |                        |                          |                          |                          |                           |
-| RPC Investigator     |                        |                          |                          |                          |                           |
+---
 
+| Tool Name             | Multi-Forest Request Support | OpNum Coverage | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
+|-----------------------|-----------------------------|----------------|-------------------------------|---------------------------|-------------------------------|---------------------------|
+| net user              |  No                           | N/A            | N/A                           | N/A                       | N/A                           | N/A                       |
+| PowerShell            |  Yes                         | N/A            | N/A                           | N/A                       | N/A                           | N/A                       |
+| Impacket              |                             |                |                               |                           |                               |                           |
+| CrackMapExec          |                             |                |                               |                           |                               |                           |
+| rpcclient      |                             |                |                               |                           |                               |                           |
+| smbclient     |                             |                |                               |                           |                               |                           |
+| BloodHound            |                             |                |                               |                           |                               |                           |
+| Nmap   |                             |                |                               |                           |                               |                           |
+| Enum4linux            |                             |                |                               |                           |                               |                           |
+| Enum4linux-ng         |                             |                |                               |                           |                               |                           |
+| Metasploit   |                             |                |                               |                           |                               |                           |
+| PowerSploit           |                             |                |                               |                           |                               |                           |
+| SAMRi10               |                             |                |                               |                           |                               |                           |
+| RPC Investigator      |                             |                |                               |                           |                               |                           |
+
+---
 
 ### Detailed Evaluation of OpNum Coverage
 > **Note:** The evaluation results in this section are based on cross-forest SAMR requests.  
 
-"⚫️" - Supported  
-"○" - Not Supported
+⚫️ - Supported  
+○ - Not Supported
 
 
 | Tool \ OpNum         | 1  | 3  | 5  | 6  | 7  | 8  | 11 | 13 | 15 | 16 | 17 | 18 | 19 | 25 | 34 | 36 | 39 | 40 | 41 | 51 | 56 | 64 |
 |----------------------|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
 | "net user", "net group"                  | ○  | ○  |  ○ | ○  | ○  | ○  |  ○ | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
-| PowerShell ActiveDirectory Module        | ○  | ○  |  ○ | ○  | ○  | ○  |  ○ | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
+| PowerShell         | ○  | ○  |  ○ | ○  | ○  | ○  |  ○ | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | Impacket             |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | CrackMapExec         |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| rpcclient (Samba)    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| smbclient (Samba)    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
+| rpcclient    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
+| smbclient    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | BloodHound           |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| Nmap (NSE Scripts)   |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
+| Nmap    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | Enum4linux           |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | Enum4linux-ng        |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| Metasploit Framework |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
+| Metasploit  |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | PowerSploit          |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | SAMRi10              |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | RPC Investigator     |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
@@ -115,16 +118,16 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 - **OpNum 1**: `SamrCloseHandle` – Closes an open handle to a SAM object, releasing the associated resources. 
 - **OpNum 3**: `SamrQuerySecurityObject` – Retrieves security information for a specified SAM object, such as permissions and access control details. 
-- **OpNum 5**: `SamrLookupDomainInSamServer` – Resolves a domain name to its corresponding SID within the SAM server. (Mandatory for SAMR communication?) - MISSING IN THE TABLE
-- **OpNum 6**: `SamrEnumerateDomainsInSamServer` – Lists all domains managed by the SAM server. (Mandatory for SAMR communication?)
+- **OpNum 5**: `SamrLookupDomainInSamServer` – Resolves a domain name to its corresponding SID within the SAM server.
+- **OpNum 6**: `SamrEnumerateDomainsInSamServer` – Lists all domains managed by the SAM server.
 - **OpNum 7**: `SamrOpenDomain` – Converts a list of account or domain names within a domain to their corresponding SIDs
 - **OpNum 8**: `SamrQueryInformationDomain` – Retrieves specific information about a domain, such as security policies or account statistics, based on the requested information level.  
-- **OpNum 11**: `SamrEnumerateGroupsInDomain` – Retrieves a list of groups within a specific domain. (Mandatory for SAMR communication?)
-- **OpNum 13**: `SamrEnumerateUsersInDomain` – Retrieves user accounts within a specific domain. (Mandatory for SAMR communication?)
+- **OpNum 11**: `SamrEnumerateGroupsInDomain` – Retrieves a list of groups within a specific domain.
+- **OpNum 13**: `SamrEnumerateUsersInDomain` – Retrieves user accounts within a specific domain.
 - **OpNum 15**: `SamrEnumerateAliasesInDomain` – Lists alias groups within a domain.
-- **OpNum 16**: `SamrGetAliasMembership` – Shows alias memberships for a specific user or SID. (Mandatory for SAMR communication?)
-- **OpNum 17**: `SamrLookupNamesInDomain` – Converts account names into SIDs within a domain. (Mandatory for SAMR communication?)
-- **OpNum 18**: `SamrLookupIdsInDomain` – Maps SIDs back to account names. (Mandatory for SAMR communication?)
+- **OpNum 16**: `SamrGetAliasMembership` – Shows alias memberships for a specific user or SID.
+- **OpNum 17**: `SamrLookupNamesInDomain` – Converts account names into SIDs within a domain.
+- **OpNum 18**: `SamrLookupIdsInDomain` – Maps SIDs back to account names.
 - **OpNum 19**: `SamrOpenGroup` – Used to open a handle to a specific group, enabling operations on that group object.
 - **OpNum 25**: `SamrGetMembersInGroup` – Retrieves the list of members for a given group, supporting group enumeration.
 - **OpNum 34**: `SamrOpenUser` – Opens a handle to a specific user account within a domain, allowing for further operations on the user object.
@@ -134,7 +137,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 - **OpNum 41**: `SamrGetDisplayEnumerationIndex` – Retrieves the display index for paginated enumerations.
 - **OpNum 51**: `SamrQueryDisplayInformation3` – Enables detailed and filtered queries for large-scale user, group, or machine account enumeration.
 - **OpNum 56**: `SamrGetDomainPasswordInformation` – Retrieves password policy information for the domain.
-- **OpNum 64**: `SamrConnect5` – Establishes a connection to the SAM server for domain enumeration and lookup. (Mandatory for SAMR communication?)
+- **OpNum 64**: `SamrConnect5` – Establishes a connection to the SAM server for domain enumeration and lookup. Typically required to establish a connection for SAMR communication.
 
 
 ### Attribute Parsing Completeness and Accuracy
