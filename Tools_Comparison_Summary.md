@@ -111,7 +111,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | RPC Investigator     |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 
 
-### OpNum Descriptions
+#### OpNum Descriptions
 
 - **OpNum 1**: `SamrCloseHandle` – Closes an open handle to a SAM object, releasing the associated resources. 
 - **OpNum 3**: `SamrQuerySecurityObject` – Retrieves security information for a specified SAM object, such as permissions and access control details. 
@@ -133,4 +133,12 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 - **OpNum 51**: `SamrQueryDisplayInformation3` – Enables detailed and filtered queries for large-scale user, group, or machine account enumeration.
 - **OpNum 56**: `SamrGetDomainPasswordInformation` – Retrieves password policy information for the domain.
 - **OpNum 64**: `SamrConnect5` – Establishes a connection to the SAM server for domain enumeration and lookup. (Mandatory for SAMR communication?)
+
+
+### Attribute Parsing Completeness and Accuracy
+
+This subsection evaluates the ability of tools to parse and display data attributes retrieved through SAMR operations. The analysis includes the completeness of the attributes retrieved for each SAMR operation and the accuracy of the values compared to expected results. Tools are assessed for handling expected data types, edge cases, and inconsistencies.
+
+| **OpNum** | **Attribute** | **Expected Data Type**  | **Completeness** | **Accuracy** | **Remarks**   |
+|-----------|---------------|-------------------------|------------------|--------------|---------------|
 
