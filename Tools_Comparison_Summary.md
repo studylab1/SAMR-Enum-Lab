@@ -1,6 +1,6 @@
 # SAMR Enumeration Tools Comparison
 
-This page provides a comparison of tools used for SAMR enumeration in Active Directory environments. Each tool's specifications, supported SAMR operations (OpNums), compatibility, and limitations are documented. This data was collected to show how different tools access, retrieve, and handle SAMR data, including in multi-forest configurations.
+This page provides a comparison of tools used for SAMR enumeration in Active Directory environments. Each tool's specifications, supported SAMR operations (OpNums), compatibility, and limitations are documented. This data was collected to show how different tools access, retrieve, and handle SAMR data, including in cross-forest configurations.
 
 ## Table of Contents
 1. [Introduction](#introduction)
@@ -54,7 +54,7 @@ The following table provides version numbers for the tools evaluated during this
 The following criteria were used to evaluate each tool's SAMR enumeration capabilities:
 
 - **OpNum Coverage**: Lists supported SAMR operation numbers.
-- **Multi-forest Support**: Indicates if the tool can perform enumeration across domains within a forest trust.
+- **Cross-forest Support**: Indicates if the tool can perform enumeration across domains within a forest trust.
 - **Permissions Compliance**: Specifies the default access permissions required by each tool.
 - **Error Handling**: Describes the tool’s ability to handle restricted permissions or errors.
 - **Authentication Methods**: Details whether NTLM, Kerberos, or both protocols are supported.
@@ -65,12 +65,12 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 ## Tool Comparison Results 
 
 ### Evaluation of Tool Comparison Criteria
-> **Note:** The evaluation results focus on analyzing tools’ support for cross-forest SAMR requests. If a tool does not support multi-forest SAMR requests or uses a different protocol for such requests, other evaluation criteria are not assessed, and the corresponding values are marked as N/A (Not Applicable).
+> **Note:** The evaluation results focus on analyzing tools’ support for cross-forest SAMR requests. If a tool does not support cross-forest SAMR requests or uses a different protocol for such requests, other evaluation criteria are not assessed, and the corresponding values are marked as N/A (Not Applicable).
 
 
 ---
 
-| Tool Name             | Multi-Forest Request Support | OpNum Coverage | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
+| Tool Name             | Cross-Forest Request Support | OpNum Coverage | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
 |-----------------------|-----------------------------|----------------|-------------------------------|---------------------------|-------------------------------|---------------------------|
 | net user              |  No                           | N/A            | N/A                           | N/A                       | N/A                           | N/A                       |
 | PowerShell            |  Yes                         | N/A            | N/A                           | N/A                       | N/A                           | N/A                       |
