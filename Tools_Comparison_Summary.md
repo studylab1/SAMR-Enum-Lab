@@ -68,10 +68,10 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 > **Note:** The evaluation results in this section are based on cross-forest SAMR requests. If a tool does not support cross-forest requests or uses a different protocol for cross-forest requests, the corresponding criteria are marked as N/A (Not Applicable).
 
 
-| Tool Name |OpNum Coverage| Access Rights Evaluation| Error Handling |Authentication Methods| Access Level Requirements |
+| Tool Name |OpNum Coverage| Excessive Permission Detection| Data Parsing and Accuracy |Supported Authentication Types| Access Level Requirements |
 |-----------|---------------------|------------------------|----------------|---------------------|---------------------------|
 | net user  | N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
-| PowerShell ActiveDirectory Module | N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
+| PowerShell| N/A                 | N/A                    |  N/A           |  N/A                | N/A                       |
 | Impacket  |                     |                        |                |                     |                           |
 | CrackMapExec         |          |                        |                |                     |                           |
 | rpcclient (Samba)    |                        |                          |                          |                          |                           |
