@@ -13,4 +13,7 @@ This page offers downloadable resources, including traffic capture files, script
 | `PowerShell` **ADD LINK TO SCRIPT**  |        | 6.8 MB      | Traffic Capture | `powershell_ad.ps1` |  Executed **ADD LINK** script with 42 ActiveDirectory cmdlets  |
 | `PowerShell` |        | 6.4 KB      | Script | `powershell_ad.ps1` |  The script contains 42 ActiveDirectory cmdlets which are related to enumeration  |
 | `Impacket samrdump.py` |        | 119 KB      | Traffic Capture | `python.exe samrdump.py domain-y/enum:LabAdm1!@zdc1.domain-z.local` |    |
+| `Impacket net.py` |        |       | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local user` |    |
+
+
 
