@@ -36,7 +36,7 @@ The following table provides version numbers for the tools evaluated during this
 | net user            | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
 | net group           | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
 | PowerShell         | 1.0.1.0           | ActiveDirectory Module. Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317) |
-| Impacket            | 0.12.0    |          |
+| Impacket            | 0.12.0    | For this research, only samrdump.py and net.py from the Impacket suite were used.      |
 | CrackMapExec        |          |  |
 | rpcclient    |         | Part of the Samba suite          |
 | smbclient    |         | Part of the Samba suite        |
@@ -74,18 +74,18 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 |-----------------------|-----------------------------|----------------|-------------------------------|---------------------------|-------------------------------|---------------------------|
 | net user              |  No                           | N/A            | N/A                           | N/A                       | N/A                           | N/A                       |
 | PowerShell            |  Yes                         | N/A            | N/A                           | N/A                       | N/A                           | N/A                       |
-| Impacket              |                             |                |                               |                           |                               |                           |
-| CrackMapExec          |                             |                |                               |                           |                               |                           |
+| Impacket              |  Yes                         |  Moderate      |  Yes                           |                           |   NTLM and Kerberos           | Standard Access    |
+| CrackMapExec          |                             |                |                               |                           |                               |                      |
 | rpcclient      |                             |                |                               |                           |                               |                           |
 | smbclient     |                             |                |                               |                           |                               |                           |
-| BloodHound            |                             |                |                               |                           |                               |                           |
+| BloodHound            |                             |                |                               |                           |                               |                    |
 | Nmap   |                             |                |                               |                           |                               |                           |
-| Enum4linux            |                             |                |                               |                           |                               |                           |
-| Enum4linux-ng         |                             |                |                               |                           |                               |                           |
+| Enum4linux            |                             |                |                               |                           |                               |                     |
+| Enum4linux-ng         |                             |                |                               |                           |                               |                      |
 | Metasploit   |                             |                |                               |                           |                               |                           |
-| PowerSploit           |                             |                |                               |                           |                               |                           |
-| SAMRi10               |                             |                |                               |                           |                               |                           |
-| RPC Investigator      |                             |                |                               |                           |                               |                           |
+| PowerSploit           |                             |                |                               |                           |                               |                        |
+| SAMRi10               |                             |                |                               |                           |                               |                        |
+| RPC Investigator      |                             |                |                               |                           |                               |                        |
 
 ---
 
@@ -114,7 +114,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | RPC Investigator     |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 
 #### OpNum Descriptions
-
+- **OpNum 0**: `SamrConnect` – Establishes an initial connection to the SAM server, allowing subsequent operations to be performed.
 - **OpNum 1**: `SamrCloseHandle` – Closes an open handle to a SAM object, releasing the associated resources. 
 - **OpNum 3**: `SamrQuerySecurityObject` – Retrieves security information for a specified SAM object, such as permissions and access control details. 
 - **OpNum 5**: `SamrLookupDomainInSamServer` – Resolves a domain name to its corresponding SID within the SAM server.
@@ -129,14 +129,18 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 - **OpNum 18**: `SamrLookupIdsInDomain` – Maps SIDs back to account names.
 - **OpNum 19**: `SamrOpenGroup` – Used to open a handle to a specific group, enabling operations on that group object.
 - **OpNum 25**: `SamrGetMembersInGroup` – Retrieves the list of members for a given group, supporting group enumeration.
+- **OpNum 27**: `SamrOpenAlias` – Opens a handle to a specific alias (local group), enabling operations on that alias object.
+- **OpNum 33**: `SamrGetMembersInAlias` – Retrieves a list of members for a specified alias (local group).
 - **OpNum 34**: `SamrOpenUser` – Opens a handle to a specific user account within a domain, allowing for further operations on the user object.
 - **OpNum 36**: `SamrQueryInformationUser` – Retrieves detailed information on a specific user account.
 - **OpNum 39**: `SamrGetGroupsForUser` – Lists all group memberships for a specified user.
 - **OpNum 40**: `SamrQueryDisplayInformation` – Provides display information in a paginated format.
 - **OpNum 41**: `SamrGetDisplayEnumerationIndex` – Retrieves the display index for paginated enumerations.
+- **OpNum 47**: `SamrQueryInformationUser2` – Provides additional detailed information about a user account, similar to `SamrQueryInformationUser` but with different levels of information.
 - **OpNum 51**: `SamrQueryDisplayInformation3` – Enables detailed and filtered queries for large-scale user, group, or machine account enumeration.
 - **OpNum 56**: `SamrGetDomainPasswordInformation` – Retrieves password policy information for the domain.
 - **OpNum 64**: `SamrConnect5` – Establishes a connection to the SAM server for domain enumeration and lookup. Typically required to establish a connection for SAMR communication.
+- **OpNum 65**: `SamrRidToSid` – Converts a relative identifier (RID) to a security identifier (SID) within the domain.
 
 
 ### Attribute Parsing Completeness and Accuracy
