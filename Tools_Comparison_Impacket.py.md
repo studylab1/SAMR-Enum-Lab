@@ -35,6 +35,11 @@ Executed with the following parameters:
 Executed with the following parameters:  
 - `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local user`
 - `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local user -name Administrator`
+- `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local group`
+- `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local group -name "Domain Admins"`
+- `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local localgroup`
+- `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local localgroup -name Administrators`
+- `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local computer`
 
 | **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
 |---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
@@ -53,6 +58,12 @@ Executed with the following parameters:
 | `SamrLookupIdsInDomain` | `LookupRids`      |  18     | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrLookupDomainInSamServer` | `LookupDomain` | 5    | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrGetAliasMembership` | `GetAliasMembership` | 16  | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrEnumerateGroupsInDomain`|`EnumDomainGroups`| 11  | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenGroup`             | `OpenGroup`       | 19  | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
+| `SamrGetMembersInGroup`     | `QueryGroupMember`  | 25| Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrEnumerateAliasesInDomain`| EnumDomainAliases`| 15| Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenAlias`   | `OpenAlias`            | 27       | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
+| `SamrGetMembersInAlias` | `GetMembersInAlias`| 33     | Access not requested               | N/A                    | N/A                         | N/A                                  |
 
 
 
