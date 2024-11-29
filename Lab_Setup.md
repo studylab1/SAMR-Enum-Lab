@@ -21,8 +21,8 @@ The lab consists of multiple Active Directory (AD) forests, each configured with
 - **Selective and Forest-Wide Authentication Scopes**
 - **Windows Server 2016 and Windows Server 2012 R2 Forest Functional Level**
 
-<img width="1021" alt="image" src="https://github.com/user-attachments/assets/8af2522a-eeef-4ef5-9a58-b2f937471358">
-<img width="1031" alt="image" src="https://github.com/user-attachments/assets/da09302c-d129-4ea7-9fca-8c7c385b6a5c">
+![image](https://github.com/user-attachments/assets/6eaf4211-c1e0-4a82-a9d4-ac7fcafd7789)
+
 
 
 ### Domain Controllers
