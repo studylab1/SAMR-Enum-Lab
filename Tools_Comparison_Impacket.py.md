@@ -65,5 +65,12 @@ Executed with the following parameters:
 | `SamrOpenAlias`   | `OpenAlias`            | 27       | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
 | `SamrGetMembersInAlias` | `GetMembersInAlias`| 33     | Access not requested               | N/A                    | N/A                         | N/A                                  |
 
+### Completeness and Accuracy Comparison Criterion
 
+This subsection evaluates the ability of tools to parse and display data attributes retrieved through SAMR operations. The analysis includes the completeness of the attributes retrieved for each SAMR operation and the accuracy of the values compared to expected results. Tools are assessed for handling expected data types, edge cases, and inconsistencies.
+
+| **OpNum** | **Attribute** | **Expected Data Type**  | **Completeness** |**Attribute Displayed?** | **Accuracy** | **Attribute Description** |
+|-----------|---------------|-------------------------|------------------|-------------------------|--------------|---------------------------|
+| 13        | RID           | Integer (32-bit)        | ...              | ...                     | ...          | A unique identifier assigned to the user within the domain |
+| 13        | Account Name  | String (variable length)| ...              | ...                     | ...          | The logon name of the user |
 
