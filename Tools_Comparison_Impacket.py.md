@@ -69,8 +69,33 @@ Executed with the following parameters:
 
 This subsection evaluates the ability of tools to parse and display data attributes retrieved through SAMR operations. The analysis includes the completeness of the attributes retrieved for each SAMR operation and the accuracy of the values compared to expected results. Tools are assessed for handling expected data types, edge cases, and inconsistencies.
 
-| **OpNum** | **Attribute** | **Expected Data Type**  | **Completeness** |**Attribute Displayed?** | **Accuracy** | **Attribute Description** |
-|-----------|---------------|-------------------------|------------------|-------------------------|--------------|---------------------------|
-| 13        | RID           | Integer (32-bit)        | ...              | ...                     | ...          | A unique identifier assigned to the user within the domain |
-| 13        | Account Name  | String (variable length)| ...              | ...                     | ...          | The logon name of the user |
+| **OpNum** | **OpNum Name**             |**Attribute**|**Expected Data Type**|**Completeness**|**Attribute Displayed?**|**Accuracy**|**Attribute Description**|
+|-----------|----------------------------|-------------|----------------------|----------------|------------------------|------------|-------------------------|
+| 13        |`SamrEnumerateUsersInDomain`| RID         | Integer              | ...            | Yes                    | ...        | A unique identifier assigned to the user within the domain |
+| 13        |`SamrEnumerateUsersInDomain`| SAM Account Name| String           | ...            | Yes                    | ...        | The logon name of the user |
+| 47        |`SamrQueryInformationUser2` | RID         | Integer              | ...            | Yes                    | ...        | A unique identifier assigned to the user within the domain |
+| 47        |`SamrQueryInformationUser2` | SAM Account Name| Unicode string   | ...            | Yes                    | ...        | The logon name of the user |
+| 47        |`SamrQueryInformationUser2` | Full Name   | Unicode string       | ...            | ...                    | ...        | The full name of the user, as stored in the domain. |
+| 47        |`SamrQueryInformationUser2` | Description | Unicode string       | ...            | ...                    | ...        | A textual description of the user account, typically used for organizational purposes.|
+| 47        |`SamrQueryInformationUser2` | Home Directory| Unicode string     | ...            | ...                    | ...        | The user’s home directory path.|
+| 47        |`SamrQueryInformationUser2` | User Script Path| Unicode string   | ...            | ...                    | ...        | Path to the user’s login script, if any.|
+| 47        |`SamrQueryInformationUser2` | User Account Control (UAC) Flags| Integer| ...      | ...                    | ...        | Flags indicating user account properties, such as “disabled,” “password never expires,” etc.|
+| 47        |`SamrQueryInformationUser2` | Account Type| Integer              | ...            | ...                    | ...        | Indicates whether the account is a normal user, administrator, or a service account.|
+| 47        |`SamrQueryInformationUser2` | Logon Count | Integer              | ...            | ...                    | ...        | The number of times the user has successfully logged on to the domain.|
+| 47        |`SamrQueryInformationUser2` | Bad Password Count| Integer        | ...            | ...                    | ...        | The number of failed password attempts.|
+| 47        |`SamrQueryInformationUser2` | Last Logon Time| FileTime structure| ...            | ...                    | ...        | Timestamp of the user’s last successful logon.|
+| 47        |`SamrQueryInformationUser2` | Last Logoff Time| FileTime structure| ...           | ...                    | ...        | Timestamp of the user’s last logoff.|
+| 47        |`SamrQueryInformationUser2` | Password Last Set| FileTime structure| ...          | ...                    | ...        | Timestamp indicating when the user’s password was last changed.|
+| 47        |`SamrQueryInformationUser2` | Account Expiration Date| FileTime structure| ...    | ...                    | ...        | Date when the account will expire, if applicable.|
+| 47        |`SamrQueryInformationUser2` | Logon Hours| Bitmask               | ...            | ...                    | ...        | A bitmask indicating the hours during which the user is allowed to log on.|
+| 47        |`SamrQueryInformationUser2` | Primary Group RID| Integer         | ...            | ...                    | ...        | RID of the user’s primary group.|
+| 47        |`SamrQueryInformationUser2` | Workstations  | Unicode string     | ...            | ...                    | ...        | A list of workstations from which the user is allowed to log on.|
+| 47        |`SamrQueryInformationUser2` | Password Expiration Date  | FileTime structure| ... | ...                    | ...        | The date when the user’s password will expire.|
+| 47        |`SamrQueryInformationUser2` | Profile Path  | Unicode string     | ...            | ...                    | ...        | Path to the user’s roaming profile, if any.|
+| 47        |`SamrQueryInformationUser2` | Home Drive  | Unicode string       | ...            | ...                    | ...        | Drive letter associated with the user’s home directory.|
+
+
+
+
+
 
