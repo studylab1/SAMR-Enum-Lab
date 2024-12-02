@@ -153,6 +153,25 @@ The table below provides an overview of SAMR operation numbers (OpNums) relevant
 
 
 ### Attribute Parsing Completeness and Accuracy
+The following table represents mapping between SAMR Protocol Attributes and LDAP Domain Object Attributes for understanding how enumeration data retrieved via SAMR corresponds to the underlying Active Directory schema. SAMR protocol attributes are designed for remote access and use different naming conventions than LDAP, which is the standard protocol for accessing directory information.
+
+| **SAMR Attribute (Protocol)**       | **LDAP Attribute (Active Directory)** | **Description**                                   |
+|-------------------------------------|---------------------------------------|-------------------------------------------------|
+| `UserName`                          | `sAMAccountName`                     | The user's account name (logon name).           |
+| `FullName`                          | `displayName`                        | The full name of the user.                      |
+| `HomeDirectory`                     | `homeDirectory`                      | The user's home directory path.                 |
+| `HomeDrive`                         | `homeDrive`                          | The drive letter for the home directory.        |
+| `ScriptPath`                        | `scriptPath`                         | The path of the user's logon script.            |
+| `AdminComment`                      | `description`                        | An administrator's comment about the user.      |
+| `UserAccountControl` (UAC Flags)    | `userAccountControl`                 | Flags controlling the user's account behavior.  |
+| `PrimaryGroupId`                    | `primaryGroupID`                     | The RID of the user's primary group.            |
+| `BadPasswordCount`                  | `badPwdCount`                        | The number of recent bad password attempts.     |
+| `LogonCount`                        | `logonCount`                         | The number of times the user has logged on.     |
+| `LastLogon`                         | `lastLogon`                          | The last time the user successfully logged on.  |
+| `LogoffTime`                        | `logoffTime`                         | The user's expected logoff time.                |
+| `PasswordLastSet`                   | `pwdLastSet`                         | The last time the user's password was changed.  |
+
+---
 
 This subsection evaluates the ability of tools to parse and display data attributes retrieved through SAMR operations. The analysis includes the completeness of the attributes retrieved for each SAMR operation and the accuracy of the values compared to expected results. Tools are assessed for handling expected data types, edge cases, and inconsistencies.
 
