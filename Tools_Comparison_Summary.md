@@ -71,10 +71,10 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 ---
 
 | Tool Name             | Cross-Forest Request Support | OpNum Coverage | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
-|-----------------------|-----------------------------|----------------|-------------------------------|---------------------------|-------------------------------|---------------------------|
-| net user              |  No                           | N/A            | N/A                           | N/A                       | N/A                           | N/A                       |
-| PowerShell            |  Yes                         | N/A            | N/A                           | N/A                       | N/A                           | N/A                       |
-| Impacket              |  Yes                         |  Moderate      |  Yes                           |                           |   NTLM and Kerberos           | Standard Access    |
+|-----------------------|-----------------------------|----------------|-------------------------------|---------------------------|-------------------------------|-----------------|
+| net user              | No                          | N/A            | N/A                           | N/A                       | N/A                           | N/A             |
+| PowerShell            | Yes                         | N/A            | N/A                           | N/A                       | N/A                           | N/A             |
+| Impacket              | Yes                         | Moderate       | Yes                           | Accurate                  | NTLM and Kerberos             | Standard Access |
 | CrackMapExec          |                             |                |                               |                           |                               |                      |
 | rpcclient      |                             |                |                               |                           |                               |                           |
 | smbclient     |                             |                |                               |                           |                               |                           |
