@@ -100,3 +100,11 @@ This subsection evaluates the ability of tools to parse and display data attribu
 | 47        | `SamrQueryInformationUser2` | `Country Code`         | N/A                        | Integer                  | Yes              | Yes                   | Accurate     | The country code associated with the user account.                                   |
 | 47        | `SamrQueryInformationUser2` | `Code Page`            | N/A                        | Integer                  | N/A              | No                    | N/A          | The code page used for the account's character encoding.                             |
 | 47        | `SamrQueryInformationUser2` | `Password Expired`     | Derived (based on policies)| Boolean                  | N/A              | No                    | N/A          | Indicates if the account's password is expired.                                      |
+| 39        | `SamrGetGroupsForUser`     | `RelativeId`            | `primaryGroupID`           | Integer (32-bit)         | N/A              | No                    | N/A          | A unique identifier of a group the user belongs to.                                   |
+| 39        | `SamrGetGroupsForUser`     | `Attributes`            | `groupType`                | Integer (32-bit)         | N/A              | No                    | N/A          | Membership attributes specifying group relationships or roles.                        |
+| 11        | `SamrEnumerateGroupsInDomain`| `RelativeId`          | `objectSid`                | Integer (32-bit)         | Yes              | Yes                   | Accurate     | A unique identifier assigned to the group within the domain.                         |
+| 11        | `SamrEnumerateGroupsInDomain`| `Name`                | `cn`                       | Unicode string           | Yes              | Yes                   | Accurate     | The common name of the group as stored in the domain.                                |
+
+
+
+
