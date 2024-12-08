@@ -1,0 +1,11 @@
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Enumerating users ..
+  1. Administrator
+  2. Guest
+  3. krbtgt
+  4. THAD_MORGAN
+  5. lab_user01_this_is_2
+  6. иван.иванов
+  7. 张伟
+  8. adm!n.u$3r

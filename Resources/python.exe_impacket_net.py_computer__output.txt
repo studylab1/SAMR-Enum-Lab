@@ -1,0 +1,8 @@
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Enumerating computers ..
+  1. ZDC1$
+  2. SECWVIR1000001$
+  3. MySvcAcct$
+  4. LABPC01$
+  5. LAB_PC01_LONG_A$

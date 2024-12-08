@@ -1,0 +1,31 @@
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Enumerating localgroups ..
+  1. Server Operators
+  2. Account Operators
+  3. Pre-Windows 2000 Compatible Access
+  4. Incoming Forest Trust Builders
+  5. Windows Authorization Access Group
+  6. Terminal Server License Servers
+  7. Administrators
+  8. Users
+  9. Guests
+  10. Print Operators
+  11. Backup Operators
+  12. Replicator
+  13. Remote Desktop Users
+  14. Network Configuration Operators
+  15. Performance Monitor Users
+  16. Performance Log Users
+  17. Distributed COM Users
+  18. IIS_IUSRS
+  19. Cryptographic Operators
+  20. Event Log Readers
+  21. Certificate Service DCOM Access
+  22. RDS Remote Access Servers
+  23. RDS Endpoint Servers
+  24. RDS Management Servers
+  25. Hyper-V Administrators
+  26. Access Control Assistance Operators
+  27. Remote Management Users
+  28. Storage Replica Administrators

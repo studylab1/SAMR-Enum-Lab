@@ -1,0 +1,26 @@
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+[*] Enumerating groups ..
+  1. Enterprise Read-only Domain Controllers
+  2. Domain Admins
+  3. Domain Users
+  4. Domain Guests
+  5. Domain Computers
+  6. Domain Controllers
+  7. Schema Admins
+  8. Enterprise Admins
+  9. Group Policy Creator Owners
+  10. Read-only Domain Controllers
+  11. Cloneable Domain Controllers
+  12. Protected Users
+  13. Key Admins
+  14. Enterprise Key Admins
+  15. DnsUpdateProxy
+  16. SH-amigisobe-admingroup1
+  17. PE-anamaroya-admingroup1
+  18. Lab_Group02 Global
+  19. Lab_Group03 Universal
+  20. Lab_Group07 Long Name aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA
+  21. Lab_Group08 Группа
+  22. Lab_Group09 组
+  23. Lab_Group10 @#$%^&_!~A`___-___.___A

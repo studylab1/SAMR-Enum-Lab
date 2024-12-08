@@ -1,0 +1,35 @@
+Impacket v0.12.0 - Copyright Fortra, LLC and its affiliated companies 
+
+User name                      Administrator
+Full name
+Comment                        Built-in account for administering the computer/domain
+User's comment
+Country/region code            000 (System Default)
+Account active                 Yes
+Account expires                Never
+
+Password last set              11/01/2024 22:35:01 PM
+Password expires               12/13/2024 22:35:01 PM
+Password changeable            11/02/2024 22:35:01 PM
+Password required              Yes
+User may change password       Yes
+
+Workstations allowed           All
+Logon script
+User profile
+Home directory
+Last logon                     12/08/2024 23:25:15 PM
+Logon count                    28
+
+Logon hours allowed            All
+
+Local Group Memberships
+  * Users
+  * Administrators
+
+Global Group memberships
+  * Group Policy Creator Owners
+  * Schema Admins
+  * Domain Users
+  * Enterprise Admins
+  * Domain Admins
