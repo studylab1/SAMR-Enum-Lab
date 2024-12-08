@@ -70,12 +70,12 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 ---
 
-| Tool Name             | Cross-Forest Request Support | OpNum Coverage | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
-|-----------------------|-----------------------------|----------------|-------------------------------|---------------------------|-------------------------------|-----------------|
-| net user              | No                          | N/A            | N/A                           | N/A                       | N/A                           | N/A             |
-| PowerShell            | Yes                         | N/A            | N/A                           | N/A                       | N/A                           | N/A             |
-| Impacket              | Yes                         | Moderate       | Yes                           | Accurate                  | NTLM and Kerberos             | Standard Access |
-| CrackMapExec          |                             |                |                               |                           |                               |                      |
+| Tool Name    | Cross-Forest Request Support | OpNum Coverage | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
+|--------------|------------------------------|----------------|--------------------------------|---------------------------|--------------------------------|---------------------------|
+| net user     | No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
+| PowerShell   | Yes                          | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
+| Impacket     | Yes                          | Moderate       | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
+| CrackMapExec |                              |                |                                |                           |                               |                      |
 | rpcclient      |                             |                |                               |                           |                               |                           |
 | smbclient     |                             |                |                               |                           |                               |                           |
 | BloodHound            |                             |                |                               |                           |                               |                    |
@@ -113,67 +113,4 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | SAMRi10              |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | RPC Investigator     |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 
----
-
-The table below provides an overview of SAMR operation numbers (OpNums) relevant to enumeration. Each OpNum represents a specific operation that can be performed through the SAMR protocol. The table includes the following details for each OpNum:
-- OpNum: The unique identifier for the operation.
-- Name: The official name of the operation.
-- Data Type in Response: The format of the data returned in response to the operation.
-- Description: A brief explanation of the operation’s functionality and purpose.
-
-| **OpNum** | **Name**                       | **Data Type in Response**             | **Description**                                                                                   |
-|-----------|--------------------------------|----------------------------------------|---------------------------------------------------------------------------------------------------|
-| 0         | `SamrConnect`                 | Handle                                | Establishes an initial connection to the SAM server, allowing subsequent operations to be performed. |
-| 1         | `SamrCloseHandle`             | N/A                                   | Closes an open handle to a SAM object, releasing the associated resources.                        |
-| 3         | `SamrQuerySecurityObject`     | Security Descriptor                   | Retrieves security information for a specified SAM object, such as permissions and access control details. |
-| 5         | `SamrLookupDomainInSamServer` | SID                                   | Resolves a domain name to its corresponding SID within the SAM server.                            |
-| 6         | `SamrEnumerateDomainsInSamServer` | List of Strings                       | Lists all domains managed by the SAM server.                                                     |
-| 7         | `SamrOpenDomain`              | Handle                                | Opens a handle to a specific domain for further operations.                                       |
-| 8         | `SamrQueryInformationDomain`  | Varies (based on Information Level)   | Retrieves specific information about a domain, such as security policies or account statistics.   |
-| 11        | `SamrEnumerateGroupsInDomain` | List of Strings and Integers          | Retrieves a list of group names (strings) and their RIDs (relative identifiers, integers).        |
-| 13        | `SamrEnumerateUsersInDomain`  | List of Strings and Integers          | Retrieves user account names (strings) and their RIDs (relative identifiers, integers).           |
-| 15        | `SamrEnumerateAliasesInDomain`| List of Strings and Integers          | Lists alias groups (local groups) within a domain along with their RIDs.                         |
-| 16        | `SamrGetAliasMembership`      | List of SIDs                          | Shows alias memberships for a specific user or SID.                                              |
-| 17        | `SamrLookupNamesInDomain`     | List of SIDs                          | Converts account names into SIDs within a domain.                                                |
-| 18        | `SamrLookupIdsInDomain`       | List of Strings                       | Maps SIDs back to account names.                                                                 |
-| 19        | `SamrOpenGroup`               | Handle                                | Opens a handle to a specific group for further operations.                                       |
-| 25        | `SamrGetMembersInGroup`       | List of Integers                      | Retrieves the list of members' RIDs for a given group.                                           |
-| 27        | `SamrOpenAlias`               | Handle                                | Opens a handle to a specific alias (local group) for further operations.                         |
-| 33        | `SamrGetMembersInAlias`       | List of SIDs                          | Retrieves a list of members for a specified alias (local group).                                 |
-| 34        | `SamrOpenUser`                | Handle                                | Opens a handle to a specific user account for further operations.                                |
-| 36        | `SamrQueryInformationUser`    | Varies (based on Information Level)   | Retrieves detailed information on a specific user account.                                       |
-| 39        | `SamrGetGroupsForUser`        | List of Integers                      | Lists all group memberships for a specified user.                                                |
-| 40        | `SamrQueryDisplayInformation` | Paginated List of Strings             | Provides display information (e.g., names) for a set of domain accounts, such as users or groups.|
-| 41        | `SamrGetDisplayEnumerationIndex` | Integer                              | Retrieves the display index for paginated enumerations.                                          |
-| 47        | `SamrQueryInformationUser2`   | Varies (based on Information Level)   | Provides additional detailed information about a user account, similar to `SamrQueryInformationUser`.|
-| 51        | `SamrQueryDisplayInformation3`| Paginated and Filtered List of Strings| Enables detailed and filtered queries for large-scale user, group, or machine account enumeration.|
-| 56        | `SamrGetDomainPasswordInformation` | Structure                           | Retrieves password policy information for the domain.                                            |
-| 64        | `SamrConnect5`                | Handle                                | Establishes a connection to the SAM server for domain enumeration and lookup.                   |
-| 65        | `SamrRidToSid`                | SID                                   | Converts a relative identifier (RID) to a security identifier (SID) within the domain.          |
-
-
-### Attribute Parsing Completeness and Accuracy
-The following table represents mapping between SAMR Protocol Attributes and LDAP Domain Object Attributes for understanding how enumeration data retrieved via SAMR corresponds to the underlying Active Directory schema. SAMR protocol attributes are designed for remote access and use different naming conventions than LDAP, which is the standard protocol for accessing directory information.
-
-| **SAMR Attribute (Protocol)**       | **Schema Attribute (Active Directory)** | **Schema Attribute Type** | **Schema Attribute Length** | **Description**                     |
-|-------------------------------------|-----------------------------------------|----------------------------|-----------------------------|-------------------------------------------------|
-| `UserName`                          | `sAMAccountName`                        | Unicode String             | Max 256 characters          | The user's account name (logon name).           |
-| `FullName`                          | `displayName`                           | Unicode String             | Max 256 characters          | The full name of the user.                      |
-| `HomeDirectory`                     | `homeDirectory`                         | Unicode String             | Max 260 characters          | The user's home directory path.                 |
-| `HomeDrive`                         | `homeDrive`                             | Unicode String             | Max 2 characters            | The drive letter for the home directory.        |
-| `ScriptPath`                        | `scriptPath`                            | Unicode String             | Max 256 characters          | The path of the user's logon script.            |
-| `AdminComment`                      | `description`                           | Unicode String             | Max 1024 characters         | An administrator's comment about the user.      |
-| `UserAccountControl` (UAC Flags)    | `userAccountControl`                    | Integer                    | 4 bytes                     | Flags controlling the user's account behavior.  |
-| `PrimaryGroupId`                    | `primaryGroupID`                        | Integer                    | 4 bytes                     | The RID of the user's primary group.            |
-| `BadPasswordCount`                  | `badPwdCount`                           | Integer                    | 2 bytes                     | The number of recent bad password attempts.     |
-| `LogonCount`                        | `logonCount`                            | Integer                    | 2 bytes                     | The number of times the user has logged on.     |
-| `LastLogon`                         | `lastLogon`                             | LargeInteger               | 8 bytes                     | The last time the user successfully logged on.  |
-| `LogoffTime`                        | `logoffTime`                            | LargeInteger               | 8 bytes                     | The user's expected logoff time.                |
-| `PasswordLastSet`                   | `pwdLastSet`                            | LargeInteger               | 8 bytes                     | The last time the user's password was changed.  |
----
-
-This subsection evaluates the ability of tools to parse and display data attributes retrieved through SAMR operations. The analysis includes the completeness of the attributes retrieved for each SAMR operation and the accuracy of the values compared to expected results. Tools are assessed for handling expected data types, edge cases, and inconsistencies.
-
-| **OpNum** | **Attribute** | **Expected Data Type**  | **Completeness** | **Accuracy** | **Remarks**   |
-|-----------|---------------|-------------------------|------------------|--------------|---------------|
 
