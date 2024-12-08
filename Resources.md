@@ -4,33 +4,33 @@ This page offers downloadable resources, including traffic capture files, script
 
 | Tool Name      | Size   | Type            | Command Executed                          | Comments                          | Link |
 |----------------|--------|-----------------|-------------------------------------------|-----------------------------------|------|
-| `Net.exe User` |        | Traffic Capture | `net.exe user /domain`                    | Request to local domain           | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Capture_Files/net_user__domain.pcapng) |
-| `Net.exe User` |        | Command Output  | `net.exe user /domain`                    | Request to local domain           | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Capture_Files/net_user__domain.pcapng) |
-| `Net.exe User` | 47 KB  | Traffic Capture | `net.exe user administrator /domain`      | Request to local domain           | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Capture_Files/net_user_administrator__domain.pcapng) |
-| `Net.exe User` | 26 KB  | Command Output  | `net.exe user administrator /domain`      | Request to local domain           |      |
-| `Net.exe Group`|        | Traffic Capture | `net.exe group /domain`                   | Request to local domain           |      |
-| `Net.exe Group`|        | Command Output  | `net.exe group /domain`                   | Request to local domain           |      |
-| `Net.exe Group`|        | Traffic Capture | `net.exe group "domain admins" /domain`   | Request to local domain           |      |
-| `Net.exe Group`|        | Command Output  | `net.exe group "domain admins" /domain`   | Request to local domain           |      |
-| `PowerShell`   |        | Command Output  | `powershell_ad.ps1`                       | Executed script with 42 ActiveDirectory cmdlets |      |
-| `PowerShell`   |        | Traffic Capture | `powershell_ad.ps1`                       | Executed script with 42 ActiveDirectory cmdlets |      |
-| `PowerShell`   |        | Script          | `powershell_ad.ps1`                       | The script contains 42 ActiveDirectory cmdlets which are related to enumeration |      |
-| `Impacket samrdump.py`|      | Traffic Capture | `python.exe samrdump.py domain-y/enum:LabAdm1!@zdc1.domain-z.local` |  |      |
-| `Impacket samrdump.py`|      | Command Output  | `python.exe samrdump.py domain-y/enum:LabAdm1!@zdc1.domain-z.local` |  |      |
-| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local user` |  |      |
-| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local user` |  |      |
-| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local user -name Administrator` |  |      |
-| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local user -name Administrator` |  |      |
-| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local group` |  |      |
-| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local group` |  |      |
-| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local group -name "Domain Admins"` |  |      |
-| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local group -name "Domain Admins"` |  |      |
-| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local localgroup` |  |      |
-| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local localgroup` |  |      |
-| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local localgroup -name Administrators` |  |      |
-| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local localgroup -name Administrators` |  |      |
-| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local computer` |  |      |
-| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local computer` |  |      |
+| `Net.exe User` |        | Traffic Capture | `net.exe user /domain`                    | Request to local domain           | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Net.exe User` |        | Command Output  | `net.exe user /domain`                    | Request to local domain           | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain__output.txt) |
+| `Net.exe User` | 47 KB  | Traffic Capture | `net.exe user administrator /domain`      | Request to local domain           | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user_administrator__domain.pcapng |
+| `Net.exe User` | 26 KB  | Command Output  | `net.exe user administrator /domain`      | Request to local domain           | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user_administrator__domain__output.txt) |
+| `Net.exe Group`|        | Traffic Capture | `net.exe group /domain`                   | Request to local domain           | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_group__domain.pcapng) |
+| `Net.exe Group`|        | Command Output  | `net.exe group /domain`                   | Request to local domain           | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_group__domain__output.txt) |
+| `Net.exe Group`|        | Traffic Capture | `net.exe group "domain admins" /domain`   | Request to local domain           | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_group_domain_admins__domain.pcapng) |
+| `Net.exe Group`|        | Command Output  | `net.exe group "domain admins" /domain`   | Request to local domain           | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_group___domain_admins_domain__output.txt) |
+| `PowerShell`   |        | Command Output  | `powershell_ad.ps1`                       | Executed script with 42 ActiveDirectory cmdlets | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `PowerShell`   |        | Traffic Capture | `powershell_ad.ps1`                       | Executed script with 42 ActiveDirectory cmdlets | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `PowerShell`   |        | Script          | `powershell_ad.ps1`                       | The script contains 42 ActiveDirectory cmdlets which are related to enumeration | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket samrdump.py`|      | Traffic Capture | `python.exe samrdump.py domain-y/enum:LabAdm1!@zdc1.domain-z.local` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket samrdump.py`|      | Command Output  | `python.exe samrdump.py domain-y/enum:LabAdm1!@zdc1.domain-z.local` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local user` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local user` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local user -name Administrator` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local user -name Administrator` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local group` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local group` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local group -name "Domain Admins"` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local group -name "Domain Admins"` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local localgroup` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local localgroup` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local localgroup -name Administrators` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local localgroup -name Administrators` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Traffic Capture | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local computer` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
+| `Impacket net.py`|      | Command Output  | `python.exe net.py domain-y/enum:LabAdm1!@zdc1.domain-z.local computer` |  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/net.exe_user__domain.pcapng) |
 
 ---
 
