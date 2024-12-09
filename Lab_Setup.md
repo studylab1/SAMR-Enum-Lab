@@ -57,7 +57,7 @@ The virtual laboratory is hosted using Microsoft Hyper-V virtualization technolo
 ### The Virtual Machines Specifications
 
 #### Workstation
-- **Operating System:** Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317) or Linux Kali 2024.3 Hyper-V AMD64.
+- **Operating System:** Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317) or Ubuntu Desktop 24.04.1 LTS.
 - **RAM:** 4 GB
 - **Processor:** 2vCPU
 - **Virtual Machine Generation**: 2  
