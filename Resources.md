@@ -77,10 +77,12 @@ The table below provides an overview of SAMR operation numbers (OpNums) relevant
 | 36        | `SamrQueryInformationUser`    | Varies (based on Information Level)   | Retrieves detailed information on a specific user account.                                       |
 | 39        | `SamrGetGroupsForUser`        | List of Integers                      | Lists all group memberships for a specified user.                                                |
 | 40        | `SamrQueryDisplayInformation` | Paginated List of Strings             | Provides display information (e.g., names) for a set of domain accounts, such as users or groups.|
-| 41        | `SamrGetDisplayEnumerationIndex` | Integer                              | Retrieves the display index for paginated enumerations.                                          |
+| 41        | `SamrGetDisplayEnumerationIndex` | Integer                              | Retrieves the display index for paginated enumerations.                                        |
+| 46        | `SamrQueryDisplayInformation2`| Paginated List of Strings             | Retrieves display information for domain accounts, similar to `SamrQueryDisplayInformation`.     |
 | 47        | `SamrQueryInformationUser2`   | Varies (based on Information Level)   | Provides additional detailed information about a user account, similar to `SamrQueryInformationUser`.|
 | 51        | `SamrQueryDisplayInformation3`| Paginated and Filtered List of Strings| Enables detailed and filtered queries for large-scale user, group, or machine account enumeration.|
-| 56        | `SamrGetDomainPasswordInformation` | Structure                           | Retrieves password policy information for the domain.                                            |
+| 56        | `SamrGetDomainPasswordInformation` | Structure                           | Retrieves password policy information for the domain.                                        |
+| 57        | `SamrValidatePasswordPolicy`  | Boolean                               | Validates a user's password against the domain's password policy.                               |
 | 64        | `SamrConnect5`                | Handle                                | Establishes a connection to the SAM server for domain enumeration and lookup.                   |
 | 65        | `SamrRidToSid`                | SID                                   | Converts a relative identifier (RID) to a security identifier (SID) within the domain.          |
 
