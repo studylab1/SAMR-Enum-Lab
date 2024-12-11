@@ -1,0 +1,39 @@
+SMB         192.168.12.11   445    ZDC1             [*] Windows 10.0 Build 20348 x64 (name:ZDC1) (domain:domain-y.local) (signing:True) (SMBv1:False)
+SMB         192.168.12.11   445    ZDC1             [+] domain-y.local\enum:LabAdm1! 
+SMB         192.168.12.11   445    ZDC1             [-] Error enumerating local groups of 192.168.12.11: SMB SessionError: STATUS_LOGON_FAILURE(The attempted logon is invalid. This is either due to a bad username or authentication information.)
+SMB         192.168.12.11   445    ZDC1             [*] Trying with SAMRPC protocol
+SMB         192.168.12.11   445    ZDC1             [+] Enumerated local groups
+SMB         192.168.12.11   445    ZDC1             rid => 549 => Server Operators
+SMB         192.168.12.11   445    ZDC1             rid => 548 => Account Operators
+SMB         192.168.12.11   445    ZDC1             rid => 554 => Pre-Windows 2000 Compatible Access
+SMB         192.168.12.11   445    ZDC1             rid => 557 => Incoming Forest Trust Builders
+SMB         192.168.12.11   445    ZDC1             rid => 560 => Windows Authorization Access Group
+SMB         192.168.12.11   445    ZDC1             rid => 561 => Terminal Server License Servers
+SMB         192.168.12.11   445    ZDC1             rid => 544 => Administrators
+SMB         192.168.12.11   445    ZDC1             rid => 545 => Users
+SMB         192.168.12.11   445    ZDC1             rid => 546 => Guests
+SMB         192.168.12.11   445    ZDC1             rid => 550 => Print Operators
+SMB         192.168.12.11   445    ZDC1             rid => 551 => Backup Operators
+SMB         192.168.12.11   445    ZDC1             rid => 552 => Replicator
+SMB         192.168.12.11   445    ZDC1             rid => 555 => Remote Desktop Users
+SMB         192.168.12.11   445    ZDC1             rid => 556 => Network Configuration Operators
+SMB         192.168.12.11   445    ZDC1             rid => 558 => Performance Monitor Users
+SMB         192.168.12.11   445    ZDC1             rid => 559 => Performance Log Users
+SMB         192.168.12.11   445    ZDC1             rid => 562 => Distributed COM Users
+SMB         192.168.12.11   445    ZDC1             rid => 568 => IIS_IUSRS
+SMB         192.168.12.11   445    ZDC1             rid => 569 => Cryptographic Operators
+SMB         192.168.12.11   445    ZDC1             rid => 573 => Event Log Readers
+SMB         192.168.12.11   445    ZDC1             rid => 574 => Certificate Service DCOM Access
+SMB         192.168.12.11   445    ZDC1             rid => 575 => RDS Remote Access Servers
+SMB         192.168.12.11   445    ZDC1             rid => 576 => RDS Endpoint Servers
+SMB         192.168.12.11   445    ZDC1             rid => 577 => RDS Management Servers
+SMB         192.168.12.11   445    ZDC1             rid => 578 => Hyper-V Administrators
+SMB         192.168.12.11   445    ZDC1             rid => 579 => Access Control Assistance Operators
+SMB         192.168.12.11   445    ZDC1             rid => 580 => Remote Management Users
+SMB         192.168.12.11   445    ZDC1             rid => 582 => Storage Replica Administrators
+SMB         192.168.12.11   445    ZDC1             rid => 517 => Cert Publishers
+SMB         192.168.12.11   445    ZDC1             rid => 553 => RAS and IAS Servers
+SMB         192.168.12.11   445    ZDC1             rid => 571 => Allowed RODC Password Replication Group
+SMB         192.168.12.11   445    ZDC1             rid => 572 => Denied RODC Password Replication Group
+SMB         192.168.12.11   445    ZDC1             rid => 1101 => DnsAdmins
+SMB         192.168.12.11   445    ZDC1             rid => 4194 => Lab_Group01 Domain_local

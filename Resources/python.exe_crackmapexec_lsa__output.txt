@@ -1,0 +1,2 @@
+SMB         192.168.12.11   445    ZDC1             [*] Windows 10.0 Build 20348 x64 (name:ZDC1) (domain:domain-y.local) (signing:True) (SMBv1:False)
+SMB         192.168.12.11   445    ZDC1             [+] domain-y.local\enum:LabAdm1! 

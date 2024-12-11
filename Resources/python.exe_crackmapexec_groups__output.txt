@@ -1,0 +1,6 @@
+[02:29:52] INFO     Socket info: host=192.168.12.11, hostname=zdc1.domain-z.local, kerberos=False                                                                  connection.py:95
+           INFO     Error creating SMBv1 connection to 192.168.12.11: Error occurs while reading from remote(104)                                                        smb.py:599
+SMB         192.168.12.11   445    ZDC1             [*] Windows 10.0 Build 20348 x64 (name:ZDC1) (domain:domain-y.local) (signing:True) (SMBv1:False)
+           INFO     Error creating SMBv1 connection to 192.168.12.11: Error occurs while reading from remote(104)                                                        smb.py:599
+SMB         192.168.12.11   445    ZDC1             [+] domain-y.local\enum:LabAdm1! 
+SMB         192.168.12.11   445    ZDC1             [-] Error enumerating domain group using dc ip 192.168.12.11: unsupported hash type MD4

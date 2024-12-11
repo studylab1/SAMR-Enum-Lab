@@ -1,0 +1,20 @@
+SMB         192.168.12.11   445    ZDC1             [*] Windows 10.0 Build 20348 x64 (name:ZDC1) (domain:domain-y.local) (signing:True) (SMBv1:False)
+SMB         192.168.12.11   445    ZDC1             [+] domain-y.local\enum:LabAdm1! 
+SMB         192.168.12.11   445    ZDC1             [+] Dumping password info for domain: DOMAIN-Z
+SMB         192.168.12.11   445    ZDC1             Minimum password length: 7
+SMB         192.168.12.11   445    ZDC1             Password history length: 24
+SMB         192.168.12.11   445    ZDC1             Maximum password age: 41 days 23 hours 53 minutes 
+SMB         192.168.12.11   445    ZDC1             
+SMB         192.168.12.11   445    ZDC1             Password Complexity Flags: 000001
+SMB         192.168.12.11   445    ZDC1                 Domain Refuse Password Change: 0
+SMB         192.168.12.11   445    ZDC1                 Domain Password Store Cleartext: 0
+SMB         192.168.12.11   445    ZDC1                 Domain Password Lockout Admins: 0
+SMB         192.168.12.11   445    ZDC1                 Domain Password No Clear Change: 0
+SMB         192.168.12.11   445    ZDC1                 Domain Password No Anon Change: 0
+SMB         192.168.12.11   445    ZDC1                 Domain Password Complex: 1
+SMB         192.168.12.11   445    ZDC1             
+SMB         192.168.12.11   445    ZDC1             Minimum password age: 1 day 4 minutes 
+SMB         192.168.12.11   445    ZDC1             Reset Account Lockout Counter: 10 minutes 
+SMB         192.168.12.11   445    ZDC1             Locked Account Duration: 10 minutes 
+SMB         192.168.12.11   445    ZDC1             Account Lockout Threshold: None
+SMB         192.168.12.11   445    ZDC1             Forced Log off Time: Not Set

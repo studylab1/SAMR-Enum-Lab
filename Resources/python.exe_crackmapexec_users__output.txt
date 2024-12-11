@@ -1,0 +1,12 @@
+SMB         192.168.12.11   445    ZDC1             [*] Windows 10.0 Build 20348 x64 (name:ZDC1) (domain:domain-y.local) (signing:True) (SMBv1:False)
+SMB         192.168.12.11   445    ZDC1             [+] domain-y.local\enum:LabAdm1! 
+SMB         192.168.12.11   445    ZDC1             [*] Trying to dump local users with SAMRPC protocol
+SMB         192.168.12.11   445    ZDC1             [+] Enumerated domain user(s)
+SMB         192.168.12.11   445    ZDC1             domain-y.local\Administrator                  Built-in account for administering the computer/domain
+SMB         192.168.12.11   445    ZDC1             domain-y.local\Guest                          Built-in account for guest access to the computer/domain
+SMB         192.168.12.11   445    ZDC1             domain-y.local\krbtgt                         Key Distribution Center Service Account
+SMB         192.168.12.11   445    ZDC1             domain-y.local\THAD_MORGAN                    Created with secframe.com/badblood.
+SMB         192.168.12.11   445    ZDC1             domain-y.local\lab_user01_this_is_2           Lab_User01 Description aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaA
+SMB         192.168.12.11   445    ZDC1             domain-y.local\иван.иванов                    
+SMB         192.168.12.11   445    ZDC1             domain-y.local\张伟                             
+SMB         192.168.12.11   445    ZDC1             domain-y.local\adm!n.u$3r 
