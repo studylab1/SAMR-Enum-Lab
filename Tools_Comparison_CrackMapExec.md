@@ -21,6 +21,20 @@ Executed with the following parameters:
 
 | **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
 |---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect2`          | 57        | `0x02000000`                      | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No         | Not Compliant                        |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains`| 6  | Access not requested              | N/A                     | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer`     | `LookupDomain`| 5 | Access not requested              | N/A                     | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`        | 7         | `0x02000000`                      | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No         | Not Compliant                        |
+| `SamrEnumerateUsersInDomain` | `EnumDomainUsers` | 13 | Access not requested              | N/A                     | N/A                         | N/A                                  |
+| `SamrOpenUser`      | `OpenUser`          | 34        | `0x02000000`                      | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No         | Not Compliant                        |
+| `SamrQueryInformationUser2` | `QueryUserInfo2` | 47   | Access not requested              | N/A                     | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`             | 1         | Access not requested              | N/A                     | N/A                         | N/A                                  |
+| `SamrConnect`       | `Connect`           | 0         | `0x02000000`                      | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No         | Not Compliant                        |
+| `SamrEnumerateAliasesInDomain`| `EnumDomainAliases`| 15| Access not requested             | N/A                     | N/A                         | N/A                                  |
+| `SamrQueryInformationDomain`| `QueryDomainInfo2`| 46  | Access not requested              | N/A                     | N/A                         | N/A                                  |
+
+
+
 
 ### Completeness and Accuracy Comparison Criterion
 
