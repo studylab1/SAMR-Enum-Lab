@@ -74,8 +74,8 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 |--------------|------------------------------|----------------|--------------------------------|---------------------------|--------------------------------|---------------------------|
 | net user     | No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
 | PowerShell   | Yes                          | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
-| Impacket     | Yes                          | Moderate       | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
-| CrackMapExec | Yes                          |                |                                |                           | NTLM and Kerberos              | Standard Access           |
+| Impacket     | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
+| CrackMapExec | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
 | rpcclient      |                             |                |                               |                           |                               |                           |
 | smbclient     |                             |                |                               |                           |                               |                           |
 | BloodHound            |                             |                |                               |                           |                               |                    |
@@ -101,7 +101,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | "net user", "net group" | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | 
 | PowerShell           | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | Impacket             | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ●  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ●  |
-| CrackMapExec         | ●  | ●  | ○  | ●  | ●  | ●  |    |    | ●  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ●  | ●  | ○  | ○  | ●  | ○  | ○  |
+| CrackMapExec         | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ●  | ●  | ○  | ○  | ●  | ○  | ○  |
 | rpcclient            |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | smbclient            |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | BloodHound           |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
