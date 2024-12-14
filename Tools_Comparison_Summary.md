@@ -36,14 +36,14 @@ The following table provides version numbers for the tools evaluated during this
 | net user            | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
 | net group           | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
 | PowerShell          | 1.0.1.0       | ActiveDirectory Module. Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317) |
-| Impacket            | 0.12.0    | For this research, only samrdump.py and net.py from the Impacket suite were used.      |
+| Impacket            | 0.12.0        | For this research, only samrdump.py and net.py from the Impacket suite were used.      |
 | CrackMapExec        | 6.1.0 - John Wick|  |
+| Enum4linux          | 0.9.1         |     |
+| Enum4linux-ng       | 1.3.4         |      |
 | rpcclient    |         | Part of the Samba suite          |
 | smbclient    |         | Part of the Samba suite        |
 | BloodHound          |          |          |
 | Nmap   |           | Part of the Nmap suite              |
-| Enum4linux          |          |    |
-| Enum4linux-ng       |          |      |
 | Metasploit|     |  Part of the Metasploit Framework                |
 | PowerSploit         |          |             |
 | SAMRi10             |          |  |
@@ -76,12 +76,12 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | PowerShell   | Yes                          | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
 | Impacket     | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
 | CrackMapExec | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
-| rpcclient      |                             |                |                               |                           |                               |                           |
+| Enum4linux   | No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
+| Enum4linux-ng| No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
+| rpcclient    |                             |                |                               |                           |                               |                           |
 | smbclient     |                             |                |                               |                           |                               |                           |
 | BloodHound            |                             |                |                               |                           |                               |                    |
 | Nmap   |                             |                |                               |                           |                               |                           |
-| Enum4linux            |                             |                |                               |                           |                               |                     |
-| Enum4linux-ng         |                             |                |                               |                           |                               |                      |
 | Metasploit   |                             |                |                               |                           |                               |                           |
 | PowerSploit           |                             |                |                               |                           |                               |                        |
 | SAMRi10               |                             |                |                               |                           |                               |                        |
@@ -102,12 +102,12 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | PowerShell           | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | Impacket             | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ●  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ●  |
 | CrackMapExec         | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ●  | ●  | ○  | ○  | ●  | ○  | ○  |
+| Enum4linux           | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
+| Enum4linux-ng        | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | rpcclient            |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | smbclient            |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | BloodHound           |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | Nmap                 |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| Enum4linux           |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
-| Enum4linux-ng        |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | Metasploit           |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | PowerSploit          |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 | SAMRi10              |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
