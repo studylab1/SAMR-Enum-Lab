@@ -1,0 +1,11 @@
+Domain:		DOMAIN-Z
+Server:		
+Comment:	
+Total Users:	49
+Total Groups:	0
+Total Aliases:	25
+Sequence No:	1
+Force Logoff:	-1
+Domain Server State:	0x1
+Server Role:	ROLE_DOMAIN_PDC
+Unknown 3:	0x0

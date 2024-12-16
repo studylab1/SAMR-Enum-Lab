@@ -1,0 +1,10 @@
+    &info: struct samr_PwInfo
+        min_password_length      : 0x0007 (7)
+        password_properties      : 0x00000001 (1)
+               1: DOMAIN_PASSWORD_COMPLEX  
+               0: DOMAIN_PASSWORD_NO_ANON_CHANGE
+               0: DOMAIN_PASSWORD_NO_CLEAR_CHANGE
+               0: DOMAIN_PASSWORD_LOCKOUT_ADMINS
+               0: DOMAIN_PASSWORD_STORE_CLEARTEXT
+               0: DOMAIN_REFUSE_PASSWORD_CHANGE
+

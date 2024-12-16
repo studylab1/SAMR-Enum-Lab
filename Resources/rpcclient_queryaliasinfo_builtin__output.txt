@@ -1,0 +1,571 @@
+enum@enum-vm:~/PycharmProjects/enum4linux$ rpcclient -U "domain-y.local\\enum%LabAdm1!" 192.168.12.11 -c "queryaliasinfo builtin 544" -d 10
+INFO: Current debug levels:
+  all: 10
+  tdb: 10
+  printdrivers: 10
+  lanman: 10
+  smb: 10
+  rpc_parse: 10
+  rpc_srv: 10
+  rpc_cli: 10
+  passdb: 10
+  sam: 10
+  auth: 10
+  winbind: 10
+  vfs: 10
+  idmap: 10
+  quota: 10
+  acls: 10
+  locking: 10
+  msdfs: 10
+  dmapi: 10
+  registry: 10
+  scavenger: 10
+  dns: 10
+  ldb: 10
+  tevent: 10
+  auth_audit: 10
+  auth_json_audit: 10
+  kerberos: 10
+  drs_repl: 10
+  smb2: 10
+  smb2_credits: 10
+  dsdb_audit: 10
+  dsdb_json_audit: 10
+  dsdb_password_audit: 10
+  dsdb_password_json_audit: 10
+  dsdb_transaction_audit: 10
+  dsdb_transaction_json_audit: 10
+  dsdb_group_audit: 10
+  dsdb_group_json_audit: 10
+lp_load_ex: refreshing parameters
+Initialising global parameters
+rlimit_max: increasing rlimit_max (1024) to minimum Windows limit (16384)
+INFO: Current debug levels:
+  all: 10
+  tdb: 10
+  printdrivers: 10
+  lanman: 10
+  smb: 10
+  rpc_parse: 10
+  rpc_srv: 10
+  rpc_cli: 10
+  passdb: 10
+  sam: 10
+  auth: 10
+  winbind: 10
+  vfs: 10
+  idmap: 10
+  quota: 10
+  acls: 10
+  locking: 10
+  msdfs: 10
+  dmapi: 10
+  registry: 10
+  scavenger: 10
+  dns: 10
+  ldb: 10
+  tevent: 10
+  auth_audit: 10
+  auth_json_audit: 10
+  kerberos: 10
+  drs_repl: 10
+  smb2: 10
+  smb2_credits: 10
+  dsdb_audit: 10
+  dsdb_json_audit: 10
+  dsdb_password_audit: 10
+  dsdb_password_json_audit: 10
+  dsdb_transaction_audit: 10
+  dsdb_transaction_json_audit: 10
+  dsdb_group_audit: 10
+  dsdb_group_json_audit: 10
+Processing section "[global]"
+doing parameter workgroup = WORKGROUP
+doing parameter server string = %h server (Samba, Ubuntu)
+doing parameter log file = /var/log/samba/log.%m
+doing parameter max log size = 1000
+doing parameter logging = file
+doing parameter panic action = /usr/share/samba/panic-action %d
+doing parameter server role = standalone server
+doing parameter obey pam restrictions = yes
+doing parameter unix password sync = yes
+doing parameter passwd program = /usr/bin/passwd %u
+doing parameter passwd chat = *Enter\snew\s*\spassword:* %n\n *Retype\snew\s*\spassword:* %n\n *password\supdated\ssuccessfully* .
+doing parameter pam password change = yes
+doing parameter map to guest = bad user
+doing parameter usershare allow guests = yes
+pm_process() returned Yes
+lp_servicenumber: couldn't find homes
+added interface eth0 ip=192.168.10.101 bcast=192.168.10.255 netmask=255.255.255.0
+directory_create_or_exist_strict: invalid ownership on directory /run/samba/msg.lock
+messaging_init_internal: Could not create lock directory: File exists
+cmdline_messaging_context: Unable to initialize messaging context.
+Connecting to 192.168.12.11 at port 445
+socket options: SO_KEEPALIVE=0, SO_REUSEADDR=0, SO_BROADCAST=0, TCP_NODELAY=1, TCP_KEEPCNT=9, TCP_KEEPIDLE=7200, TCP_KEEPINTVL=75, IPTOS_LOWDELAY=0, IPTOS_THROUGHPUT=0, SO_REUSEPORT=0, SO_SNDBUF=87040, SO_RCVBUF=131072, SO_SNDLOWAT=1, SO_RCVLOWAT=1, SO_SNDTIMEO=0, SO_RCVTIMEO=0, TCP_QUICKACK=1, TCP_DEFER_ACCEPT=0, TCP_USER_TIMEOUT=0
+cli_session_setup_spnego_send: Connect to 192.168.12.11 as enum@DOMAIN-Y.LOCAL using SPNEGO
+GENSEC backend 'gssapi_spnego' registered
+GENSEC backend 'gssapi_krb5' registered
+GENSEC backend 'gssapi_krb5_sasl' registered
+GENSEC backend 'spnego' registered
+GENSEC backend 'schannel' registered
+GENSEC backend 'naclrpc_as_system' registered
+GENSEC backend 'sasl-EXTERNAL' registered
+GENSEC backend 'ntlmssp' registered
+GENSEC backend 'ntlmssp_resume_ccache' registered
+GENSEC backend 'http_basic' registered
+GENSEC backend 'http_ntlm' registered
+GENSEC backend 'http_negotiate' registered
+GENSEC backend 'krb5' registered
+GENSEC backend 'fake_gssapi_krb5' registered
+Starting GENSEC mechanism spnego
+Starting GENSEC submechanism gse_krb5
+Cannot do GSE to an IP address
+Failed to start GENSEC client mech gse_krb5: NT_STATUS_INVALID_PARAMETER
+Starting GENSEC submechanism ntlmssp
+     negotiate: struct NEGOTIATE_MESSAGE
+        Signature                : 'NTLMSSP'
+        MessageType              : NtLmNegotiate (1)
+        NegotiateFlags           : 0x62088215 (1644724757)
+               1: NTLMSSP_NEGOTIATE_UNICODE
+               0: NTLMSSP_NEGOTIATE_OEM    
+               1: NTLMSSP_REQUEST_TARGET   
+               1: NTLMSSP_NEGOTIATE_SIGN   
+               0: NTLMSSP_NEGOTIATE_SEAL   
+               0: NTLMSSP_NEGOTIATE_DATAGRAM
+               0: NTLMSSP_NEGOTIATE_LM_KEY 
+               0: NTLMSSP_NEGOTIATE_NETWARE
+               1: NTLMSSP_NEGOTIATE_NTLM   
+               0: NTLMSSP_NEGOTIATE_NT_ONLY
+               0: NTLMSSP_ANONYMOUS        
+               0: NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED
+               0: NTLMSSP_NEGOTIATE_OEM_WORKSTATION_SUPPLIED
+               0: NTLMSSP_NEGOTIATE_THIS_IS_LOCAL_CALL
+               1: NTLMSSP_NEGOTIATE_ALWAYS_SIGN
+               0: NTLMSSP_TARGET_TYPE_DOMAIN
+               0: NTLMSSP_TARGET_TYPE_SERVER
+               0: NTLMSSP_TARGET_TYPE_SHARE
+               1: NTLMSSP_NEGOTIATE_EXTENDED_SESSIONSECURITY
+               0: NTLMSSP_NEGOTIATE_IDENTIFY
+               0: NTLMSSP_REQUEST_NON_NT_SESSION_KEY
+               0: NTLMSSP_NEGOTIATE_TARGET_INFO
+               1: NTLMSSP_NEGOTIATE_VERSION
+               1: NTLMSSP_NEGOTIATE_128    
+               1: NTLMSSP_NEGOTIATE_KEY_EXCH
+               0: NTLMSSP_NEGOTIATE_56     
+        DomainNameLen            : 0x0000 (0)
+        DomainNameMaxLen         : 0x0000 (0)
+        DomainName               : *
+            DomainName               : ''
+        WorkstationLen           : 0x0000 (0)
+        WorkstationMaxLen        : 0x0000 (0)
+        Workstation              : *
+            Workstation              : ''
+        Version: struct ntlmssp_VERSION
+            ProductMajorVersion      : NTLMSSP_WINDOWS_MAJOR_VERSION_6 (6)
+            ProductMinorVersion      : NTLMSSP_WINDOWS_MINOR_VERSION_1 (1)
+            ProductBuild             : 0x0000 (0)
+            Reserved: ARRAY(3)
+                [0]                      : 0x00 (0)
+                [1]                      : 0x00 (0)
+                [2]                      : 0x00 (0)
+            NTLMRevisionCurrent      : NTLMSSP_REVISION_W2K3 (15)
+gensec_update_send: ntlmssp[0x55723b4a2340]: subreq: 0x55723b487ef0
+gensec_update_send: spnego[0x55723b4a2430]: subreq: 0x55723b4a5a80
+gensec_update_done: ntlmssp[0x55723b4a2340]: NT_STATUS_MORE_PROCESSING_REQUIRED tevent_req[0x55723b487ef0/../../auth/ntlmssp/ntlmssp.c:180]: state[2] error[0 (0x0)]  state[struct gensec_ntlmssp_update_state (0x55723b4880b0)] timer[(nil)] finish[../../auth/ntlmssp/ntlmssp.c:215]
+gensec_update_done: spnego[0x55723b4a2430]: NT_STATUS_MORE_PROCESSING_REQUIRED tevent_req[0x55723b4a5a80/../../auth/gensec/spnego.c:1631]: state[2] error[0 (0x0)]  state[struct gensec_spnego_update_state (0x55723b4a5c40)] timer[(nil)] finish[../../auth/gensec/spnego.c:2116]
+Got challenge flags:
+Got NTLMSSP neg_flags=0x62898215
+  NTLMSSP_NEGOTIATE_UNICODE
+  NTLMSSP_REQUEST_TARGET
+  NTLMSSP_NEGOTIATE_SIGN
+  NTLMSSP_NEGOTIATE_NTLM
+  NTLMSSP_NEGOTIATE_ALWAYS_SIGN
+  NTLMSSP_TARGET_TYPE_DOMAIN
+  NTLMSSP_NEGOTIATE_EXTENDED_SESSIONSECURITY
+  NTLMSSP_NEGOTIATE_TARGET_INFO
+  NTLMSSP_NEGOTIATE_VERSION
+  NTLMSSP_NEGOTIATE_128
+  NTLMSSP_NEGOTIATE_KEY_EXCH
+     challenge: struct CHALLENGE_MESSAGE
+        Signature                : 'NTLMSSP'
+        MessageType              : NtLmChallenge (0x2)
+        TargetNameLen            : 0x0010 (16)
+        TargetNameMaxLen         : 0x0010 (16)
+        TargetName               : *
+            TargetName               : 'DOMAIN-Z'
+        NegotiateFlags           : 0x62898215 (1653178901)
+               1: NTLMSSP_NEGOTIATE_UNICODE
+               0: NTLMSSP_NEGOTIATE_OEM    
+               1: NTLMSSP_REQUEST_TARGET   
+               1: NTLMSSP_NEGOTIATE_SIGN   
+               0: NTLMSSP_NEGOTIATE_SEAL   
+               0: NTLMSSP_NEGOTIATE_DATAGRAM
+               0: NTLMSSP_NEGOTIATE_LM_KEY 
+               0: NTLMSSP_NEGOTIATE_NETWARE
+               1: NTLMSSP_NEGOTIATE_NTLM   
+               0: NTLMSSP_NEGOTIATE_NT_ONLY
+               0: NTLMSSP_ANONYMOUS        
+               0: NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED
+               0: NTLMSSP_NEGOTIATE_OEM_WORKSTATION_SUPPLIED
+               0: NTLMSSP_NEGOTIATE_THIS_IS_LOCAL_CALL
+               1: NTLMSSP_NEGOTIATE_ALWAYS_SIGN
+               1: NTLMSSP_TARGET_TYPE_DOMAIN
+               0: NTLMSSP_TARGET_TYPE_SERVER
+               0: NTLMSSP_TARGET_TYPE_SHARE
+               1: NTLMSSP_NEGOTIATE_EXTENDED_SESSIONSECURITY
+               0: NTLMSSP_NEGOTIATE_IDENTIFY
+               0: NTLMSSP_REQUEST_NON_NT_SESSION_KEY
+               1: NTLMSSP_NEGOTIATE_TARGET_INFO
+               1: NTLMSSP_NEGOTIATE_VERSION
+               1: NTLMSSP_NEGOTIATE_128    
+               1: NTLMSSP_NEGOTIATE_KEY_EXCH
+               0: NTLMSSP_NEGOTIATE_56     
+        ServerChallenge          : bcda138f408f7ac6
+        Reserved                 : 0000000000000000
+        TargetInfoLen            : 0x009a (154)
+        TargetInfoMaxLen         : 0x009a (154)
+        TargetInfo               : *
+            TargetInfo: struct AV_PAIR_LIST
+                count                    : 0x00000007 (7)
+                pair: ARRAY(7)
+                    pair: struct AV_PAIR
+                        AvId                     : MsvAvNbDomainName (0x2)
+                        AvLen                    : 0x0010 (16)
+                        Value                    : union ntlmssp_AvValue(case 0x2)
+                        AvNbDomainName           : 'DOMAIN-Z'
+                    pair: struct AV_PAIR
+                        AvId                     : MsvAvNbComputerName (0x1)
+                        AvLen                    : 0x0008 (8)
+                        Value                    : union ntlmssp_AvValue(case 0x1)
+                        AvNbComputerName         : 'ZDC1'
+                    pair: struct AV_PAIR
+                        AvId                     : MsvAvDnsDomainName (0x4)
+                        AvLen                    : 0x001c (28)
+                        Value                    : union ntlmssp_AvValue(case 0x4)
+                        AvDnsDomainName          : 'domain-z.local'
+                    pair: struct AV_PAIR
+                        AvId                     : MsvAvDnsComputerName (0x3)
+                        AvLen                    : 0x0026 (38)
+                        Value                    : union ntlmssp_AvValue(case 0x3)
+                        AvDnsComputerName        : 'zdc1.domain-z.local'
+                    pair: struct AV_PAIR
+                        AvId                     : MsvAvDnsTreeName (0x5)
+                        AvLen                    : 0x001c (28)
+                        Value                    : union ntlmssp_AvValue(case 0x5)
+                        AvDnsTreeName            : 'domain-z.local'
+                    pair: struct AV_PAIR
+                        AvId                     : MsvAvTimestamp (0x7)
+                        AvLen                    : 0x0008 (8)
+                        Value                    : union ntlmssp_AvValue(case 0x7)
+                        AvTimestamp              : E dets  16 22:03:02 2024 EET
+                    pair: struct AV_PAIR
+                        AvId                     : MsvAvEOL (0x0)
+                        AvLen                    : 0x0000 (0)
+                        Value                    : union ntlmssp_AvValue(case 0x0)
+        Version: struct ntlmssp_VERSION
+            ProductMajorVersion      : NTLMSSP_WINDOWS_MAJOR_VERSION_10 (0xA)
+            ProductMinorVersion      : NTLMSSP_WINDOWS_MINOR_VERSION_0 (0x0)
+            ProductBuild             : 0x4f7c (20348)
+            Reserved                 : 000000
+            NTLMRevisionCurrent      : NTLMSSP_REVISION_W2K3 (0xF)
+     authenticate: struct AUTHENTICATE_MESSAGE
+        Signature                : 'NTLMSSP'
+        MessageType              : NtLmAuthenticate (3)
+        LmChallengeResponseLen   : 0x0018 (24)
+        LmChallengeResponseMaxLen: 0x0018 (24)
+        LmChallengeResponse      : *
+            LmChallengeResponse      : union ntlmssp_LM_RESPONSE_with_len(case 24)
+            v1: struct LM_RESPONSE
+                Response                 : 000000000000000000000000000000000000000000000000
+        NtChallengeResponseLen   : 0x013e (318)
+        NtChallengeResponseMaxLen: 0x013e (318)
+        NtChallengeResponse      : *
+            NtChallengeResponse      : union ntlmssp_NTLM_RESPONSE_with_len(case 318)
+            v2: struct NTLMv2_RESPONSE
+                Response                 : d75e3b4b93dde73cda4917a61752bc4a
+                Challenge: struct NTLMv2_CLIENT_CHALLENGE
+                    RespType                 : 0x01 (1)
+                    HiRespType               : 0x01 (1)
+                    Reserved1                : 0x0000 (0)
+                    Reserved2                : 0x00000000 (0)
+                    TimeStamp                : E dets  16 22:03:02 2024 EET
+                    ChallengeFromClient      : 37a6604d4bc8fca3
+                    Reserved3                : 0x00000000 (0)
+                    AvPairs: struct AV_PAIR_LIST
+                        count                    : 0x0000000b (11)
+                        pair: ARRAY(11)
+                            pair: struct AV_PAIR
+                                AvId                     : MsvAvNbDomainName (0x2)
+                                AvLen                    : 0x0010 (16)
+                                Value                    : union ntlmssp_AvValue(case 0x2)
+                                AvNbDomainName           : 'DOMAIN-Z'
+                            pair: struct AV_PAIR
+                                AvId                     : MsvAvNbComputerName (0x1)
+                                AvLen                    : 0x0008 (8)
+                                Value                    : union ntlmssp_AvValue(case 0x1)
+                                AvNbComputerName         : 'ZDC1'
+                            pair: struct AV_PAIR
+                                AvId                     : MsvAvDnsDomainName (0x4)
+                                AvLen                    : 0x001c (28)
+                                Value                    : union ntlmssp_AvValue(case 0x4)
+                                AvDnsDomainName          : 'domain-z.local'
+                            pair: struct AV_PAIR
+                                AvId                     : MsvAvDnsComputerName (0x3)
+                                AvLen                    : 0x0026 (38)
+                                Value                    : union ntlmssp_AvValue(case 0x3)
+                                AvDnsComputerName        : 'zdc1.domain-z.local'
+                            pair: struct AV_PAIR
+                                AvId                     : MsvAvDnsTreeName (0x5)
+                                AvLen                    : 0x001c (28)
+                                Value                    : union ntlmssp_AvValue(case 0x5)
+                                AvDnsTreeName            : 'domain-z.local'
+                            pair: struct AV_PAIR
+                                AvId                     : MsvAvTimestamp (0x7)
+                                AvLen                    : 0x0008 (8)
+                                Value                    : union ntlmssp_AvValue(case 0x7)
+                                AvTimestamp              : E dets  16 22:03:02 2024 EET
+                            pair: struct AV_PAIR
+                                AvId                     : MsvAvFlags (0x6)
+                                AvLen                    : 0x0004 (4)
+                                Value                    : union ntlmssp_AvValue(case 0x6)
+                                AvFlags                  : 0x00000002 (2)
+                                       0: NTLMSSP_AVFLAG_CONSTRAINTED_ACCOUNT
+                                       1: NTLMSSP_AVFLAG_MIC_IN_AUTHENTICATE_MESSAGE
+                                       0: NTLMSSP_AVFLAG_TARGET_SPN_FROM_UNTRUSTED_SOURCE
+                            pair: struct AV_PAIR
+                                AvId                     : MsvAvSingleHost (0x8)
+                                AvLen                    : 0x0030 (48)
+                                Value                    : union ntlmssp_AvValue(case 0x8)
+                                AvSingleHost: struct ntlmssp_SingleHostData
+                                    Size                     : 0x00000030 (48)
+                                    Z4                       : 0x00000000 (0)
+                                    token_info: struct LSAP_TOKEN_INFO_INTEGRITY
+                                        Flags                    : 0x00000000 (0)
+                                        TokenIL                  : 0x00000000 (0)
+                                        MachineId                : 313b48375e09fa57f903f7b5c2a710c34f3fd3bf48adc12b65c11159f1d33a91
+                                    remaining                : DATA_BLOB length=0
+                            pair: struct AV_PAIR
+                                AvId                     : MsvChannelBindings (0xA)
+                                AvLen                    : 0x0010 (16)
+                                Value                    : union ntlmssp_AvValue(case 0xA)
+                                ChannelBindings          : 00000000000000000000000000000000
+                            pair: struct AV_PAIR
+                                AvId                     : MsvAvTargetName (0x9)
+                                AvLen                    : 0x0024 (36)
+                                Value                    : union ntlmssp_AvValue(case 0x9)
+                                AvTargetName             : 'cifs/192.168.12.11'
+                            pair: struct AV_PAIR
+                                AvId                     : MsvAvEOL (0x0)
+                                AvLen                    : 0x0000 (0)
+                                Value                    : union ntlmssp_AvValue(case 0x0)
+        DomainNameLen            : 0x001c (28)
+        DomainNameMaxLen         : 0x001c (28)
+        DomainName               : *
+            DomainName               : 'DOMAIN-Y.LOCAL'
+        UserNameLen              : 0x0008 (8)
+        UserNameMaxLen           : 0x0008 (8)
+        UserName                 : *
+            UserName                 : 'enum'
+        WorkstationLen           : 0x000e (14)
+        WorkstationMaxLen        : 0x000e (14)
+        Workstation              : *
+            Workstation              : 'ENUM-VM'
+        EncryptedRandomSessionKeyLen: 0x0010 (16)
+        EncryptedRandomSessionKeyMaxLen: 0x0010 (16)
+        EncryptedRandomSessionKey: *
+            EncryptedRandomSessionKey: DATA_BLOB length=16
+[0000] DB FF 4C 0E 18 65 26 85   4D 0E AF 95 90 6C 33 42   ..L..e&. M....l3B
+        NegotiateFlags           : 0x62088215 (1644724757)
+               1: NTLMSSP_NEGOTIATE_UNICODE
+               0: NTLMSSP_NEGOTIATE_OEM    
+               1: NTLMSSP_REQUEST_TARGET   
+               1: NTLMSSP_NEGOTIATE_SIGN   
+               0: NTLMSSP_NEGOTIATE_SEAL   
+               0: NTLMSSP_NEGOTIATE_DATAGRAM
+               0: NTLMSSP_NEGOTIATE_LM_KEY 
+               0: NTLMSSP_NEGOTIATE_NETWARE
+               1: NTLMSSP_NEGOTIATE_NTLM   
+               0: NTLMSSP_NEGOTIATE_NT_ONLY
+               0: NTLMSSP_ANONYMOUS        
+               0: NTLMSSP_NEGOTIATE_OEM_DOMAIN_SUPPLIED
+               0: NTLMSSP_NEGOTIATE_OEM_WORKSTATION_SUPPLIED
+               0: NTLMSSP_NEGOTIATE_THIS_IS_LOCAL_CALL
+               1: NTLMSSP_NEGOTIATE_ALWAYS_SIGN
+               0: NTLMSSP_TARGET_TYPE_DOMAIN
+               0: NTLMSSP_TARGET_TYPE_SERVER
+               0: NTLMSSP_TARGET_TYPE_SHARE
+               1: NTLMSSP_NEGOTIATE_EXTENDED_SESSIONSECURITY
+               0: NTLMSSP_NEGOTIATE_IDENTIFY
+               0: NTLMSSP_REQUEST_NON_NT_SESSION_KEY
+               0: NTLMSSP_NEGOTIATE_TARGET_INFO
+               1: NTLMSSP_NEGOTIATE_VERSION
+               1: NTLMSSP_NEGOTIATE_128    
+               1: NTLMSSP_NEGOTIATE_KEY_EXCH
+               0: NTLMSSP_NEGOTIATE_56     
+        Version: struct ntlmssp_VERSION
+            ProductMajorVersion      : NTLMSSP_WINDOWS_MAJOR_VERSION_6 (6)
+            ProductMinorVersion      : NTLMSSP_WINDOWS_MINOR_VERSION_1 (1)
+            ProductBuild             : 0x0000 (0)
+            Reserved: ARRAY(3)
+                [0]                      : 0x00 (0)
+                [1]                      : 0x00 (0)
+                [2]                      : 0x00 (0)
+            NTLMRevisionCurrent      : NTLMSSP_REVISION_W2K3 (15)
+NTLMSSP: Set final flags:
+Got NTLMSSP neg_flags=0x62088215
+  NTLMSSP_NEGOTIATE_UNICODE
+  NTLMSSP_REQUEST_TARGET
+  NTLMSSP_NEGOTIATE_SIGN
+  NTLMSSP_NEGOTIATE_NTLM
+  NTLMSSP_NEGOTIATE_ALWAYS_SIGN
+  NTLMSSP_NEGOTIATE_EXTENDED_SESSIONSECURITY
+  NTLMSSP_NEGOTIATE_VERSION
+  NTLMSSP_NEGOTIATE_128
+  NTLMSSP_NEGOTIATE_KEY_EXCH
+NTLMSSP Sign/Seal - Initialising with flags:
+Got NTLMSSP neg_flags=0x62088215
+  NTLMSSP_NEGOTIATE_UNICODE
+  NTLMSSP_REQUEST_TARGET
+  NTLMSSP_NEGOTIATE_SIGN
+  NTLMSSP_NEGOTIATE_NTLM
+  NTLMSSP_NEGOTIATE_ALWAYS_SIGN
+  NTLMSSP_NEGOTIATE_EXTENDED_SESSIONSECURITY
+  NTLMSSP_NEGOTIATE_VERSION
+  NTLMSSP_NEGOTIATE_128
+  NTLMSSP_NEGOTIATE_KEY_EXCH
+dump_arc4_state: NTLMSSP send seal arc4 state:
+
+dump_arc4_state: NTLMSSP recv seal arc4 state:
+
+gensec_update_send: ntlmssp[0x55723b4a2340]: subreq: 0x55723b4a03d0
+gensec_update_send: spnego[0x55723b4a2430]: subreq: 0x55723b4a9620
+gensec_update_done: ntlmssp[0x55723b4a2340]: NT_STATUS_OK tevent_req[0x55723b4a03d0/../../auth/ntlmssp/ntlmssp.c:180]: state[2] error[0 (0x0)]  state[struct gensec_ntlmssp_update_state (0x55723b4a0590)] timer[(nil)] finish[../../auth/ntlmssp/ntlmssp.c:222]
+gensec_update_done: spnego[0x55723b4a2430]: NT_STATUS_MORE_PROCESSING_REQUIRED tevent_req[0x55723b4a9620/../../auth/gensec/spnego.c:1631]: state[2] error[0 (0x0)]  state[struct gensec_spnego_update_state (0x55723b4a97e0)] timer[(nil)] finish[../../auth/gensec/spnego.c:2116]
+ntlmssp_check_packet: NTLMSSP signature OK !
+NTLMSSP Sign/Seal - Initialising with flags:
+Got NTLMSSP neg_flags=0x62088215
+  NTLMSSP_NEGOTIATE_UNICODE
+  NTLMSSP_REQUEST_TARGET
+  NTLMSSP_NEGOTIATE_SIGN
+  NTLMSSP_NEGOTIATE_NTLM
+  NTLMSSP_NEGOTIATE_ALWAYS_SIGN
+  NTLMSSP_NEGOTIATE_EXTENDED_SESSIONSECURITY
+  NTLMSSP_NEGOTIATE_VERSION
+  NTLMSSP_NEGOTIATE_128
+  NTLMSSP_NEGOTIATE_KEY_EXCH
+dump_arc4_state: NTLMSSP send seal arc4 state:
+
+dump_arc4_state: NTLMSSP recv seal arc4 state:
+
+gensec_update_send: spnego[0x55723b4a2430]: subreq: 0x55723b4a90a0
+gensec_update_done: spnego[0x55723b4a2430]: NT_STATUS_OK tevent_req[0x55723b4a90a0/../../auth/gensec/spnego.c:1631]: state[2] error[0 (0x0)]  state[struct gensec_spnego_update_state (0x55723b4a9260)] timer[(nil)] finish[../../auth/gensec/spnego.c:2116]
+signed SMB2 message (sign_algo_id=2)
+signed SMB2 message (sign_algo_id=2)
+Bind RPC Pipe: host 192.168.12.11 auth_type 0, auth_level 1
+     &r: struct ncacn_packet
+        rpc_vers                 : 0x05 (5)
+        rpc_vers_minor           : 0x00 (0)
+        ptype                    : DCERPC_PKT_BIND (11)
+        pfc_flags                : 0x03 (3)
+               1: DCERPC_PFC_FLAG_FIRST    
+               1: DCERPC_PFC_FLAG_LAST     
+               0: DCERPC_PFC_FLAG_PENDING_CANCEL_OR_HDR_SIGNING
+               0: DCERPC_PFC_FLAG_CONC_MPX 
+               0: DCERPC_PFC_FLAG_DID_NOT_EXECUTE
+               0: DCERPC_PFC_FLAG_MAYBE    
+               0: DCERPC_PFC_FLAG_OBJECT_UUID
+        drep: ARRAY(4)
+            [0]                      : 0x10 (16)
+            [1]                      : 0x00 (0)
+            [2]                      : 0x00 (0)
+            [3]                      : 0x00 (0)
+        frag_length              : 0x0048 (72)
+        auth_length              : 0x0000 (0)
+        call_id                  : 0x00000001 (1)
+        u                        : union dcerpc_payload(case 11)
+        bind: struct dcerpc_bind
+            max_xmit_frag            : 0x10b8 (4280)
+            max_recv_frag            : 0x10b8 (4280)
+            assoc_group_id           : 0x00000000 (0)
+            num_contexts             : 0x01 (1)
+            ctx_list: ARRAY(1)
+                ctx_list: struct dcerpc_ctx_list
+                    context_id               : 0x0000 (0)
+                    num_transfer_syntaxes    : 0x01 (1)
+                    abstract_syntax: struct ndr_syntax_id
+                        uuid                     : 12345778-1234-abcd-ef00-0123456789ac
+                        if_version               : 0x00000001 (1)
+                    transfer_syntaxes: ARRAY(1)
+                        transfer_syntaxes: struct ndr_syntax_id
+                            uuid                     : 8a885d04-1ceb-11c9-9fe8-08002b104860
+                            if_version               : 0x00000002 (2)
+            auth_info                : DATA_BLOB length=0
+rpc_api_pipe: host 192.168.12.11
+signed SMB2 message (sign_algo_id=2)
+rpc_read_send: data_to_read: 52
+     state->pkt: struct ncacn_packet
+        rpc_vers                 : 0x05 (5)
+        rpc_vers_minor           : 0x00 (0)
+        ptype                    : DCERPC_PKT_BIND_ACK (12)
+        pfc_flags                : 0x03 (3)
+               1: DCERPC_PFC_FLAG_FIRST    
+               1: DCERPC_PFC_FLAG_LAST     
+               0: DCERPC_PFC_FLAG_PENDING_CANCEL_OR_HDR_SIGNING
+               0: DCERPC_PFC_FLAG_CONC_MPX 
+               0: DCERPC_PFC_FLAG_DID_NOT_EXECUTE
+               0: DCERPC_PFC_FLAG_MAYBE    
+               0: DCERPC_PFC_FLAG_OBJECT_UUID
+        drep: ARRAY(4)
+            [0]                      : 0x10 (16)
+            [1]                      : 0x00 (0)
+            [2]                      : 0x00 (0)
+            [3]                      : 0x00 (0)
+        frag_length              : 0x0044 (68)
+        auth_length              : 0x0000 (0)
+        call_id                  : 0x00000001 (1)
+        u                        : union dcerpc_payload(case 12)
+        bind_ack: struct dcerpc_bind_ack
+            max_xmit_frag            : 0x10b8 (4280)
+            max_recv_frag            : 0x10b8 (4280)
+            assoc_group_id           : 0x00001440 (5184)
+            secondary_address_size   : 0x000c (12)
+            secondary_address        : '\pipe\lsass'
+            _pad1                    : DATA_BLOB length=2
+[0000] C0 39                                               .9
+            num_results              : 0x01 (1)
+            ctx_list: ARRAY(1)
+                ctx_list: struct dcerpc_ack_ctx
+                    result                   : DCERPC_BIND_ACK_RESULT_ACCEPTANCE (0)
+                    reason                   : union dcerpc_bind_ack_reason(case 0)
+                    value                    : DCERPC_BIND_ACK_REASON_NOT_SPECIFIED (0)
+                    syntax: struct ndr_syntax_id
+                        uuid                     : 8a885d04-1ceb-11c9-9fe8-08002b104860
+                        if_version               : 0x00000002 (2)
+            auth_info                : DATA_BLOB length=0
+rpc_api_pipe: got frag len of 68 at offset 0: NT_STATUS_OK
+rpc_api_pipe: host 192.168.12.11 returned 68 bytes.
+check_bind_response: accepted!
+cli_rpc_pipe_open_noauth: opened pipe samr to machine 192.168.12.11 and bound anonymously.
+===============================================================
+INTERNAL ERROR: Signal 11: Segmentation fault in pid 14360 (4.15.13-Ubuntu)
+If you are running a recent Samba version, and if you think this problem is not yet fixed in the latest versions, please consider reporting this bug, see https://wiki.samba.org/index.php/Bug_Reporting
+===============================================================
+PANIC (pid 14360): Signal 11: Segmentation fault in 4.15.13-Ubuntu
+BACKTRACE: 11 stack frames:
+ #0 /lib/x86_64-linux-gnu/libsamba-util.so.0(log_stack_trace+0x34) [0x7f7401c59874]
+ #1 /lib/x86_64-linux-gnu/libsamba-util.so.0(smb_panic+0xd) [0x7f7401c59e2d]
+ #2 /lib/x86_64-linux-gnu/libsamba-util.so.0(+0x1dec5) [0x7f7401c59ec5]
+ #3 /lib/x86_64-linux-gnu/libc.so.6(+0x42520) [0x7f7400faf520]
+ #4 /lib/x86_64-linux-gnu/libc.so.6(+0x47580) [0x7f7400fb4580]
+ #5 rpcclient(+0x958ac) [0x55723ab268ac]
+ #6 rpcclient(+0x983be) [0x55723ab293be]
+ #7 rpcclient(main+0x8be) [0x55723aac60de]
+ #8 /lib/x86_64-linux-gnu/libc.so.6(+0x29d90) [0x7f7400f96d90]
+ #9 /lib/x86_64-linux-gnu/libc.so.6(__libc_start_main+0x80) [0x7f7400f96e40]
+ #10 rpcclient(_start+0x25) [0x55723aac6285]
+smb_panic(): calling panic action [/usr/share/samba/panic-action 14360]
+smb_panic(): action returned status 0
+Can not dump core: corepath not set up
+enum@enum-vm:~/PycharmProjects/enum4linux$ 
+

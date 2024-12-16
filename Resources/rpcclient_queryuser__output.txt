@@ -1,0 +1,27 @@
+User Name   :	Administrator
+	Full Name   :	
+	Home Drive  :	
+	Dir Drive   :	
+	Profile Path:	
+	Logon Script:	
+	Description :	Built-in account for administering the computer/domain
+	Workstations:	
+	Comment     :	
+	Remote Dial :
+	Logon Time               :	P, 15 dets  2024 00:49:35 EET
+	Logoff Time              :	N, 01 jaan  1970 03:00:00 MSK
+	Kickoff Time             :	N, 01 jaan  1970 03:00:00 MSK
+	Password last set Time   :	L, 14 dets  2024 02:24:32 EET
+	Password can change Time :	P, 15 dets  2024 02:24:32 EET
+	Password must change Time:	L, 25 jaan  2025 02:24:32 EET
+	unknown_2[0..31]...
+	user_rid :	0x1f4
+	group_rid:	0x201
+	acb_info :	0x00000010
+	fields_present:	0x00ffffff
+	logon_divs:	168
+	bad_password_count:	0x00000000
+	logon_count:	0x00000025
+	padding1[0..7]...
+	logon_hrs[0..21]...
+

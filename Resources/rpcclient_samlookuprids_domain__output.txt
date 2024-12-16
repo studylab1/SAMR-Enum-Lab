@@ -1,0 +1,2 @@
+rid 0x200: Domain Admins (2)
+

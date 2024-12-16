@@ -1,0 +1,4 @@
+min_password_length: 7
+password_properties: 0x00000001
+	DOMAIN_PASSWORD_COMPLEX
+

@@ -1,0 +1,9 @@
+user:[Administrator] rid:[0x1f4]
+user:[Guest] rid:[0x1f5]
+user:[krbtgt] rid:[0x1f6]
+user:[THAD_MORGAN] rid:[0x74c]
+user:[lab_user01_this_is_2] rid:[0x106a]
+user:[иван.иванов] rid:[0x106b]
+user:[张伟] rid:[0x106c]
+user:[adm!n.u$3rA] rid:[0x106e]
+
