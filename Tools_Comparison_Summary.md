@@ -33,8 +33,7 @@ The following table provides version numbers for the tools evaluated during this
 
 | Tool Name           | Version       | Additional Notes                    |
 |---------------------|---------------|-------------------------------------|
-| net user            | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
-| net group           | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
+| Net                 | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317)    |
 | PowerShell          | 1.0.1.0       | ActiveDirectory Module. Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317) |
 | Impacket            | 0.12.0        | For this research, only samrdump.py and net.py from the Impacket suite were used.      |
 | CrackMapExec        | 6.1.0 - John Wick|                                  |
@@ -72,20 +71,13 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 | Tool Name    | Cross-Forest Request Support | OpNum Coverage | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
 |--------------|------------------------------|----------------|--------------------------------|---------------------------|--------------------------------|---------------------------|
-| net user     | No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
+| Net          | No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
 | PowerShell   | Yes                          | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
 | Impacket     | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
 | CrackMapExec | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
 | Enum4linux   | No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
 | Enum4linux-ng| No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
 | rpcclient    | Yes                          |                |                                |                           | NTLM and Kerberos              | Standard Access           |
-| smbclient     |                             |                |                               |                           |                               |                           |
-| BloodHound            |                             |                |                               |                           |                               |                    |
-| Nmap   |                             |                |                               |                           |                               |                           |
-| Metasploit   |                             |                |                               |                           |                               |                           |
-| PowerSploit           |                             |                |                               |                           |                               |                        |
-| SAMRi10               |                             |                |                               |                           |                               |                        |
-| RPC Investigator      |                             |                |                               |                           |                               |                        |
 
 ---
 
@@ -98,8 +90,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 | Tool \ OpNum         | 0  | 1  | 3  | 5  | 6  | 7  | 8  | 11 | 13 | 15 | 16 | 17 | 18 | 19 | 20 | 25 | 27 | 33 | 34 | 36 | 39 | 40 | 41 | 44 | 46 | 47 | 48 | 51 | 56 | 57 | 64 | 65 |
 |----------------------|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
-| "net user", 
-"net group"            | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | 
+| Net                  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | 
 | PowerShell           | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | Impacket             | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ○  | ●  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ●  |
 | CrackMapExec         | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ●  | ○  | ○  |
