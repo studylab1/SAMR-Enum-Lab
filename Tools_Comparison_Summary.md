@@ -77,7 +77,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | CrackMapExec | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
 | Enum4linux   | No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
 | Enum4linux-ng| No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
-| rpcclient    | Yes                          |                |                                |                           | NTLM and Kerberos              | Standard Access           |
+| rpcclient    | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
 
 ---
 
