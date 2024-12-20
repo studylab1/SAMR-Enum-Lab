@@ -40,13 +40,8 @@ The following table provides version numbers for the tools evaluated during this
 | Enum4linux          | 0.9.1         |                                     |
 | Enum4linux-ng       | 1.3.4         |                                     |
 | rpcclient           | 4.15.13       | Part of the Samba suite             |
-| smbclient    |         | Part of the Samba suite        |
-| BloodHound          |          |          |
-| Nmap   |           | Part of the Nmap suite              |
-| Metasploit|     |  Part of the Metasploit Framework                |
-| PowerSploit         |          |             |
-| SAMRi10             |          |  |
-| RPC Investigator    |          |     |
+| Metasploit          | 6.4.41 dev    | Part of the Metasploit Framework    |
+
 
 ## Criteria for Tool Evaluation
 
@@ -78,6 +73,8 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | Enum4linux   | No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
 | Enum4linux-ng| No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
 | rpcclient    | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
+| rpcclient    | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
+| Metasploit   | Yes                          |                |                                |                           |                                | Standard Access           |
 
 ---
 
@@ -97,5 +94,5 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | Enum4linux           | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | Enum4linux-ng        | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | rpcclient            | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ○  | ●  | ●  | ●  | ○  | ●  | ○  |
-
+| Metasploit           |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
 
