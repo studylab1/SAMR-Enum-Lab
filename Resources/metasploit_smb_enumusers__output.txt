@@ -1,0 +1,57 @@
+msf6 auxiliary(scanner/smb/smb_enumusers) > info
+
+       Name: SMB User Enumeration (SAM EnumUsers)
+     Module: auxiliary/scanner/smb/smb_enumusers
+    License: Metasploit Framework License (BSD)
+       Rank: Normal
+
+Provided by:
+  hdm <x@hdm.io>
+
+Check supported:
+  No
+
+Basic options:
+  Name          Current Setting  Required  Description
+  ----          ---------------  --------  -----------
+  DB_ALL_USERS  false            no        Add all enumerated usernames to the database
+
+
+  Used when connecting via an existing SESSION:
+
+  Name     Current Setting  Required  Description
+  ----     ---------------  --------  -----------
+  SESSION                   no        The session to run this module on
+
+
+  Used when making a new connection via RHOSTS:
+
+  Name       Current Setting  Required  Description
+  ----       ---------------  --------  -----------
+  RHOSTS     192.168.12.11    no        The target host(s), see https://docs.metasploit.com/docs/using-metasploit/basics/using-metasploit.html
+  RPORT      445              no        The target port (TCP)
+  SMBDomain                   no        The Windows domain to use for authentication
+  SMBPass    LabAdm1!         no        The password for the specified username
+  SMBUser    enum             no        The username to authenticate as
+  THREADS    1                yes       The number of concurrent threads (max one per host)
+
+Description:
+  Determine what users exist via the SAM RPC service
+
+
+View the full module info with the info -d command.
+
+msf6 auxiliary(scanner/smb/smb_enumusers) > run
+[*] 192.168.12.11:445 - Connecting to Security Account Manager (SAM) Remote Protocol
+[*] 192.168.12.11:445 - Binding to \samr...
+[+] 192.168.12.11:445 - Bound to \samr
+[*] 192.168.12.11:445 - Using automatically identified domain: DOMAIN-Z
+[+] 192.168.12.11:445 - DOMAIN-Z [ Administrator, Guest, krbtgt, THAD_MORGAN, lab_user01_this_is_2, иван.иванов, 张伟, adm!n.u$3rA ] ( LockoutTries=0 PasswordMin=7 )
+[*] 192.168.12.11:445 - Connecting to Security Account Manager (SAM) Remote Protocol
+[*] 192.168.12.11:445 - Binding to \samr...
+[+] 192.168.12.11:445 - Bound to \samr
+[+] 192.168.12.11:445 - Builtin [  ] ( LockoutTries=0 PasswordMin=0 )
+[*] 192.168.12.11: - Scanned 1 of 1 hosts (100% complete)
+[*] Auxiliary module execution completed
+msf6 auxiliary(scanner/smb/smb_enumusers) > 
+
