@@ -1,0 +1,73 @@
+sf6 auxiliary(admin/dcerpc/samr_account) > info
+
+       Name: SAMR Account Management
+     Module: auxiliary/admin/dcerpc/samr_account
+    License: Metasploit Framework License (BSD)
+       Rank: Normal
+
+Provided by:
+  JaGoTu
+  Spencer McIntyre
+  smashery
+
+Module side effects:
+ ioc-in-logs
+
+Available actions:
+    Name            Description
+    ----            -----------
+    ADD_COMPUTER    Add a computer account
+    ADD_USER        Add a user account
+    DELETE_ACCOUNT  Delete a computer or user account
+=>  LOOKUP_ACCOUNT  Lookup a computer or user account
+
+Check supported:
+  No
+
+Basic options:
+  Name              Current Setting  Required  Description
+  ----              ---------------  --------  -----------
+  ACCOUNT_NAME      Administrator    no        The account name
+  ACCOUNT_PASSWORD                   no        The password for the new account
+
+
+  Used when connecting via an existing SESSION:
+
+  Name     Current Setting  Required  Description
+  ----     ---------------  --------  -----------
+  SESSION                   no        The session to run this module on
+
+
+  Used when making a new connection via RHOSTS:
+
+  Name       Current Setting  Required  Description
+  ----       ---------------  --------  -----------
+  RHOSTS     192.168.12.11    no        The target host(s), see https://docs.metasploit.com/docs/using-metasploit/basics/using-metasploit.html
+  RPORT      445              yes       The target port (TCP)
+  SMBDomain                   no        The Windows domain to use for authentication
+  SMBPass    LabAdm1!         no        The password for the specified username
+  SMBUser    enum             no        The username to authenticate as
+
+Description:
+  Add, lookup and delete user / machine accounts via MS-SAMR. By default
+  standard active directory users can add up to 10 new computers to the
+  domain (MachineAccountQuota). Administrative privileges however are required
+  to delete the created accounts, or to create/delete user accounts.
+
+References:
+  https://github.com/SecureAuthCorp/impacket/blob/master/examples/addcomputer.py
+
+Also known as:
+  samr_computer
+  samr_user
+
+
+View the full module info with the info -d command.
+
+msf6 auxiliary(admin/dcerpc/samr_account) > run
+[*] Running module against 192.168.12.11
+[*] 192.168.12.11:445 - Using automatically identified domain: DOMAIN-Z
+[+] 192.168.12.11:445 - Found DOMAIN-Z\Administrator (SID: S-1-5-21-2189324197-3478012550-1180063049-500)
+[*] Auxiliary module execution completed
+msf6 auxiliary(admin/dcerpc/samr_account) > 
+
