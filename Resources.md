@@ -104,6 +104,12 @@ This page offers downloadable resources, including traffic capture files, script
 | `rpcclient`      | 52 B | Command Output  | `rpcclient -U "domain-y.local\\enum%LabAdm1!" 192.168.12.11 -c "enumdomains"` |  | [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/rpcclient_enumdomains__output.txt) |
 | `rpcclient`      | 15 KB| Traffic Capture | `rpcclient -U "domain-y.local\\enum%LabAdm1!" 192.168.12.11 -c "getusrdompwinfo 500"` | Administrator | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/rpcclient_getusrdompwinfo.pcapng) |
 | `rpcclient`      | 417 B| Command Output  | `rpcclient -U "domain-y.local\\enum%LabAdm1!" 192.168.12.11 -c "getusrdompwinfo 500"` | Administrator | [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/rpcclient_getusrdompwinfo__output.txt) |
+| `Metasploit`     | 26 KB| Traffic Capture | `auxiliary/scanner/smb/smb_enumusers` module |      | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/metasploit_smb_enumusers.pcapng) |
+| `Metasploit`     | 2 KB | Command Output  | `auxiliary/scanner/smb/smb_enumusers` module |      | [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/metasploit_smb_enumusers__output.txt) |
+| `Metasploit`     | 16 KB| Traffic Capture | `auxiliary/admin/dcerpc/samr_account ` module | LOOKUP_ACCOUNT user  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/metasploit_samr_account__user.pcapng) |
+| `Metasploit`     | 3 KB | Command Output  | `auxiliary/admin/dcerpc/samr_account ` module | LOOKUP_ACCOUNT user  | [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/metasploit_samr_account__user__output.txt) |
+| `Metasploit`     | 16 KB| Traffic Capture | `auxiliary/admin/dcerpc/samr_account ` module | LOOKUP_ACCOUNT computer  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/metasploit_samr_account__computer.pcapng) |
+| `Metasploit`     | 3 KB | Command Output  | `auxiliary/admin/dcerpc/samr_account ` module | LOOKUP_ACCOUNT computer  | [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/metasploit_samr_account__computer__output.txt) |
 
 ---
 
@@ -121,7 +127,7 @@ The table below provides an overview of SAMR operation numbers (OpNums) relevant
 | 1         | `SamrCloseHandle`             | N/A                                   | Closes an open handle to a SAM object, releasing the associated resources.                        |
 | 3         | `SamrQuerySecurityObject`     | Security Descriptor                   | Retrieves security information for a specified SAM object, such as permissions and access control details. |
 | 5         | `SamrLookupDomainInSamServer` | SID                                   | Resolves a domain name to its corresponding SID within the SAM server.                            |
-| 6         | `SamrEnumerateDomainsInSamServer` | List of Strings                       | Lists all domains managed by the SAM server.                                                     |
+| 6         | `SamrEnumerateDomainsInSamServer` | List of Strings                       | Lists all domains managed by the SAM server.                                                  |
 | 7         | `SamrOpenDomain`              | Handle                                | Opens a handle to a specific domain for further operations.                                       |
 | 8         | `SamrQueryInformationDomain`  | Varies (based on Information Level)   | Retrieves specific information about a domain, such as security policies or account statistics.   |
 | 11        | `SamrEnumerateGroupsInDomain` | List of Strings and Integers          | Retrieves a list of group names (strings) and their RIDs (relative identifiers, integers).        |
@@ -131,6 +137,7 @@ The table below provides an overview of SAMR operation numbers (OpNums) relevant
 | 17        | `SamrLookupNamesInDomain`     | List of SIDs                          | Converts account names into SIDs within a domain.                                                |
 | 18        | `SamrLookupIdsInDomain`       | List of Strings                       | Maps SIDs back to account names.                                                                 |
 | 19        | `SamrOpenGroup`               | Handle                                | Opens a handle to a specific group for further operations.                                       |
+| 20        | `SamrOpenAlias`               | Handle                                | Opens a handle to a specific alias (local group) for further operations.                         |
 | 25        | `SamrGetMembersInGroup`       | List of Integers                      | Retrieves the list of members' RIDs for a given group.                                           |
 | 27        | `SamrOpenAlias`               | Handle                                | Opens a handle to a specific alias (local group) for further operations.                         |
 | 33        | `SamrGetMembersInAlias`       | List of SIDs                          | Retrieves a list of members for a specified alias (local group).                                 |
@@ -138,9 +145,11 @@ The table below provides an overview of SAMR operation numbers (OpNums) relevant
 | 36        | `SamrQueryInformationUser`    | Varies (based on Information Level)   | Retrieves detailed information on a specific user account.                                       |
 | 39        | `SamrGetGroupsForUser`        | List of Integers                      | Lists all group memberships for a specified user.                                                |
 | 40        | `SamrQueryDisplayInformation` | Paginated List of Strings             | Provides display information (e.g., names) for a set of domain accounts, such as users or groups.|
-| 41        | `SamrGetDisplayEnumerationIndex` | Integer                              | Retrieves the display index for paginated enumerations.                                        |
+| 41        | `SamrGetDisplayEnumerationIndex` | Integer                            | Retrieves the display index for paginated enumerations.                                          |
+| 44        | `SamrSetInformationUser`      | N/A                                   | Modifies the properties or settings of a user account based on specified information.             |
 | 46        | `SamrQueryDisplayInformation2`| Paginated List of Strings             | Retrieves display information for domain accounts, similar to `SamrQueryDisplayInformation`.     |
 | 47        | `SamrQueryInformationUser2`   | Varies (based on Information Level)   | Provides additional detailed information about a user account, similar to `SamrQueryInformationUser`.|
+| 48        | `SamrSetSecurityObject`       | Boolean                               | Updates the security descriptor (permissions, owner, etc.) for a specified SAM object.           |
 | 51        | `SamrQueryDisplayInformation3`| Paginated and Filtered List of Strings| Enables detailed and filtered queries for large-scale user, group, or machine account enumeration.|
 | 56        | `SamrGetDomainPasswordInformation` | Structure                           | Retrieves password policy information for the domain.                                        |
 | 57        | `SamrValidatePasswordPolicy`  | Boolean                               | Validates a user's password against the domain's password policy.                               |
