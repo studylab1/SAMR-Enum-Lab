@@ -74,7 +74,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | Enum4linux-ng| No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
 | rpcclient    | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
 | rpcclient    | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
-| Metasploit   | Yes                          |                |                                |                           |                                | Standard Access           |
+| Metasploit   | Yes                          |                | No                             | Accurate                  | NTLM                           | Standard Access           |
 
 ---
 
@@ -94,5 +94,5 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | Enum4linux           | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | Enum4linux-ng        | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | rpcclient            | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ○  | ●  | ●  | ●  | ○  | ●  | ○  |
-| Metasploit           |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |    |
+| Metasploit           | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ○  | ●  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  |
 
