@@ -41,6 +41,7 @@ The following table provides version numbers for the tools evaluated during this
 | Enum4linux-ng       | 1.3.4         |                                     |
 | rpcclient           | 4.15.13       | Part of the Samba suite             |
 | Metasploit          | 6.4.41 dev    | Part of the Metasploit Framework    |
+| SharpHound          | 2.5.9         | Part of the BloodHound project      |
 
 
 ## Criteria for Tool Evaluation
@@ -75,6 +76,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | rpcclient    | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
 | rpcclient    | Yes                          |                | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
 | Metasploit   | Yes                          |                | No                             | Accurate                  | NTLM                           | Standard Access           |
+| SharpHound   | Yes                          |                | No                             | Accurate                  | NTLM and Kerberos              | Standard Access           |
 
 ---
 
@@ -95,4 +97,5 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | Enum4linux-ng        | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | rpcclient            | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ○  | ●  | ●  | ●  | ○  | ●  | ○  |
 | Metasploit           | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ○  | ●  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  |
+| SharpHound           | ○  | ●  | ○  | ●  | ●  | ●  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | 
 
