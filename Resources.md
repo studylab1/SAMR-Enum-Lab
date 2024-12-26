@@ -110,6 +110,16 @@ This page offers downloadable resources, including traffic capture files, script
 | `Metasploit`     | 3 KB | Command Output  | `auxiliary/admin/dcerpc/samr_account ` module | LOOKUP_ACCOUNT user  | [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/metasploit_samr_account__user__output.txt) |
 | `Metasploit`     | 16 KB| Traffic Capture | `auxiliary/admin/dcerpc/samr_account ` module | LOOKUP_ACCOUNT computer  | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/metasploit_samr_account__computer.pcapng) |
 | `Metasploit`     | 3 KB | Command Output  | `auxiliary/admin/dcerpc/samr_account ` module | LOOKUP_ACCOUNT computer  | [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/metasploit_samr_account__computer__output.txt) |
+| `SharpHound`     | 2 MB | Traffic Capture  | `SharpHound.exe -c All  --domaincontroller zdc1.domain-z.local` | | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain_z.pcapng) |
+| `SharpHound`     | 4 KB | Command Output   | `SharpHound.exe -c All  --domaincontroller zdc1.domain-z.local` | | [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain_z__output.txt) |
+| `SharpHound`     | 23 KB | Command Export   | `SharpHound.exe -c All  --domaincontroller zdc1.domain-z.local` | Computers (JSON) | [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain-z__computers_export.json) |
+| `SharpHound`     | 334 KB | Command Export   | `SharpHound.exe -c All  --domaincontroller zdc1.domain-z.local` | Containers (JSON)| [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain-z__containers_export.json) |
+| `SharpHound`     | 5 KB | Command Export   | `SharpHound.exe -c All  --domaincontroller zdc1.domain-z.local` | Domains (JSON)| [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain-z__domains_export.json) |
+| `SharpHound`     | 4 KB | Command Export   | `SharpHound.exe -c All  --domaincontroller zdc1.domain-z.local` | GPOs (JSON) | [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain-z__gpos_export.json) |
+| `SharpHound`     | 196 KB | Command Export   | `SharpHound.exe -c All  --domaincontroller zdc1.domain-z.local` | Groups (JSON) | [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain-z__groups_export.json) |
+| `SharpHound`     | 7 KB | Command Export   | `SharpHound.exe -c All  --domaincontroller zdc1.domain-z.local` | OUs (JSON)| [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain-z__ous_export.json) |
+| `SharpHound`     | 36 KB | Command Export   | `SharpHound.exe -c All  --domaincontroller zdc1.domain-z.local` | Users (JSON)| [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain-z__users_export.json) |
+| `SharpHound`     | 10 MB | Command Export  | `SharpHound.exe -c All  --domaincontroller xdc1.domain-x.local` | Archive | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain-x__export.zip) |
 
 ---
 
