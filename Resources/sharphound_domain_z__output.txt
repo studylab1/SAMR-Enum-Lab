@@ -1,0 +1,37 @@
+2024-12-26T00:53:45.4083834+02:00|INFORMATION|This version of SharpHound is compatible with the 5.0.0 Release of BloodHound
+2024-12-26T00:53:45.5034036+02:00|INFORMATION|Resolved Collection Methods: Group, LocalAdmin, GPOLocalGroup, Session, LoggedOn, Trusts, ACL, Container, RDP, ObjectProps, DCOM, SPNTargets, PSRemote, UserRights, CARegistry, DCRegistry, CertServices
+2024-12-26T00:53:45.5190350+02:00|INFORMATION|Initializing SharpHound at 12:53 AM on 12/26/2024
+2024-12-26T00:53:45.5506822+02:00|INFORMATION|Resolved current domain to domain-y.local
+2024-12-26T00:53:45.8364561+02:00|INFORMATION|Loaded cache with stats: 132 ID to type mappings.
+ 1 name to SID mappings.
+ 3 machine sid mappings.
+ 7 sid to domain mappings.
+ 0 global catalog mappings.
+2024-12-26T00:53:45.8524752+02:00|INFORMATION|Flags: Group, LocalAdmin, GPOLocalGroup, Session, LoggedOn, Trusts, ACL, Container, RDP, ObjectProps, DCOM, SPNTargets, PSRemote, UserRights, CARegistry, DCRegistry, CertServices
+2024-12-26T00:53:45.9067918+02:00|INFORMATION|Beginning LDAP search for domain-y.local
+2024-12-26T00:53:45.9696045+02:00|INFORMATION|Beginning LDAP search for domain-y.local Configuration NC
+2024-12-26T00:53:45.9791256+02:00|INFORMATION|Producer has finished, closing LDAP channel
+2024-12-26T00:53:45.9791256+02:00|INFORMATION|LDAP channel closed, waiting for consumers
+2024-12-26T00:53:45.9791256+02:00|INFORMATION|[CommonLib ACLProc]Building GUID Cache for DOMAIN-Z.LOCAL
+2024-12-26T00:53:45.9791256+02:00|INFORMATION|[CommonLib ACLProc]Building GUID Cache for DOMAIN-Z.LOCAL
+2024-12-26T00:53:46.0319280+02:00|INFORMATION|[CommonLib ACLProc]Found GUID for ACL Right ms-mcs-admpwd: bb47cc36-61e9-4f66-88b5-768490f2811e in domain DOMAIN-Z.LOCAL
+2024-12-26T00:53:46.0319280+02:00|INFORMATION|[CommonLib ACLProc]Found GUID for ACL Right ms-mcs-admpwd: bb47cc36-61e9-4f66-88b5-768490f2811e in domain DOMAIN-Z.LOCAL
+2024-12-26T00:53:46.2006963+02:00|INFORMATION|[CommonLib ACLProc]Building GUID Cache for DOMAIN-Z.LOCAL
+2024-12-26T00:53:46.2006963+02:00|INFORMATION|[CommonLib ACLProc]Building GUID Cache for DOMAIN-Z.LOCAL
+2024-12-26T00:53:46.2323763+02:00|INFORMATION|[CommonLib ACLProc]Found GUID for ACL Right ms-mcs-admpwd: bb47cc36-61e9-4f66-88b5-768490f2811e in domain DOMAIN-Z.LOCAL
+2024-12-26T00:53:46.2323763+02:00|INFORMATION|[CommonLib ACLProc]Found GUID for ACL Right ms-mcs-admpwd: bb47cc36-61e9-4f66-88b5-768490f2811e in domain DOMAIN-Z.LOCAL
+2024-12-26T00:53:46.2505324+02:00|INFORMATION|[CommonLib ACLProc]Building GUID Cache for DOMAIN-Z.LOCAL
+2024-12-26T00:53:46.2821863+02:00|INFORMATION|[CommonLib ACLProc]Found GUID for ACL Right ms-mcs-admpwd: bb47cc36-61e9-4f66-88b5-768490f2811e in domain DOMAIN-Z.LOCAL
+2024-12-26T00:53:46.2956929+02:00|INFORMATION|[CommonLib ACLProc]Building GUID Cache for DOMAIN-Z.LOCAL
+2024-12-26T00:53:46.3273459+02:00|INFORMATION|[CommonLib ACLProc]Found GUID for ACL Right ms-mcs-admpwd: bb47cc36-61e9-4f66-88b5-768490f2811e in domain DOMAIN-Z.LOCAL
+2024-12-26T00:53:46.6257079+02:00|INFORMATION|Consumers finished, closing output channel
+Closing writers
+2024-12-26T00:53:46.6413431+02:00|INFORMATION|Output channel closed, waiting for output task to complete
+2024-12-26T00:53:46.7196664+02:00|INFORMATION|Status: 318 objects finished (+318 Infinity)/s -- Using 41 MB RAM
+2024-12-26T00:53:46.7196664+02:00|INFORMATION|Enumeration finished in 00:00:00.8170045
+2024-12-26T00:53:46.7664413+02:00|INFORMATION|Saving cache with stats: 132 ID to type mappings.
+ 1 name to SID mappings.
+ 3 machine sid mappings.
+ 7 sid to domain mappings.
+ 0 global catalog mappings.
+2024-12-26T00:53:46.7664413+02:00|INFORMATION|SharpHound Enumeration Completed at 12:53 AM on 12/26/2024! Happy Graphing!
