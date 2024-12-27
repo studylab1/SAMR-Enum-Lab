@@ -6,8 +6,10 @@
 3. [Tool Versions and Specifications](#tool-versions-and-specifications)
 4. [Criteria for Tool Evaluation](#criteria-for-tool-evaluation)
 5. [Tool Comparison Results](#tool-comparison-results)
-6. [Analysis of 'Desired Access' Field](#analysis-of-desired-access-field)
-7. [Parsing and Accuracy Details](#parsing-and-accuracy-details)
+6. [Criteria Evaluation Details](#criteria-evaluation-details)
+   1. [OpNum Coverage Criterion](#opnum-coverage-criterion)
+   2. [Excessive Permission Detection Criterion](#excessive-permission-detection-criterion)
+   3. [Data Parsing and Accuracy Criterion](#data-parsing-and-accuracy-criterion)
 
 ## Introduction
 
@@ -102,7 +104,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | rpcclient            | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ○  | ●  | ●  | ●  | ○  | ●  | ○  |
 
 
-### "Excessive Permission Detection" Criterion
+### Excessive Permission Detection Criterion
 
 The evaluation focuses on analyzing the **'Desired Access'** field in SAMR requests. For clarity:
 
@@ -165,7 +167,7 @@ Module used:
 - `auxiliary/scanner/smb/smb_enumusers`
 - `auxiliary/admin/dcerpc/samr_account`
 
-**No SAMR requests specifying the “Desired Access” field were detected in the network traffic captures.**
+> No SAMR requests specifying the “Desired Access” field were detected in the network traffic captures.
 
 #### CrackMapExec
 
@@ -297,7 +299,7 @@ Executed following commands:
 | `SamrOpenGroup`     | `OpenGroup`         | 19        | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
 
 
-### "Data Parsing and Accuracy" Criterion
+### Data Parsing and Accuracy Criterion
  
 This section displays how tools parse and present data attributes retrieved through SAMR operations. The analysis evaluates the completeness of the attributes retrieved for each SAMR operation and the accuracy of the values compared to expected results. Tools are assessed based on their handling of expected data types, edge cases, and inconsistencies.
 
