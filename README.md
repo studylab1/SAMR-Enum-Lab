@@ -1,23 +1,44 @@
-# SAMR-Enum-Lab
+# SAMR Enumeration in Multi-Forest Active Directory Environments
 
-# Investigating SAMR Enumeration Attacks in Active Directory Multi-Forest Environments
+## Overview
 
-## What the project does
-This project investigates SAMR enumeration attacks in multi-forest Active Directory environments. It develops a Python tool to explore the full capabilities of the SAMR protocol and analyzes how different forest trust configurations impact the amount of accessible data, which could be exploited by attackers.
+This project explores the enumeration capabilities of the **Security Account Manager Remote (SAMR)** protocol in **Active Directory (AD)** environments, with a focus on multi-forest configurations. The research evaluates SAMR's ability to extract information such as user accounts, groups, domain structures, and access permissions, highlighting its security implications in trust-based AD setups.
 
-The laboratory setup aims to provide insights into:
+The project includes:
+- Comparative analysis of existing tools for SAMR enumeration.
+- A custom tool designed to leverage select SAMR operation numbers (OpNums) for detailed enumeration.
+- Experimental results on how trust configurations affect data accessibility.
 
-- The extent of data leakage via SAMR enumeration in different trust configurations.
-- How forest trust types influence enumeration attack surfaces.
-- Strategies for mitigating SAMR-based attacks in multi-forest environments.
+## Key Features
 
-## Why the project is useful
-The SAMR protocol allows attackers to gather critical information about users, groups, and domain structures, even from non-privileged accounts. This research develops a tool that simulates these attacks in various Active Directory trust configurations, providing insights into how attackers could exploit trust relationships during lateral movement. The findings will guide organizations in optimizing their security configurations, improving risk management, and developing countermeasures and detection tools.
+- **Custom SAMR Enumeration Tool**: A Python-based tool utilizing a subset of SAMR OpNums to perform targeted enumeration in multi-forest AD setups.
+- **Comparative Study**: Evaluates tools such as `Impacket`, `CrackMapExec`, `rpcclient`, `Metasploit`, and `SharpHound` based on their OpNum coverage, authentication support, and performance in multi-forest scenarios.
+- **Laboratory Setup**: Simulated AD environment with diverse trust configurations, authentication scopes, and functional levels.
 
-## How users can get started with the project
-Users can start by setting up a controlled lab environment using Hyper-V, following the configuration guidelines in the project documentation in Lab Setup. The SAMR enumeration tool can be used to simulate attacks and analyze vulnerabilities in different trust setups.
+## Research Highlights
 
-## References
-- [Lab Setup](Lab_Setup.md): Detailed instructions for setting up a virtual lab environment on Hyper-V, designed for SAMR enumeration testing across multiple Active Directory forests. This setup includes six forest trusts with various configurations to analyze SAMR’s enumeration capabilities under different trust relationships and authentication scopes.
+- **Impact of Trust Configurations**: Analyzes how one-way, two-way, and selective authentication scopes influence SAMR enumeration results.
+- **Tool Limitations**: Identifies gaps in existing tools, including restricted OpNum support and dependency on excessive permissions.
+- **Security Insights**: Provides recommendations to mitigate risks associated with SAMR enumeration in multi-forest setups.
 
-- [SAMR Tools Comparison](SAMR_Tools_Comparison.md): A comparative analysis of existing tools used for SAMR enumeration, focusing on factors like OpNum coverage, multi-forest support, permissions compliance, and error handling. This document evaluates tools such as Impacket, CrackMapExec, and rpcclient, identifying limitations and gaps that led to the development of a new enumeration tool.
+## Repository Structure
+
+- **`src/`**: Contains the custom SAMR enumeration tool.
+- **`tests/`**: Automated tests for various SAMR operations.
+- **`docs/`**:
+  - [`Lab_Setup.md`](./docs/Lab_Setup.md): Details the AD lab configuration and experimental setup.
+  - [`Resources.md`](./docs/Resources.md): References and supplementary reading.
+  - [`Tools_Comparison.md`](./docs/Tools_Comparison.md): Comparative evaluation of SAMR enumeration tools.
+
+## Requirements
+
+- **Python 3.8+**
+- **Dependencies**: Listed in `requirements.txt` (e.g., `impacket`, `pycrypto`).
+- **Environment**: Windows or Linux systems with access to a configured Active Directory lab.
+
+## Usage
+
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/your-repo-url.git
+   cd samr-enumeration
