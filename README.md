@@ -26,9 +26,9 @@ The project includes:
 - **`src/`**: Contains the custom SAMR enumeration tool.
 - **`tests/`**: Automated tests for various SAMR operations.
 - **`docs/`**:
-  - [`Lab_Setup.md`](./docs/Lab_Setup.md): Details the AD lab configuration and experimental setup.
-  - [`Resources.md`](./docs/Resources.md): References and supplementary reading.
-  - [`Tools_Comparison.md`](./docs/Tools_Comparison.md): Comparative evaluation of SAMR enumeration tools.
+  - [`Lab_Setup.md`](Lab_Setup.md): Details the AD lab configuration and experimental setup.
+  - [`Resources.md`](Resources.md): References and supplementary reading.
+  - [`Tools_Comparison.md`](Tools_Comparison.md): Comparative evaluation of SAMR enumeration tools.
 
 ## Requirements
 
