@@ -1,4 +1,14 @@
-### Scripts and Traffic Captures
+# Resources
+
+This page serves as a central repository of downloadable resources, detailed documentation, and supporting scripts to aid in SAMR enumeration and analysis efforts. It contains traffic capture files, tool outputs, enumeration scripts, and comprehensive descriptions of SAMR operation numbers (OpNums). These resources are designed to complement the information presented on other pages and facilitate deeper understanding and hands-on exploration.
+
+## Table of Contents
+1. [Traffic Captures, Tools Output and Scripts](#traffic-captures-tools-output-and-scripts)
+2. [SAMR Operation Numbers Details](#samr-operation-numbers-details)
+3. [PowerShell AD Module Cmdlets Details](#powershell-ad-module-cmdlets-details)
+
+
+## Traffic Captures, Tools Output and Scripts
 
 This page offers downloadable resources, including traffic capture files, scripts, command outputs, and other materials generated and utilized during the research
 
@@ -121,11 +131,9 @@ This page offers downloadable resources, including traffic capture files, script
 | `SharpHound`     | 36 KB | Command Export   | `SharpHound.exe -c All  --domaincontroller zdc1.domain-z.local` | Users (JSON)| [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain-z__users_export.json) |
 | `SharpHound`     | 10 MB | Command Export  | `SharpHound.exe -c All  --domaincontroller xdc1.domain-x.local` | Archive | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain-x__export.zip) |
 
----
+## SAMR Operation Numbers Details
 
-### SAMR Operation Numbers Details
-
-The table below provides an overview of SAMR operation numbers (OpNums) relevant to enumeration. Each OpNum represents a specific operation that can be performed through the SAMR protocol. The table includes the following details for each OpNum:
+The table below provides an overview of SAMR operation numbers (OpNums) relevant to enumeration. Each OpNum corresponds to a specific operation that can be executed using the SAMR protocol. The table includes the following details for each OpNum:
 - OpNum: The unique identifier for the operation.
 - Name: The official name of the operation.
 - Data Type in Response: The format of the data returned in response to the operation.
@@ -166,4 +174,210 @@ The table below provides an overview of SAMR operation numbers (OpNums) relevant
 | 64        | `SamrConnect5`                | Handle                                | Establishes a connection to the SAM server for domain enumeration and lookup.                   |
 | 65        | `SamrRidToSid`                | SID                                   | Converts a relative identifier (RID) to a security identifier (SID) within the domain.          |
 
+## PowerShell AD Module Cmdlets Details
 
+The following is the list of PowerShell AD module cmdlets and their parameters used during testing. These commands targeted the domain controller zdc1.domain-z.local in a foreign forest using cross-forest authentication with explicitly defined credentials. The parameters for each command were selected to evaluate the cmdlets’ behavior.
+
+Traffic analysis revealed that the cmdlets relied on the Microsoft .NET Naming Service (MS-NNS) and Microsoft .NET Message Framing Protocol (MS-NMF) for their operations, rather than SAMR requests.
+
+1. **Get-ADAccountAuthorizationGroup**
+   - `-Identity "administrator"`
+   - `-Server "zdc1.domain-z.local"`
+   - `-Credential $Cred`
+
+2. **Get-ADAccountResultantPasswordReplicationPolicy**
+   - `-Identity "administrator"`
+   - `-DomainController "zdc1.domain-z.local"`
+   - `-Credential $Cred`
+
+3. **Get-ADAuthenticationPolicy**
+   - `-Filter *`
+   - `-Server "zdc1.domain-z.local"`
+   - `-Credential $Cred`
+
+4. **Get-ADAuthenticationPolicySilo**
+   - `-Filter *`
+   - `-Server "zdc1.domain-z.local"`
+   - `-Credential $Cred`
+
+5. **Get-ADCentralAccessPolicy**
+   - `-Filter *`
+   - `-Server "zdc1.domain-z.local"`
+   - `-Credential $Cred`
+
+6. **Get-ADCentralAccessRule**
+   - `-Filter *`
+   - `-Server "zdc1.domain-z.local"`
+   - `-Credential $Cred`
+
+7. **Get-ADClaimTransformPolicy**
+   - `-Filter *`
+   - `-Server "zdc1.domain-z.local"`
+   - `-Credential $Cred`
+
+8. **Get-ADClaimType**
+   - `-Filter *`
+   - `-Server "zdc1.domain-z.local"`
+   - `-Credential $Cred`
+
+9. **Get-ADComputerServiceAccount**
+   - `-Identity "MySvcAcct"`
+   - `-Server "zdc1.domain-z.local"`
+   - `-Credential $Cred`
+
+10. **Get-ADDefaultDomainPasswordPolicy**
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+11. **Get-ADDomainControllerPasswordReplicationPolicy**
+    - `-Identity "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+12. **Get-ADDomainControllerPasswordReplicationPolicyUsage**
+    - `-Identity "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+13. **Get-ADFineGrainedPasswordPolicy**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+14. **Get-ADFineGrainedPasswordPolicySubject**
+    - `-Identity "ExistingPolicyName"`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+15. **Get-ADObject**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+16. **Get-ADOptionalFeature**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+17. **Get-ADOrganizationalUnit**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+18. **Get-ADPrincipalGroupMembership**
+    - `-Identity "administrator"`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+19. **Get-ADReplicationAttributeMetadata**
+    - `-Object "CN=Administrator,CN=Users,DC=domain-z,DC=local"`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+20. **Get-ADReplicationConnection**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+21. **Get-ADReplicationFailure**
+    - `-Target "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+22. **Get-ADReplicationPartnerMetadata**
+    - `-Target "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+23. **Get-ADReplicationQueueOperation**
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+24. **Get-ADReplicationSite**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+25. **Get-ADReplicationSiteLink**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+26. **Get-ADReplicationSiteLinkBridge**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+27. **Get-ADReplicationSubnet**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+28. **Get-ADResourceProperty**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+29. **Get-ADResourcePropertyList**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+30. **Get-ADResourcePropertyValueType**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+31. **Get-ADRootDSE**
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+32. **Get-ADServiceAccount**
+    - `-Identity "MySvcAcct"`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+33. **Get-ADTrust**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+34. **Get-ADUserResultantPasswordPolicy**
+    - `-Identity "administrator"`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+35. **Sync-ADObject**
+    - `-Object "CN=Administrator,CN=Users,DC=domain-z,DC=local"`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+36. **Search-ADAccount**
+    - `-AccountDisabled`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+37. **Get-ADUser**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+38. **Get-ADGroup**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+39. **Get-ADComputer**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+40. **Get-ADDomain**
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+41. **Get-ADDomainController**
+    - `-Filter *`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
+
+42. **Get-ADGroupMember**
+    - `-Identity "Domain Admins"`
+    - `-Server "zdc1.domain-z.local"`
+    - `-Credential $Cred`
