@@ -65,19 +65,19 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 ## Tool Comparison Results 
 
-> **Note:** The evaluation results analyze tools’ support for cross-forest SAMR requests. If a tool does not support cross-forest SAMR or uses a different protocol for enumeration, other criteria are not assessed, and the corresponding values are marked as N/A (Not Applicable).
+> **Note:** The evaluation results analyze tools’ support for cross-forest SAMR requests. If a tool does not support cross-forest SAMR or uses a different protocol for enumeration, other criteria are not assessed, and the corresponding values are marked as "Not Applicable".
 
 | Tool Name    | Cross-Forest Request Support | OpNum Coverage | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
 |--------------|------------------------------|----------------|--------------------------------|---------------------------|--------------------------------|---------------------------|
-| Net          | No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
-| PowerShell   | Yes                          | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
-| Enum4linux   | No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
-| Enum4linux-ng| No                           | N/A            | N/A                            | N/A                       | N/A                            | N/A                       |
-| SharpHound   | Yes                          | Low (25%)      | No                             | Accurate                  | NTLM and Kerberos              | Standard Access           |
-| Metasploit   | Yes                          | Low (28.1%)    | No                             | Accurate                  | NTLM                           | Standard Access           |
-| CrackMapExec | Yes                          | Low (34.3%)    | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
-| Impacket     | Yes                          | Moderate (59.3%)| Yes                           | Accurate                  | NTLM and Kerberos              | Standard Access           |
-| rpcclient    | Yes                          | High (84.3%)   | Yes                            | Accurate                  | NTLM and Kerberos              | Standard Access           |
+| Net          | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
+| Enum4linux   | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
+| Enum4linux-ng| Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
+| PowerShell   | Supported                    | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
+| SharpHound   | Supported                    | Low Coverage (25%) | Not Detected               | Accurate                  | NTLM and Kerberos              | Standard Access           |
+| Metasploit   | Supported                    | Low Coverage (28.1%) | Not Detected             | Accurate                  | NTLM                           | Standard Access           |
+| CrackMapExec | Supported                    | Low Coverage (34.3%) | Detected                 | Accurate                  | NTLM and Kerberos              | Standard Access           |
+| Impacket     | Supported                    | Moderate Coverage (59.3%)| Detected             | Accurate                  | NTLM and Kerberos              | Standard Access           |
+| rpcclient    | Supported                    | High Coverage (84.3%) | Detected                | Accurate                  | NTLM and Kerberos              | Standard Access           |
 
 > Cmdlets from the Active Directory module in PowerShell did not use the SAMR for communication. Instead, these cmdlets primarily relied on the Microsoft .NET Naming Service (MS-NNS) and Microsoft .NET Message Framing Protocol (MS-NMF) for their operations.
 
