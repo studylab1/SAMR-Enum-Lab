@@ -28,9 +28,9 @@ These scans were performed in cases where tools supported cross-forest requests.
 
 The data in Active Directory was populated using the BadBlood tool. Key details of the environment include:
 - The `zdc1.domain-z.local` domain controller hosted users, groups, and computers with:
-  - Special characters in their names.
-  - Foreign language inputs.
-  - Long names, descriptions, and other fields.
+  - Special characters in their names such as   `@`, `#`, `$`, `%`, `^`, `&`, `*`, `!`, `~`, `'`, `+`, `=`, `_`, `-`, `<`, `>`, `,`, `.`, `?`, `/`, `"`.
+  - Fields in foreign language such as Russian and Chinese.
+  - Fields like names, descriptions, and others with long values.
 - The `zdc1.domain-z.local` domain controller contained:
   - 20,000 users.
   - 10,000 computers and groups.
