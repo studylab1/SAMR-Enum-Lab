@@ -60,7 +60,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 - **OpNum Coverage**: Lists supported SAMR operation numbers.
 - **Excessive Permission Detection**: Specifies the default access permissions required by each tool.
 - **Data Parsing and Accuracy**: Evaluates whether tools correctly interpret and retrieve all fields from SAMR responses and align the output with the expected protocol structures. Includes verification of field completeness and consistency in results across SAMR operations.
-- **Supported Authentication Types**: Details whether NTLM, Kerberos, or both protocols are supported.
+- **Supported Authentication Types**: Details whether NTLM, Kerberos, or both protocols are supported (Multi-Authentication Compatible).
 - **Access Level Requirements**: Specifies whether administrator privileges are required for operation.
 
 ## Tool Comparison Results 
@@ -73,11 +73,11 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | Enum4linux   | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | Enum4linux-ng| Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | PowerShell   | Supported                    | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
-| SharpHound   | Supported                    | Low Coverage (25%) | Not Detected               | Accurate                  | NTLM and Kerberos              | Standard Access           |
+| SharpHound   | Supported                    | Low Coverage (25%) | Not Detected               | Accurate                  | Multi-Authentication Compatible| Standard Access           |
 | Metasploit   | Supported                    | Low Coverage (28.1%) | Not Detected             | Accurate                  | NTLM                           | Standard Access           |
-| CrackMapExec | Supported                    | Low Coverage (34.3%) | Detected                 | Accurate                  | NTLM and Kerberos              | Standard Access           |
-| Impacket     | Supported                    | Moderate Coverage (59.3%)| Detected             | Accurate                  | NTLM and Kerberos              | Standard Access           |
-| rpcclient    | Supported                    | High Coverage (84.3%) | Detected                | Accurate                  | NTLM and Kerberos              | Standard Access           |
+| CrackMapExec | Supported                    | Low Coverage (34.3%) | Detected                 | Accurate                  | Multi-Authentication Compatible| Standard Access           |
+| Impacket     | Supported                    | Moderate Coverage (59.3%)| Detected             | Accurate                  | Multi-Authentication Compatible| Standard Access           |
+| rpcclient    | Supported                    | High Coverage (84.3%) | Detected                | Accurate                  | Multi-Authentication Compatible| Standard Access           |
 
 > Cmdlets from the Active Directory module in PowerShell did not use the SAMR for communication. Instead, these cmdlets primarily relied on the Microsoft .NET Naming Service (MS-NNS) and Microsoft .NET Message Framing Protocol (MS-NMF) for their operations.
 
