@@ -73,11 +73,11 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | Enum4linux   | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | Enum4linux-ng| Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | PowerShell   | Supported                    | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
-| SharpHound   | Supported                    | Low Coverage (25%) | Not Detected               | Accurate                  | Multi-Authentication Compatible| Standard Access           |
-| Metasploit   | Supported                    | Low Coverage (28.1%) | Not Detected             | Accurate                  | NTLM                           | Standard Access           |
-| CrackMapExec | Supported                    | Low Coverage (34.3%) | Detected                 | Accurate                  | Multi-Authentication Compatible| Standard Access           |
-| Impacket     | Supported                    | Moderate Coverage (59.3%)| Detected             | Accurate                  | Multi-Authentication Compatible| Standard Access           |
-| rpcclient    | Supported                    | High Coverage (84.3%) | Detected                | Accurate                  | Multi-Authentication Compatible| Standard Access           |
+| SharpHound   | Supported                    | Low Coverage (25%) | Not Detected               | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| Metasploit   | Supported                    | Low Coverage (28.1%) | Not Detected             | Accurate                  | NTLM                           | Standard Access Sufficient|
+| CrackMapExec | Supported                    | Low Coverage (34.3%) | Detected                 | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| Impacket     | Supported                    | Moderate Coverage (59.3%)| Detected             | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| rpcclient    | Supported                    | High Coverage (84.3%) | Detected                | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
 
 > Cmdlets from the Active Directory module in PowerShell did not use the SAMR for communication. Instead, these cmdlets primarily relied on the Microsoft .NET Naming Service (MS-NNS) and Microsoft .NET Message Framing Protocol (MS-NMF) for their operations.
 
