@@ -130,6 +130,8 @@ This page offers downloadable resources, including traffic capture files, script
 | `SharpHound`     | 7 KB | Command Export   | `SharpHound.exe -c All  --domaincontroller zdc1.domain-z.local` | OUs (JSON)| [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain-z__ous_export.json) |
 | `SharpHound`     | 36 KB | Command Export   | `SharpHound.exe -c All  --domaincontroller zdc1.domain-z.local` | Users (JSON)| [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain-z__users_export.json) |
 | `SharpHound`     | 10 MB | Command Export  | `SharpHound.exe -c All  --domaincontroller xdc1.domain-x.local` | Archive | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/sharphound_domain-x__export.zip) |
+| `nmap`           | 8 KB | Traffic Capture | `nmap -p 445 --script smb-enum* 192.168.10.11 -d` | An error occurred | [Download](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/nmap.pcapng) |
+| `nmap`           | 6 KB | Command Output  | `nmap -p 445 --script smb-enum* 192.168.10.11 -d` | An error occurred | [Open](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/nmap__output.txt) |
 
 ## SAMR Operation Numbers Details
 
