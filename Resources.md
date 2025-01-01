@@ -10,7 +10,7 @@ This page serves as a central repository of downloadable resources, detailed doc
 
 ## Traffic Captures, Tools Output and Scripts
 
-This page offers downloadable resources, including traffic capture files, scripts, command outputs, and other materials generated and utilized during the research
+This page offers downloadable resources, including traffic capture files, scripts, command outputs, and other materials generated and utilized during the research. The traffic capture of communication with xdc1.domain-x.local is not included in the table due to the large size of the files
 
 | Tool Name      | Size   | Type            | Command Executed                          | Comments                          | Link |
 |----------------|--------|-----------------|-------------------------------------------|-----------------------------------|------|
