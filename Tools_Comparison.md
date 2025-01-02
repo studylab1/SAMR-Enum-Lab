@@ -80,6 +80,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | rpcclient    | Supported                    | High Coverage (84.3%) | Detected                | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
 
 > Cmdlets from the Active Directory module in PowerShell did not use the SAMR for communication. Instead, these cmdlets primarily relied on the Microsoft .NET Naming Service (MS-NNS) and Microsoft .NET Message Framing Protocol (MS-NMF) for their operations.
+> For Metasploit, only the "auxiliary/scanner/smb/smb_enumusers" and "auxiliary/admin/dcerpc/samr_account" modules were examined.
 
 ## Criteria Evaluation Details
 
