@@ -1,4 +1,4 @@
-![image](https://github.com/user-attachments/assets/a1d0b7ab-a6ae-433f-aa25-26c8f5b07683)# SAMR Enumeration Tools Comparison
+# SAMR Enumeration Tools Comparison
 
 ## Table of Contents
 1. [Introduction](#introduction)
