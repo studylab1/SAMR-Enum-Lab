@@ -191,7 +191,7 @@ The following table outlines the IP addressing scheme used for the lab environme
 | **Domain Controller** | edc2              | <div align="right">e1.domain-e.local</div> | 50          | 192.168.5.12/24        | 192.168.5.1                  |
 | **Domain Controller** | xdc1              | <div align="right">domain-x.local</div>    | 100         | 192.168.10.11/24       | 192.168.10.1                 |
 | **Workstation**       | xws1              | <div align="right">N/A</div>               | 100         | 192.168.10.101/24      | 192.168.10.1                 |
-| **Workstation**       | xws2              | <div align="right">N/A</div>               | 100         | 192.168.10.102/24      | 192.168.10.1                 |
+| **Workstation**       | xws2              | <div align="right">domain-x.local</div>    | 100         | 192.168.10.102/24      | 192.168.10.1                 |
 | **Workstation**       | xws3              | <div align="right">N/A</div>               | 100         | 192.168.10.103/24      | 192.168.10.1                 |
 | **Domain Controller** | ydc1              | <div align="right">domain-y.local</div>    | 110         | 192.168.11.11/24       | 192.168.11.1                 |
 | **Workstation**       | yws1              | <div align="right">domain-y.local</div>    | 110         | 192.168.11.101/24      | 192.168.11.1                 |
