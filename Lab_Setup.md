@@ -42,11 +42,25 @@ The SAMR protocol is used to perform enumeration of users, groups, and domain st
 
 The virtual laboratory is hosted using Microsoft Hyper-V virtualization technology.
 
-### The Host Server Specifications
+### The Host Server Specifications for Tools Evaluation
+The host server was used for tool evaluation activities and contained virtual machines in the domain-x.local, domain-y.local, and domain-z.local domains.
 
 - **Operating System:** Windows 10 Enterprise (Version 22H2)
 - **RAM:** 32 GB
-- **Processor:** AMD Ryzen 7 PRO 5750G with Radeon Graphics, 3.80 GHz
+- **Processor:** AMD Ryzen 7 PRO 5750G with Radeon Graphics, 3.80 GHz.
+- **Virtualization Platform:** Microsoft Hyper-V
+- **Networking:** All virtual machines are connected to one Hyper-V private network.  
+  The "Private (Lab1)" Virtual Switch Extensions:
+  - "Microsoft Windows Filtering Platform": Disabled
+  - "Microsoft Azure VFP Switch Extension": Disabled
+  - "Microsoft NDIS Capture": Enabled
+ 
+### The Host Server Specifications for SAMRClient Tool Enumeration
+The host server was used to enumerate domains in foreign forests using the SAMRClient tool.
+
+- **Operating System:** Windows 11 Enterprise (Version 23H2)
+- **RAM:** 64 GB
+- **Processor:** 12th Gen Intel(R) Core(TM) i9-12900   2.40 GHz
 - **Virtualization Platform:** Microsoft Hyper-V
 - **Networking:** All virtual machines are connected to one Hyper-V private network.  
   The "Private (Lab1)" Virtual Switch Extensions:
