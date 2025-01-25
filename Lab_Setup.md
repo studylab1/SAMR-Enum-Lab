@@ -155,13 +155,15 @@ The computer names follow this convention (excluding router server):
 - **Number of the Computer:** A sequential number indicating the specific machine within its role (e.g., `1`, `2`, `3`).
 
 #### Examples:
-- `adc1`: Domain Controller 1 in domain "A".
-- `bws1`: Workstation 1 in domain "B".
+- `adc1`: First Domain Controller in "domain-a.local" domain.
+- `xws1`: First Workstation in "domain-x.local" domain.
 
 #### Special hosts:
-- `xdc1`: domain controller that contains a datas for replication to other domains.
-- `xws1`: Linux client used to execute the enumeration scan with tools available only on Linux.
 - `ydc1` and `zdc1`: domain controllers used to execute enumeration scans for comparing existing tools.
+- `xdc1`: domain controller that contains a set of data for replication to other domains.
+- `xws1`: Linux client used to execute the enumeration scan with tools available only on Linux.
+- `xws2`: A development machine for programming and testing SAMRClient.
+- `xws3`: A client to execute SAMR enumeration with SAMRCLient tool.
 - `yws1`: workstation from which the enumeration scan is executed to compare existing tools.
 
 ### Network Setup
@@ -170,7 +172,7 @@ The following table outlines the IP addressing scheme used for the lab environme
 
 | **Role**              | **Hostname**      | **Domain**                                  | **VLAN ID** | **IP Address/Subnet** | **Gateway (Routing Server)** |
 |-----------------------|-------------------|---------------------------------------------|-------------|-----------------------|------------------------------|
-| **Routing Server**    | router            | <div align="right">N/A</div>               | 10          | 192.168.1.1/24         | N/A                          |
+| **Routing Server**    | router            | <div align="right">N/A</div>                | 10          | 192.168.1.1/24         | N/A                          |
 |                       |                   |                                             | 20          | 192.168.2.1/24         | N/A                          |
 |                       |                   |                                             | 30          | 192.168.3.1/24         | N/A                          |
 |                       |                   |                                             | 40          | 192.168.4.1/24         | N/A                          |
@@ -179,25 +181,18 @@ The following table outlines the IP addressing scheme used for the lab environme
 |                       |                   |                                             | 110         | 192.168.11.1/24        | N/A                          |
 |                       |                   |                                             | 120         | 192.168.12.1/24        | N/A                          |
 | **Domain Controller** | adc1              | <div align="right">domain-a.local</div>    | 10          | 192.168.1.11/24        | 192.168.1.1                  |
-| **Workstation**       | aws1              | <div align="right">domain-a.local</div>    | 10          | 192.168.1.101/24       | 192.168.1.1                  |
 | **Domain Controller** | bdc1              | <div align="right">domain-b.local</div>    | 20          | 192.168.2.11/24        | 192.168.2.1                  |
-| **Workstation**       | bws1              | <div align="right">domain-b.local</div>    | 20          | 192.168.2.101/24       | 192.168.2.1                  |
 | **Domain Controller** | bdc2              | <div align="right">b1.domain-b.local</div> | 20          | 192.168.2.12/24        | 192.168.2.1                  |
-| **Workstation**       | bws2              | <div align="right">b1.domain-b.local</div> | 20          | 192.168.2.102/24       | 192.168.2.1                  |
 | **Domain Controller** | cdc1              | <div align="right">domain-c.local</div>    | 30          | 192.168.3.11/24        | 192.168.3.1                  |
-| **Workstation**       | cws1              | <div align="right">domain-c.local</div>    | 30          | 192.168.3.101/24       | 192.168.3.1                  |
 | **Domain Controller** | cdc2              | <div align="right">c1.domain-c.local</div> | 30          | 192.168.3.12/24        | 192.168.3.1                  |
-| **Workstation**       | cws2              | <div align="right">c1.domain-c.local</div> | 30          | 192.168.3.102/24       | 192.168.3.1                  |
 | **Domain Controller** | ddc1              | <div align="right">domain-d.local</div>    | 40          | 192.168.4.11/24        | 192.168.4.1                  |
-| **Workstation**       | dws1              | <div align="right">domain-d.local</div>    | 40          | 192.168.4.101/24       | 192.168.4.1                  |
 | **Domain Controller** | ddc2              | <div align="right">d1.domain-d.local</div> | 40          | 192.168.4.12/24        | 192.168.4.1                  |
-| **Workstation**       | dws2              | <div align="right">d1.domain-d.local</div> | 40          | 192.168.4.102/24       | 192.168.4.1                  |
 | **Domain Controller** | edc1              | <div align="right">domain-e.local</div>    | 50          | 192.168.5.11/24        | 192.168.5.1                  |
-| **Workstation**       | ews1              | <div align="right">domain-e.local</div>    | 50          | 192.168.5.101/24       | 192.168.5.1                  |
 | **Domain Controller** | edc2              | <div align="right">e1.domain-e.local</div> | 50          | 192.168.5.12/24        | 192.168.5.1                  |
-| **Workstation**       | ews2              | <div align="right">e1.domain-e.local</div> | 50          | 192.168.5.102/24       | 192.168.5.1                  |
 | **Domain Controller** | xdc1              | <div align="right">domain-x.local</div>    | 100         | 192.168.10.11/24       | 192.168.10.1                 |
 | **Workstation**       | xws1              | <div align="right">N/A</div>               | 100         | 192.168.10.101/24      | 192.168.10.1                 |
+| **Workstation**       | xws2              | <div align="right">N/A</div>               | 100         | 192.168.10.102/24      | 192.168.10.1                 |
+| **Workstation**       | xws3              | <div align="right">N/A</div>               | 100         | 192.168.10.103/24      | 192.168.10.1                 |
 | **Domain Controller** | ydc1              | <div align="right">domain-y.local</div>    | 110         | 192.168.11.11/24       | 192.168.11.1                 |
 | **Workstation**       | yws1              | <div align="right">domain-y.local</div>    | 110         | 192.168.11.101/24      | 192.168.11.1                 |
 | **Domain Controller** | zdc1              | <div align="right">domain-z.local</div>    | 120         | 192.168.12.11/24       | 192.168.12.1                 |
