@@ -6,6 +6,17 @@ from datetime import datetime
 
 from impacket.dcerpc.v5 import transport, samr
 
+#
+# --- SID_NAME_USE local definitions ---
+# If your version of impacket doesn't provide these as samr.SID_NAME_ALIAS, etc.,
+# define them yourself so that code is still readable:
+#
+SID_NAME_USER    = 1
+SID_NAME_GROUP   = 2
+SID_NAME_DOMAIN  = 3
+SID_NAME_ALIAS   = 4
+SID_NAME_WKN_GRP = 5
+
 def parse_named_args(argv):
     """
     Very simple parser for key=value style arguments.
@@ -23,6 +34,22 @@ def log_debug(debug, message):
     """Print message only if debug=True."""
     if debug:
         print(message)
+
+def extract_ndr_value(ndr_object):
+    """
+    Extract the integer value from an impacket NDR object (e.g. NDRULONG).
+    This helps avoid raw objects that could cause type errors when printing.
+    """
+    return ndr_object.fields['Data'] if hasattr(ndr_object, 'fields') else ndr_object
+
+def safe_str(value):
+    """
+    Decode bytes returned by SAMR calls into a normal Python string.
+    Often, Windows returns UTF-16-LE for these fields.
+    """
+    if isinstance(value, bytes):
+        return value.decode('utf-16-le', errors='replace')
+    return value
 
 def samr_connect(server, username, password, domain, debug):
     """
@@ -74,11 +101,10 @@ def get_domain_handle(dce, serverHandle, debug):
     if not domains:
         raise Exception("No domains found on server.")
 
-    # For simplicity, pick the first domain returned if multiple
-    domainName = domains[0]['Name']
+    rawDomainName = domains[0]['Name']   # Might be bytes
+    domainName = safe_str(rawDomainName) # Convert to str
     log_debug(debug, f"[debug] Found domain: {domainName}")
 
-    # Lookup domain SID
     lookupResp = samr.hSamrLookupDomainInSamServer(dce, serverHandle, domainName)
     if debug:
         print("[debug] SamrLookupDomainInSamServer response dump:")
@@ -88,12 +114,11 @@ def get_domain_handle(dce, serverHandle, debug):
     sidString = domainSidObj.formatCanonical()
     log_debug(debug, f"[debug] Domain SID: {sidString}")
 
-    # Open the domain
     log_debug(debug, "[debug] SamrOpenDomain -> opening domain handle...")
     openDomResp = samr.hSamrOpenDomain(
         dce,
         serverHandle,
-        samr.DOMAIN_LOOKUP | samr.DOMAIN_LIST_ACCOUNTS,
+        samr.DOMAIN_LOOKUP | samr.DOMAIN_LIST_ACCOUNTS,  # Could try samr.MAXIMUM_ALLOWED
         domainSidObj
     )
     if debug:
@@ -121,7 +146,7 @@ def enumerate_groups_in_domain(dce, domainHandle, debug):
         raise Exception(f"SamrEnumerateGroupsInDomain ErrorCode=0x{ntStatus:X}")
 
     groups = enumGroupsResp['Buffer']['Buffer'] or []
-    return [(g['Name'], g['RelativeId']) for g in groups]
+    return [(safe_str(g['Name']), g['RelativeId']) for g in groups]
 
 def enumerate_users_in_domain(dce, domainHandle, debug):
     """Enumerates domain users. Returns a list of (userName, rid)."""
@@ -132,18 +157,17 @@ def enumerate_users_in_domain(dce, domainHandle, debug):
         print(enumUsersResp.dump())
 
     ntStatus = enumUsersResp['ErrorCode']
-    if ntStatus not in (0, 0x105):  # 0x105 = STATUS_MORE_ENTRIES
+    if ntStatus not in (0, 0x105):
         raise Exception(f"SamrEnumerateUsersInDomain ErrorCode=0x{ntStatus:X}")
 
     users = enumUsersResp['Buffer']['Buffer'] or []
-    return [(u['Name'], u['RelativeId']) for u in users]
+    return [(safe_str(u['Name']), u['RelativeId']) for u in users]
 
 def list_group_members(dce, domainHandle, groupName, debug):
     """
     Looks up 'groupName' by SamrLookupNamesInDomain, which returns arrays 'RelativeIds' & 'Use' (NOT 'TranslatedSids').
     If it's an alias => SamrOpenAlias + SamrGetMembersInAlias
     If it's a domain group => SamrOpenGroup + SamrGetMembersInGroup
-    Returns a list of (memberRidOrSidData, attributes).
     """
     log_debug(debug, f"[debug] SamrLookupNamesInDomain -> looking up group: {groupName}")
     lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [groupName])
@@ -155,19 +179,17 @@ def list_group_members(dce, domainHandle, groupName, debug):
     if ntStatus != 0:
         raise Exception(f"SamrLookupNamesInDomain failed (NTSTATUS=0x{ntStatus:X})")
 
-    # Instead of TranslatedSids, Impacket returns 'RelativeIds' & 'Use'
     rids = lookupResp['RelativeIds']['Element']
     uses = lookupResp['Use']['Element']
-
     if len(rids) < 1 or len(uses) < 1:
         raise Exception(f"No mapped result for '{groupName}'")
 
-    groupRid = rids[0]
-    sidUse   = uses[0]
+    groupRid = extract_ndr_value(rids[0])
+    sidUse   = extract_ndr_value(uses[0])
     log_debug(debug, f"[debug] groupRid={groupRid}, sidUse={sidUse}")
 
-    if sidUse == samr.SID_NAME_ALIAS:
-        # local group (alias)
+    # If it's an ALIAS (local group)
+    if sidUse == SID_NAME_ALIAS:  # numeric 4
         log_debug(debug, "[debug] SamrOpenAlias -> local group/alias")
         openAliasResp = samr.hSamrOpenAlias(dce, domainHandle, samr.ALIAS_LIST_MEMBERS, groupRid)
         if debug:
@@ -189,17 +211,18 @@ def list_group_members(dce, domainHandle, groupName, debug):
 
         members = membersResp['Members']['Sids']
         samr.hSamrCloseHandle(dce, aliasHandle)
+
         results = []
         for m in members:
-            sidData = m['SidPointer']['Data']   # bytes
-            sidAttr = m['SidAttributes']        # int
-            # Convert bytes to a safer string or hex, so we won't cause "non-string" errors
+            sidData = m['SidPointer']['Data']  # raw bytes
+            sidAttr = m['SidAttributes']       # int
+            # Convert the bytes to hex string to avoid "non-string" errors
             results.append((sidData.hex(), sidAttr))
         return results
 
-    elif sidUse == samr.SID_NAME_DOM_GRP or sidUse == samr.SID_NAME_WKN_GRP:
-        # domain group
-        log_debug(debug, "[debug] SamrOpenGroup -> domain group")
+    # If it's a domain or well-known group
+    elif sidUse == SID_NAME_GROUP or sidUse == SID_NAME_WKN_GRP:  # numeric 2 or 5
+        log_debug(debug, "[debug] SamrOpenGroup -> domain/well-known group")
         openGroupResp = samr.hSamrOpenGroup(dce, domainHandle, samr.GROUP_LIST_MEMBERS, groupRid)
         if debug:
             print("[debug] SamrOpenGroup response dump:")
@@ -209,26 +232,33 @@ def list_group_members(dce, domainHandle, groupName, debug):
             raise Exception(f"SamrOpenGroup failed (NTSTATUS=0x{openGroupResp['ErrorCode']:X})")
 
         groupHandle = openGroupResp['GroupHandle']
-        log_debug(debug, "[debug] SamrGetMembersInGroup -> retrieving members for domain group...")
+        log_debug(debug, "[debug] SamrGetMembersInGroup -> retrieving members...")
         membersResp = samr.hSamrGetMembersInGroup(dce, groupHandle)
         if debug:
             print("[debug] SamrGetMembersInGroup response dump:")
             print(membersResp.dump())
 
-        if membersResp['ErrorCode'] != 0:
-            raise Exception(f"SamrGetMembersInGroup failed (0x{membersResp['ErrorCode']:X}).")
+        ntStatus = membersResp['ErrorCode']
+        if ntStatus != 0:
+            raise Exception(f"SamrGetMembersInGroup failed (NTSTATUS=0x{ntStatus:X}).")
 
-        members = membersResp['Members']['Members']
+        rids_array = membersResp['Members']['Members']  # Each is an NDRULONG
+        attrs_array = membersResp['Members']['Attributes']  # Each is an NDRULONG
         samr.hSamrCloseHandle(dce, groupHandle)
 
-        # Each member is { 'RelativeId': rid, 'Attributes': ... }
-        return [(m['RelativeId'], m['Attributes']) for m in members]
+        results = []
+        for i in range(len(rids_array)):
+            ridVal = extract_ndr_value(rids_array[i])  # e.g. 500
+            attrVal = extract_ndr_value(attrs_array[i])  # e.g. 7
+            results.append((ridVal, attrVal))
+
+        return results
 
     else:
+        # Some other SID type
         raise Exception(f"Object '{groupName}' is not recognized as a domain or alias group (SID type={sidUse}).")
 
 def main():
-    # Parse named args
     args = parse_named_args(sys.argv)
     operation   = args.get('operation', 'groups').lower()
     server      = args.get('server', '')
@@ -288,7 +318,6 @@ def main():
             raise Exception(f"Unknown operation '{operation}'. Supported: groups, users, group-members.")
 
     except Exception as e:
-        # Use repr(e) in case e contains raw bytes
         execution_status = f"error: {repr(e)}"
     finally:
         # Cleanup
@@ -324,7 +353,6 @@ def main():
     print(f"Number of objects: {obj_count}")
     print("====")
     if obj_count > 0:
-        # enumerated_objects might contain tuples of ints or hex strings
         for obj in enumerated_objects:
             print(obj)
 
