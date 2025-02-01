@@ -11,11 +11,16 @@ Usage Examples:
   python samr-enum.py enumerate=groups server=dc1.company.local username=someuser password=somepass
   python samr-enum.py enumerate=group-members server=dc1.company.local username=someuser password=somepass group="Domain Admins"
 
+Now also supports:
+  - auth=kerberos  (defaults to NTLM)
+  - prompting for password if 'password=' is empty (hidden entry)
+  
 Use 'help=true' or run "python samr-enum.py help" for a short help message.
 """
 
 import sys
 import time
+import getpass
 from datetime import datetime
 from impacket.dcerpc.v5 import transport, samr
 
@@ -53,10 +58,10 @@ SAMR_FUNCTION_OPNUMS = {
 # in your code. Others show no Access Mask.
 ###########################################################
 SAMR_FUNCTION_ACCESS = {
-    'SamrConnect':         0x00000031,  # desiredAccess=0x31
-    'SamrOpenDomain':      0x00000300,  # DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS
-    'SamrOpenGroup':       0x00000010,  # GROUP_LIST_MEMBERS
-    'SamrOpenAlias':       0x00000004,  # ALIAS_LIST_MEMBERS
+    'SamrConnect':     0x00000031,  # desiredAccess=0x31
+    'SamrOpenDomain':  0x00000300,  # DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS
+    'SamrOpenGroup':   0x00000010,  # GROUP_LIST_MEMBERS
+    'SamrOpenAlias':   0x00000004,  # ALIAS_LIST_MEMBERS
 }
 
 
@@ -85,6 +90,7 @@ def parse_named_args(argv):
 
     :param argv: sys.argv or similar list of command-line tokens
     :return: dict mapping lowercase key -> string value
+    Example: python samr-enum.py server=server1 user=admin password=pass123
     """
     args = {}
     for item in argv[1:]:
@@ -92,6 +98,24 @@ def parse_named_args(argv):
             key, val = item.split('=', 1)
             args[key.strip().lower()] = val.strip()
     return args
+
+
+def print_help():
+    """
+    Print a short help/description about the script usage,
+    then exit.
+    """
+    print("samr-enum.py - A tool to enumerate domain users and groups via SAMR.")
+    print("Example usage:")
+    print("  python samr-enum.py enumerate=users server=dc1.company.local username=someuser password=somepass")
+    print("Optional arguments:")
+    print("  domain=<DOMAIN>      The domain for the user credentials (for NTLM or Kerberos)")
+    print("  group=<GroupName>    Required only if enumerate=group-members")
+    print("  debug=true           Show debug details of the SAMR calls")
+    print("  export=<filename>    Export the data (default format=txt, can do format=csv,json)")
+    print("  auth=kerberos        Use Kerberos instead of NTLM (default=NTLM)")
+    print("If 'password=' is empty, the program will prompt you securely.")
+    sys.exit(0)
 
 
 def log_debug(debug, message):
@@ -175,43 +199,36 @@ def export_data(filename, fmt, data):
         print(f"Export failed: {str(e)}")
 
 
-def print_help():
-    """
-    Print a short help/description about the script usage,
-    then exit.
-    """
-    print("samr-enum.py - A tool to enumerate domain users and groups via SAMR.")
-    print("Short usage example:")
-    print("  python samr-enum.py enumerate=users server=dc1.company.local username=someuser password=somepass")
-    print("Optional arguments:")
-    print("  domain=<DOMAIN>      The domain for the user credentials")
-    print("  group=<GroupName>    Required only if enumerate=group-members")
-    print("  debug=true           Show debug details of the SAMR calls")
-    print("  export=<filename>    Export the data (default format=txt, can do format=csv,json)\n")
-    print("If you run with no parameters, it shows usage and exits. If you pass 'help=true' or")
-    print("'python samr-enum.py help', you'll see this message.\n")
-    sys.exit(0)
-
-
-def samr_connect(server, username, password, domain, debug):
+def samr_connect(server, username, password, domain, debug, auth_mode):
     """
     Connect to \\pipe\\samr on the remote server and return (dce, serverHandle).
-    Desired Access: 0x00000031
+    If auth_mode=='kerberos', sets Kerberos = True in the transport.
+
+    desiredAccess=0x00000031 for SamrConnect
 
     :param server: Hostname or IP of the remote server
     :param username: The username for authentication
-    :param password: The password for authentication
+    :param password: The password for authentication (could be empty, then user is prompted)
     :param domain: The domain of the user (can be blank if not needed)
     :param debug: Boolean indicating debug output
+    :param auth_mode: "kerberos" or "ntlm" (default)
     :return: (dce, serverHandle)
     """
     binding_str = rf"ncacn_np:{server}[\pipe\samr]"
     log_debug(debug, f"[debug] Using binding string: {binding_str}")
     rpc_transport = transport.DCERPCTransportFactory(binding_str)
+
+    # If auth=kerberos, set Kerberos usage on the transport
+    if auth_mode.lower() == 'kerberos':
+        log_debug(debug, "[debug] Setting Kerberos auth on the transport.")
+        rpc_transport.set_kerberos(True)
+    else:
+        log_debug(debug, "[debug] Using NTLM (default).")
+
     rpc_transport.set_credentials(username, password, domain=domain)
 
     dce = rpc_transport.get_dce_rpc()
-    log_debug(debug, f"[debug] Connecting to {server} via SMB...")
+    log_debug(debug, f"[debug] Connecting to {server} via SMB (auth={auth_mode})...")
     dce.connect()
 
     log_debug(debug, "[debug] Binding to SAMR interface (MSRPC_UUID_SAMR)...")
@@ -305,7 +322,8 @@ def enumerate_groups_in_domain(dce, domainHandle, debug):
 
     try:
         enumAliasesResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
-        aliases = [(safe_str(a['Name']), a['RelativeId']) for a in enumAliasesResp['Buffer']['Buffer']]
+        aliases = [(safe_str(a['Name']), a['RelativeId'])
+                   for a in enumAliasesResp['Buffer']['Buffer']]
         did_aliases = True
     except Exception as e:
         if debug:
@@ -328,7 +346,7 @@ def enumerate_users_in_domain(dce, domainHandle, debug):
     """
     log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating users...")
     users = []
-    resumeHandle = 0  # We'll store 'EnumerationContext' here
+    resumeHandle = 0
     max_retries = 3
     retry_count = 0
 
@@ -356,14 +374,13 @@ def enumerate_users_in_domain(dce, domainHandle, debug):
             else:
                 raise
 
-        userChunk = enumUsersResp['Buffer']['Buffer'] or []
-        for userEntry in userChunk:
+        chunk = enumUsersResp['Buffer']['Buffer'] or []
+        for userEntry in chunk:
             username = safe_str(userEntry['Name'])
             rid = userEntry['RelativeId']
             users.append((username, rid))
 
         resumeHandle = enumUsersResp['EnumerationContext']
-
         if enumUsersResp['ErrorCode'] != 0x00000105:
             break
         time.sleep(0.1)
@@ -401,10 +418,11 @@ def list_group_members(dce, domainHandle, groupName, debug):
     results = []
     additional_ops = ["SamrLookupNamesInDomain"]
 
-    if sidUse == SID_NAME_ALIAS:
+    if sidUse == samr.SID_NAME_ALIAS:
         log_debug(debug, "[debug] SamrOpenAlias -> local group/alias")
         additional_ops.append("SamrOpenAlias")
-        openAliasResp = samr.hSamrOpenAlias(dce, domainHandle, samr.ALIAS_LIST_MEMBERS, groupRid)
+        openAliasResp = samr.hSamrOpenAlias(dce, domainHandle,
+                                            samr.ALIAS_LIST_MEMBERS, groupRid)
         if debug:
             print("[debug] SamrOpenAlias response dump:")
             print(openAliasResp.dump())
@@ -422,10 +440,11 @@ def list_group_members(dce, domainHandle, groupName, debug):
 
         results = [(m['SidPointer']['Data'].hex(), m['SidAttributes']) for m in members]
 
-    elif sidUse in (SID_NAME_GROUP, SID_NAME_WKN_GRP):
+    elif sidUse in (samr.SID_NAME_GROUP, samr.SID_NAME_WKN_GRP):
         log_debug(debug, "[debug] SamrOpenGroup -> domain group")
         additional_ops.append("SamrOpenGroup")
-        openGroupResp = samr.hSamrOpenGroup(dce, domainHandle, samr.GROUP_LIST_MEMBERS, groupRid)
+        openGroupResp = samr.hSamrOpenGroup(dce, domainHandle,
+                                            samr.GROUP_LIST_MEMBERS, groupRid)
         if debug:
             print("[debug] SamrOpenGroup response dump:")
             print(openGroupResp.dump())
@@ -445,6 +464,7 @@ def list_group_members(dce, domainHandle, groupName, debug):
         lookupResp = samr.hSamrLookupIdsInDomain(dce, domainHandle, rids_list)
         names = [safe_str(name['Data']) for name in lookupResp['Names']['Element']]
         results = [(names[i], rid) for i, rid in enumerate(rids_list)]
+
     else:
         raise Exception(f"Unsupported SID type: {sidUse}")
 
@@ -457,43 +477,44 @@ def main():
     Parses arguments, performs the requested enumeration,
     prints the results, and optionally exports them.
     """
-    # 1) First, check for "help" arguments before anything else
-    #    e.g. "python samr-enum.py help" or "python samr-enum.py help=true"
+    # Basic "help" check
     if len(sys.argv) > 1:
-        # If user typed "python samr-enum.py help" or "python samr-enum.py help=whatever"
+        # e.g. "python samr-enum.py help" or "python samr-enum.py help=whatever"
         first_arg = sys.argv[1].lower()
         if first_arg == "help" or "help" in first_arg:
             print_help()
 
-    args = parse_named_args(sys.argv)
-
-    # If help=true was specified (not the first argument),
-    # we show help as well
-    if args.get('help', 'false').lower() == 'true':
-        print_help()
-
-    # If no args were provided at all, print usage and exit
+    # If no args given, print usage
     if len(sys.argv) == 1:
         print("Usage:\n  python samr-enum.py enumerate=groups server=dc1.domain-a.local"
               " username=user123 password=Password123 [domain=domain-b.local] [group=MyGroup]"
-              " [debug=true] [export=output.txt [format=txt|csv|json]]")
+              " [debug=true] [export=output.txt [format=txt|csv|json]] [auth=kerberos]")
         sys.exit(1)
+
+    args = parse_named_args(sys.argv)
+    if args.get('help', 'false').lower() == 'true':
+        print_help()
 
     enumeration = args.get('enumerate', 'groups').lower()
     server = args.get('server', '')
     username = args.get('username', '')
-    password = args.get('password', '')
+    password = args.get('password', '')  # might be empty -> prompt
     domain = args.get('domain', '')
     groupName = args.get('group', '')
     debug = args.get('debug', 'false').lower() == 'true'
     export_file = args.get('export', '')
     export_format = args.get('format', 'txt').lower()
+    auth_mode = args.get('auth', 'ntlm').lower()  # "kerberos" or "ntlm" default
 
-    # If required parameters are missing, show usage and exit
-    if not server or not username or not password:
+    # If password is empty, prompt user. getpass hides the input on CLI
+    if password == '':
+        password = getpass.getpass(prompt="Enter password (hidden): ")
+
+    # If required parameters are missing, show usage
+    if not server or not username:
         print("Usage:\n  python samr-enum.py enumerate=groups server=dc1.domain-a.local"
               " username=user123 password=Password123 [domain=domain-b.local] [group=MyGroup]"
-              " [debug=true] [export=output.txt [format=txt|csv|json]]")
+              " [debug=true] [export=output.txt [format=txt|csv|json]] [auth=kerberos]")
         sys.exit(1)
 
     start_time = time.time()
@@ -509,12 +530,15 @@ def main():
     execution_status = "success"
 
     try:
-        # SamrConnect (Access Mask=0x00000031)
-        dce, serverHandle = samr_connect(server, username, password, domain, debug)
+        # SamrConnect (with possible Kerberos, password prompt, etc.)
+        dce, serverHandle = samr_connect(server, username, password,
+                                         domain, debug, auth_mode)
         add_opnum_call(opnums_called, "SamrConnect")
 
-        # SamrEnumerateDomainsInSamServer, SamrLookupDomainInSamServer, SamrOpenDomain (Access=0x300)
-        domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug)
+        # SamrEnumerateDomainsInSamServer, SamrLookupDomainInSamServer, SamrOpenDomain
+        domainHandle, domainName, domainSidString = get_domain_handle(dce,
+                                                                      serverHandle,
+                                                                      debug)
         add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
         add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
         add_opnum_call(opnums_called, "SamrOpenDomain")
@@ -522,23 +546,27 @@ def main():
         # Figure out which operation is requested
         if enumeration == 'groups':
             # SamrEnumerateGroupsInDomain
-            groups_result, did_aliases = enumerate_groups_in_domain(dce, domainHandle, debug)
+            groups_result, did_aliases = enumerate_groups_in_domain(dce,
+                                                                    domainHandle,
+                                                                    debug)
             add_opnum_call(opnums_called, "SamrEnumerateGroupsInDomain")
             if did_aliases:
-                # SamrEnumerateAliasesInDomain also was called
                 add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
             enumerated_objects = groups_result
 
         elif enumeration == 'users':
-            # SamrEnumerateUsersInDomain
             enumerated_objects = enumerate_users_in_domain(dce, domainHandle, debug)
             add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
 
         elif enumeration == 'group-members':
-            # Need groupName
             if not groupName:
                 raise Exception("group parameter required for group-members enumeration.")
-            enumerated_objects, additional_ops = list_group_members(dce, domainHandle, groupName, debug)
+            enumerated_objects, additional_ops = list_group_members(
+                dce,
+                domainHandle,
+                groupName,
+                debug
+            )
             for op_name in additional_ops:
                 add_opnum_call(opnums_called, op_name)
 
@@ -566,14 +594,15 @@ def main():
     print(f"Domain SID: {domainSidString}")
     print(f"Account: {username}")
     print(f"Enumerate: {enumeration}")
+    print(f"Authentication: {auth_mode.upper()}")
     print(f"OpNums called: {', '.join(opnums_called)}")
     print(f"Execution status: {execution_status}")
     print(f"Number of objects: {len(enumerated_objects) if execution_status == 'success' else 0}")
     print("====")
 
-    # Print enumerated objects if successful
     if enumerated_objects and execution_status == "success":
-        max_username_length = max(len(str(obj[0])) for obj in enumerated_objects) if enumerated_objects else 20
+        max_username_length = max(len(str(obj[0])) for obj in enumerated_objects) \
+            if enumerated_objects else 20
         print(f"{'Username':<{max_username_length}} RID")
         print("-" * (max_username_length + 5))
         for obj in enumerated_objects:
@@ -586,4 +615,4 @@ def main():
 
 
 if __name__ == "__main__":
-    main() 
+    main()
