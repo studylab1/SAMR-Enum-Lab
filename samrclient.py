@@ -132,14 +132,62 @@ def enumerate_groups_in_domain(dce, domainHandle, debug):
         aliases = []
     return [(safe_str(g['Name']), g['RelativeId']) for g in groups] + aliases
 
+
+import time  # Add this import at the top of the file
+
+
 def enumerate_users_in_domain(dce, domainHandle, debug):
     log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating users...")
-    enumUsersResp = samr.hSamrEnumerateUsersInDomain(dce, domainHandle)
-    if debug:
-        print("[debug] SamrEnumerateUsersInDomain response dump:")
-        print(enumUsersResp.dump())
-    users = enumUsersResp['Buffer']['Buffer'] or []
-    return [(safe_str(u['Name']), u['RelativeId']) for u in users]
+    users = []
+    resumeHandle = 0  # We'll store 'EnumerationContext' here
+    max_retries = 3
+    retry_count = 0
+
+    while True:
+        try:
+            # Fetch one "batch" of users
+            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
+                dce,
+                domainHandle,
+                enumerationContext=resumeHandle,
+                userAccountControl=samr.USER_NORMAL_ACCOUNT
+            )
+            retry_count = 0  # reset retries on success
+
+        except samr.DCERPCSessionError as e:
+            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
+                # If Impacket raises an exception with partial data, fetch it
+                enumUsersResp = e.get_packet()
+                retry_count = 0
+            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
+                log_debug(debug, "[debug] Server busy, retrying after delay...")
+                time.sleep(2)
+                retry_count += 1
+                if retry_count > max_retries:
+                    raise Exception("Server resource limit reached after retries")
+                continue
+            else:
+                raise
+
+        # Process the chunk
+        userChunk = enumUsersResp['Buffer']['Buffer'] or []
+        for userEntry in userChunk:
+            username = safe_str(userEntry['Name'])
+            rid = userEntry['RelativeId']
+            users.append((username, rid))
+
+        # The key is named 'EnumerationContext', not 'ResumeHandle'
+        resumeHandle = enumUsersResp['EnumerationContext']
+
+        # If the server did not return STATUS_MORE_ENTRIES (0x105), we're done
+        if enumUsersResp['ErrorCode'] != 0x00000105:
+            break
+
+        # A short sleep can help avoid hammering the DC
+        time.sleep(0.1)
+
+    return users
+
 
 def list_group_members(dce, domainHandle, groupName, debug):
     log_debug(debug, f"[debug] SamrLookupNamesInDomain -> looking up group: {groupName}")
