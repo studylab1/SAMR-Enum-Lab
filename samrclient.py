@@ -12,6 +12,39 @@ SID_NAME_DOMAIN = 3
 SID_NAME_ALIAS = 4
 SID_NAME_WKN_GRP = 5
 
+###########################################################
+# SAMR FUNCTION -> OPNUM MAPPING
+# References from MS-SAMR specification
+# (in decimal). Adjust if your Impacket build differs.
+###########################################################
+SAMR_FUNCTION_OPNUMS = {
+    'SamrConnect': 0,
+    'SamrCloseHandle': 1,
+    'SamrEnumerateDomainsInSamServer': 6,
+    'SamrLookupDomainInSamServer': 5,
+    'SamrOpenDomain': 7,
+    'SamrEnumerateGroupsInDomain': 11,
+    'SamrEnumerateUsersInDomain': 13,
+    'SamrEnumerateAliasesInDomain': 15,
+    'SamrLookupNamesInDomain': 17,
+    'SamrLookupIdsInDomain': 18,
+    'SamrOpenGroup': 19,
+    'SamrGetMembersInGroup': 25,
+    'SamrOpenAlias': 27,
+    'SamrGetMembersInAlias': 33,
+}
+
+def add_opnum_call(opnums_list, func_name):
+    """
+    Appends 'func_name (OpNum N)' to opnums_list
+    if we have a known mapping, else just func_name.
+    """
+    opnum = SAMR_FUNCTION_OPNUMS.get(func_name)
+    if opnum is not None:
+        opnums_list.append(f"{func_name} (OpNum {opnum})")
+    else:
+        opnums_list.append(func_name)
+
 def parse_named_args(argv):
     args = {}
     for item in argv[1:]:
@@ -107,7 +140,9 @@ def get_domain_handle(dce, serverHandle, debug):
     sidString = domainSidObj.formatCanonical()
     log_debug(debug, f"[debug] Domain SID: {sidString}")
     log_debug(debug, "[debug] SamrOpenDomain -> opening domain handle...")
-    openDomResp = samr.hSamrOpenDomain(dce, serverHandle, samr.DOMAIN_LOOKUP | samr.DOMAIN_LIST_ACCOUNTS, domainSidObj)
+    openDomResp = samr.hSamrOpenDomain(dce, serverHandle,
+                                       samr.DOMAIN_LOOKUP | samr.DOMAIN_LIST_ACCOUNTS,
+                                       domainSidObj)
     if debug:
         print("[debug] SamrOpenDomain response dump:")
         print(openDomResp.dump())
@@ -124,17 +159,23 @@ def enumerate_groups_in_domain(dce, domainHandle, debug):
         print("[debug] SamrEnumerateGroupsInDomain response dump:")
         print(enumGroupsResp.dump())
     groups = enumGroupsResp['Buffer']['Buffer'] or []
+
+    # We also attempt to enumerate aliases
+    # so add this OpNum to the calls list for "groups" scanning
+    # We'll let the calling code handle appending to opnums_called
+    # but let's return a small note about it
+    did_aliases = False
+
     try:
         enumAliasesResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
         aliases = [(safe_str(a['Name']), a['RelativeId']) for a in enumAliasesResp['Buffer']['Buffer']]
+        did_aliases = True
     except Exception as e:
-        if debug: print(f"[debug] Alias enumeration error: {str(e)}")
+        if debug:
+            print(f"[debug] Alias enumeration error: {str(e)}")
         aliases = []
-    return [(safe_str(g['Name']), g['RelativeId']) for g in groups] + aliases
 
-
-import time  # Add this import at the top of the file
-
+    return [(safe_str(g['Name']), g['RelativeId']) for g in groups] + aliases, did_aliases
 
 def enumerate_users_in_domain(dce, domainHandle, debug):
     log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating users...")
@@ -183,11 +224,9 @@ def enumerate_users_in_domain(dce, domainHandle, debug):
         if enumUsersResp['ErrorCode'] != 0x00000105:
             break
 
-        # A short sleep can help avoid hammering the DC
         time.sleep(0.1)
 
     return users
-
 
 def list_group_members(dce, domainHandle, groupName, debug):
     log_debug(debug, f"[debug] SamrLookupNamesInDomain -> looking up group: {groupName}")
@@ -202,43 +241,60 @@ def list_group_members(dce, domainHandle, groupName, debug):
     groupRid = extract_ndr_value(rids[0])
     sidUse = extract_ndr_value(uses[0])
     results = []
+    additional_ops = ["SamrLookupNamesInDomain"]
+
     if sidUse == SID_NAME_ALIAS:
         log_debug(debug, "[debug] SamrOpenAlias -> local group/alias")
+        additional_ops.append("SamrOpenAlias")
         openAliasResp = samr.hSamrOpenAlias(dce, domainHandle, samr.ALIAS_LIST_MEMBERS, groupRid)
         if debug:
             print("[debug] SamrOpenAlias response dump:")
             print(openAliasResp.dump())
+
         aliasHandle = openAliasResp['AliasHandle']
+        additional_ops.append("SamrGetMembersInAlias")
         membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
         if debug:
             print("[debug] SamrGetMembersInAlias response dump:")
             print(membersResp.dump())
+
         members = membersResp['Members']['Sids']
         samr.hSamrCloseHandle(dce, aliasHandle)
+        additional_ops.append("SamrCloseHandle")  # closed alias handle
+
         results = [(m['SidPointer']['Data'].hex(), m['SidAttributes']) for m in members]
+
     elif sidUse in (SID_NAME_GROUP, SID_NAME_WKN_GRP):
         log_debug(debug, "[debug] SamrOpenGroup -> domain group")
+        additional_ops.append("SamrOpenGroup")
         openGroupResp = samr.hSamrOpenGroup(dce, domainHandle, samr.GROUP_LIST_MEMBERS, groupRid)
         if debug:
             print("[debug] SamrOpenGroup response dump:")
             print(openGroupResp.dump())
+
         groupHandle = openGroupResp['GroupHandle']
+        additional_ops.append("SamrGetMembersInGroup")
         membersResp = samr.hSamrGetMembersInGroup(dce, groupHandle)
         if debug:
             print("[debug] SamrGetMembersInGroup response dump:")
             print(membersResp.dump())
+
         rids_list = [extract_ndr_value(rid) for rid in membersResp['Members']['Members']]
         samr.hSamrCloseHandle(dce, groupHandle)
+        additional_ops.append("SamrCloseHandle")  # closed group handle
+
+        additional_ops.append("SamrLookupIdsInDomain")
         lookupResp = samr.hSamrLookupIdsInDomain(dce, domainHandle, rids_list)
         names = [safe_str(name['Data']) for name in lookupResp['Names']['Element']]
         results = [(names[i], rid) for i, rid in enumerate(rids_list)]
     else:
         raise Exception(f"Unsupported SID type: {sidUse}")
-    return results, ["SamrLookupNamesInDomain", "SamrOpenGroup", "SamrGetMembersInGroup", "SamrLookupIdsInDomain"]
+
+    return results, additional_ops
 
 def main():
     args = parse_named_args(sys.argv)
-    enumerate = args.get('enumerate', 'groups').lower()
+    enumeration = args.get('enumerate', 'groups').lower()
     server = args.get('server', '')
     username = args.get('username', '')
     password = args.get('password', '')
@@ -265,40 +321,61 @@ def main():
     execution_status = "success"
 
     try:
+        # SamrConnect
         dce, serverHandle = samr_connect(server, username, password, domain, debug)
-        opnums_called.append("SamrConnect")
-        domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug)
-        opnums_called.extend(["SamrEnumerateDomainsInSamServer", "SamrLookupDomainInSamServer", "SamrOpenDomain"])
+        add_opnum_call(opnums_called, "SamrConnect")
 
-        if enumerate == 'groups':
-            enumerated_objects = enumerate_groups_in_domain(dce, domainHandle, debug)
-            opnums_called.append("SamrEnumerateGroupsInDomain")
-        elif enumerate == 'users':
+        # SamrEnumerateDomainsInSamServer, SamrLookupDomainInSamServer, SamrOpenDomain
+        domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug)
+        add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+        add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
+        add_opnum_call(opnums_called, "SamrOpenDomain")
+
+        if enumeration == 'groups':
+            # SamrEnumerateGroupsInDomain
+            groups_result, did_aliases = enumerate_groups_in_domain(dce, domainHandle, debug)
+            add_opnum_call(opnums_called, "SamrEnumerateGroupsInDomain")
+            if did_aliases:
+                # SamrEnumerateAliasesInDomain also was called
+                add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
+            enumerated_objects = groups_result
+
+        elif enumeration == 'users':
+            # SamrEnumerateUsersInDomain
             enumerated_objects = enumerate_users_in_domain(dce, domainHandle, debug)
-            opnums_called.append("SamrEnumerateUsersInDomain")
-        elif enumerate == 'group-members':
+            add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
+
+        elif enumeration == 'group-members':
             if not groupName:
                 raise Exception("group parameter required for group-members enumeration")
+            # This returns the result plus additional_ops (list of calls made)
             enumerated_objects, additional_ops = list_group_members(dce, domainHandle, groupName, debug)
-            opnums_called.extend(additional_ops)
+            for op_name in additional_ops:
+                add_opnum_call(opnums_called, op_name)
+
         else:
-            raise Exception(f"Unknown enumeration: {enumerate}")
+            raise Exception(f"Unknown enumeration: {enumeration}")
 
     except Exception as e:
         execution_status = f"error: {repr(e)}"
     finally:
+        # SamrCloseHandle calls
         for handle in [domainHandle, serverHandle]:
             if handle:
-                try: samr.hSamrCloseHandle(dce, handle)
-                except: pass
-        if dce: dce.disconnect()
+                try:
+                    samr.hSamrCloseHandle(dce, handle)
+                    add_opnum_call(opnums_called, "SamrCloseHandle")
+                except:
+                    pass
+        if dce:
+            dce.disconnect()
 
     duration = time.time() - start_time
     print(f"\nExecution time: {duration:.2f} seconds")
     print(f"Destination server: {server}")
     print(f"Domain SID: {domainSidString}")
     print(f"Account: {username}")
-    print(f"Enumerate: {enumerate}")
+    print(f"Enumerate: {enumeration}")
     print(f"OpNums called: {', '.join(opnums_called)}")
     print(f"Execution status: {execution_status}")
     print(f"Number of objects: {len(enumerated_objects) if execution_status == 'success' else 0}")
