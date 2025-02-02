@@ -1,8 +1,10 @@
 #!/usr/bin/env python3
 """
-samr-enum.py
+samr-enum.py - SAMR enumeration tool using Impacket.
+Copyright (c) 2025. Licensed under the MIT License.
+
 A Python tool to enumerate domain accounts and groups via the Microsoft
-SAMR interface (using Impacket). Supports enumerating domain users,
+SAMR interface. Supports enumerating domain users,
 groups, and group members, optionally exporting the results in various
 formats (TXT, CSV, JSON).
 
@@ -11,7 +13,7 @@ Usage Examples:
   python samr-enum.py enumerate=groups server=dc1.company.local username=someuser password=somepass
   python samr-enum.py enumerate=group-members server=dc1.company.local username=someuser password=somepass group="Domain Admins"
 
-Now also supports:
+Also supports:
   - auth=kerberos  (defaults to NTLM)
   - prompting for password if 'password=' is empty (hidden entry)
   
@@ -499,12 +501,12 @@ def main():
     server = args.get('server', '')
     username = args.get('username', '')
     password = args.get('password', '')  # might be empty -> prompt
-    domain = args.get('domain', '')
     groupName = args.get('group', '')
     debug = args.get('debug', 'false').lower() == 'true'
     export_file = args.get('export', '')
     export_format = args.get('format', 'txt').lower()
-    auth_mode = args.get('auth', 'ntlm').lower()  # "kerberos" or "ntlm" default
+    auth_mode = args.get('auth', 'ntlm').lower()  # "Kerberos" or "ntlm" default
+    domain = args.get('domain', '')  # mandatory for Kerberos authentication
 
     # If password is empty, prompt user. getpass hides the input on CLI
     if password == '':
@@ -513,8 +515,8 @@ def main():
     # If required parameters are missing, show usage
     if not server or not username:
         print("Usage:\n  python samr-enum.py enumerate=groups server=dc1.domain-a.local"
-              " username=user123 password=Password123 [domain=domain-b.local] [group=MyGroup]"
-              " [debug=true] [export=output.txt [format=txt|csv|json]] [auth=kerberos]")
+              " username=user123 password=Password123 [group=MyGroup]"
+              " [debug=true] [export=output.txt [format=txt|csv|json]] [domain=domain-b.local [auth=kerberos]]")
         sys.exit(1)
 
     start_time = time.time()
