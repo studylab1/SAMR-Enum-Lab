@@ -10,7 +10,8 @@ formats (TXT, CSV, JSON).
 
 Usage Examples:
   python samr-enum.py enumerate=users server=dc1.company.local username=someuser password=somepass
-  python samr-enum.py enumerate=groups server=dc1.company.local username=someuser password=somepass
+  python samr-enum.py enumerate=groups-domain server=dc1.company.local username=someuser password=somepass
+  python samr-enum.py enumerate=groups-local server=dc1.company.local username=someuser password=somepass
   python samr-enum.py enumerate=group-members server=dc1.company.local username=someuser password=somepass group="Domain Admins"
 
 Also supports:
@@ -110,6 +111,9 @@ def print_help():
     print("samr-enum.py - A tool to enumerate domain users and groups via SAMR.")
     print("Example usage:")
     print("  python samr-enum.py enumerate=users server=dc1.company.local username=someuser password=somepass")
+    print("  python samr-enum.py enumerate=groups-domain server=dc1.company.local username=someuser password=somepass")
+    print("  python samr-enum.py enumerate=groups-local server=dc1.company.local username=someuser password=somepass")
+    print("  python samr-enum.py enumerate=group-members server=dc1.company.local username=someuser password=somepass group=\"Domain Admins\"")
     print("Optional arguments:")
     print("  domain=<DOMAIN>      The domain for the user credentials (for NTLM or Kerberos)")
     print("  group=<GroupName>    Required only if enumerate=group-members")
@@ -304,6 +308,65 @@ def get_domain_handle(dce, serverHandle, debug):
     return domainHandle, domainName, sidString
 
 
+def get_builtin_domain_handle(dce, serverHandle, debug):
+    """
+    Enumerate the domain list, find the one named "Builtin", then open it.
+    SamrOpenDomain uses desiredAccess=0x00000300
+    (DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS).
+
+    :param dce: The DCE/RPC connection object
+    :param serverHandle: The handle to the SAMR server
+    :param debug: Boolean indicating debug output
+    :return: (domainHandle, domainName, sidString)
+    """
+    log_debug(debug, "[debug] SamrEnumerateDomainsInSamServer -> looking for Builtin domain...")
+    enumDomainsResp = samr.hSamrEnumerateDomainsInSamServer(dce, serverHandle)
+    if debug:
+        print("[debug] SamrEnumerateDomainsInSamServer response dump:")
+        print(enumDomainsResp.dump())
+
+    domains = enumDomainsResp['Buffer']['Buffer']
+    if not domains:
+        raise Exception("No domains found on server.")
+
+    builtin_domain = None
+    for dom in domains:
+        d_name = safe_str(dom['Name'])
+        if d_name.lower() == 'builtin':
+            builtin_domain = d_name
+            break
+
+    if not builtin_domain:
+        raise Exception("Builtin domain not found on server.")
+
+    lookupResp = samr.hSamrLookupDomainInSamServer(dce, serverHandle, builtin_domain)
+    if debug:
+        print("[debug] SamrLookupDomainInSamServer (Builtin) response dump:")
+        print(lookupResp.dump())
+
+    domainSidObj = lookupResp['DomainId']
+    sidString = domainSidObj.formatCanonical()
+    log_debug(debug, f"[debug] Builtin Domain SID: {sidString}")
+
+    log_debug(debug, "[debug] SamrOpenDomain -> opening Builtin domain handle...")
+    openDomResp = samr.hSamrOpenDomain(
+        dce,
+        serverHandle,
+        samr.DOMAIN_LOOKUP | samr.DOMAIN_LIST_ACCOUNTS,
+        domainSidObj
+    )
+    if debug:
+        print("[debug] SamrOpenDomain (Builtin) response dump:")
+        print(openDomResp.dump())
+
+    if openDomResp['ErrorCode'] != 0:
+        raise Exception(f"SamrOpenDomain failed for Builtin domain (NTSTATUS=0x{openDomResp['ErrorCode']:X})")
+
+    domainHandle = openDomResp['DomainHandle']
+    log_debug(debug, "[debug] Builtin Domain opened successfully.")
+    return domainHandle, builtin_domain, sidString
+
+
 def enumerate_groups_in_domain(dce, domainHandle, debug):
     """
     Enumerate domain groups plus attempt to enumerate domain aliases.
@@ -488,16 +551,17 @@ def main():
 
     # If no args given, print usage
     if len(sys.argv) == 1:
-        print("Usage:\n  python samr-enum.py enumerate=groups server=dc1.domain-a.local"
+        print("Usage:\n  python samr-enum.py enumerate=groups-domain server=dc1.domain-a.local"
               " username=user123 password=Password123 [domain=domain-b.local] [group=MyGroup]"
               " [debug=true] [export=output.txt [format=txt|csv|json]] [auth=kerberos]")
+        print("  or enumerate=groups-local for builtin domain groups")
         sys.exit(1)
 
     args = parse_named_args(sys.argv)
     if args.get('help', 'false').lower() == 'true':
         print_help()
 
-    enumeration = args.get('enumerate', 'groups').lower()
+    enumeration = args.get('enumerate', 'groups-domain').lower()
     server = args.get('server', '')
     username = args.get('username', '')
     password = args.get('password', '')  # might be empty -> prompt
@@ -514,7 +578,7 @@ def main():
 
     # If required parameters are missing, show usage
     if not server or not username:
-        print("Usage:\n  python samr-enum.py enumerate=groups server=dc1.domain-a.local"
+        print("Usage:\n  python samr-enum.py enumerate=groups-domain server=dc1.domain-a.local"
               " username=user123 password=Password123 [group=MyGroup]"
               " [debug=true] [export=output.txt [format=txt|csv|json]] [domain=domain-b.local [auth=kerberos]]")
         sys.exit(1)
@@ -537,16 +601,15 @@ def main():
                                          domain, debug, auth_mode)
         add_opnum_call(opnums_called, "SamrConnect")
 
-        # SamrEnumerateDomainsInSamServer, SamrLookupDomainInSamServer, SamrOpenDomain
-        domainHandle, domainName, domainSidString = get_domain_handle(dce,
-                                                                      serverHandle,
-                                                                      debug)
-        add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-        add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-        add_opnum_call(opnums_called, "SamrOpenDomain")
+        # Distinguish between enumerating normal domain groups vs builtin domain groups
+        if enumeration == 'groups-domain':
+            domainHandle, domainName, domainSidString = get_domain_handle(dce,
+                                                                          serverHandle,
+                                                                          debug)
+            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
+            add_opnum_call(opnums_called, "SamrOpenDomain")
 
-        # Figure out which operation is requested
-        if enumeration == 'groups':
             # SamrEnumerateGroupsInDomain
             groups_result, did_aliases = enumerate_groups_in_domain(dce,
                                                                     domainHandle,
@@ -556,11 +619,44 @@ def main():
                 add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
             enumerated_objects = groups_result
 
+        elif enumeration == 'groups-local':
+            # Builtin domain
+            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce,
+                                                                                  serverHandle,
+                                                                                  debug)
+            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
+            add_opnum_call(opnums_called, "SamrOpenDomain")
+
+            groups_result, did_aliases = enumerate_groups_in_domain(dce,
+                                                                    domainHandle,
+                                                                    debug)
+            add_opnum_call(opnums_called, "SamrEnumerateGroupsInDomain")
+            if did_aliases:
+                add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
+            enumerated_objects = groups_result
+
         elif enumeration == 'users':
+            # Get the primary domain handle for enumerating users
+            domainHandle, domainName, domainSidString = get_domain_handle(dce,
+                                                                          serverHandle,
+                                                                          debug)
+            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
+            add_opnum_call(opnums_called, "SamrOpenDomain")
+
             enumerated_objects = enumerate_users_in_domain(dce, domainHandle, debug)
             add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
 
         elif enumeration == 'group-members':
+            # Need domain handle for the group
+            domainHandle, domainName, domainSidString = get_domain_handle(dce,
+                                                                          serverHandle,
+                                                                          debug)
+            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
+            add_opnum_call(opnums_called, "SamrOpenDomain")
+
             if not groupName:
                 raise Exception("group parameter required for group-members enumeration.")
             enumerated_objects, additional_ops = list_group_members(
