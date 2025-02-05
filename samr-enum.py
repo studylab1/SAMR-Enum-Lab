@@ -17,7 +17,7 @@ Usage Examples:
 Also supports:
   - auth=kerberos  (defaults to NTLM)
   - prompting for password if 'password=' is empty (hidden entry)
-  
+
 Use 'help=true' or run "python samr-enum.py help" for a short help message.
 """
 
@@ -453,86 +453,153 @@ def enumerate_users_in_domain(dce, domainHandle, debug):
     return users
 
 
-def list_group_members(dce, domainHandle, groupName, debug):
+def list_group_members(dce, serverHandle, domainHandle, groupName, debug):
     """
     Enumerate members of a group (alias or domain group).
-    If domain group, also map RIDs to account names.
-
-    For alias: SamrOpenAlias uses Access=0x00000004
-    For domain group: SamrOpenGroup uses Access=0x00000010
+    If not found in the primary domain, fallback to Builtin domain if possible.
 
     :param dce: The DCE/RPC connection
-    :param domainHandle: The opened domain handle
+    :param serverHandle: SAMR server handle (needed for fallback to Builtin)
+    :param domainHandle: The opened domain handle (usually the primary domain)
     :param groupName: Name of the group
     :param debug: Boolean for debug prints
     :return: (list_of_members, additional_ops_list)
     """
     log_debug(debug, f"[debug] SamrLookupNamesInDomain -> looking up group: {groupName}")
-    lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [groupName])
+    additional_ops = ["SamrLookupNamesInDomain"]
+
+    # Attempt a normal domain lookup first
+    try:
+        lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [groupName])
+    except samr.DCERPCSessionError as e:
+        # STATUS_NONE_MAPPED => fallback to Builtin domain
+        if e.get_error_code() == 0xC0000073:  # STATUS_NONE_MAPPED
+            log_debug(debug, f"[debug] Group '{groupName}' not found in primary domain, trying Builtin domain.")
+            builtinDomainHandle, _, _ = get_builtin_domain_handle(dce, serverHandle, debug)
+            lookupResp = samr.hSamrLookupNamesInDomain(dce, builtinDomainHandle, [groupName])
+            domainHandle = builtinDomainHandle
+        else:
+            raise
+
     if debug:
         print("[debug-lookupResp] SamrLookupNamesInDomain response dump:")
         print(lookupResp.dump())
 
+    # The 'RelativeIds' is a list of NDR types or ints, we only need the first
     rids = lookupResp['RelativeIds']['Element']
     uses = lookupResp['Use']['Element']
     if not rids or not uses:
         raise Exception(f"No mapped result for '{groupName}'")
 
-    groupRid = extract_ndr_value(rids[0])
-    sidUse = extract_ndr_value(uses[0])
+    groupRid = extract_ndr_value(rids[0])  # convert to int
+    sidUse = extract_ndr_value(uses[0])    # e.g. 4 => SID_NAME_ALIAS
     results = []
-    additional_ops = ["SamrLookupNamesInDomain"]
 
-    if sidUse == samr.SID_NAME_ALIAS:
+    # Check whether it's a local alias or domain group
+    if sidUse == SID_NAME_ALIAS:
         log_debug(debug, "[debug] SamrOpenAlias -> local group/alias")
         additional_ops.append("SamrOpenAlias")
-        openAliasResp = samr.hSamrOpenAlias(dce, domainHandle,
-                                            samr.ALIAS_LIST_MEMBERS, groupRid)
+
+        openAliasResp = samr.hSamrOpenAlias(
+            dce, domainHandle,
+            samr.ALIAS_LIST_MEMBERS,  # desiredAccess
+            groupRid
+        )
         if debug:
             print("[debug] SamrOpenAlias response dump:")
             print(openAliasResp.dump())
 
         aliasHandle = openAliasResp['AliasHandle']
+
         additional_ops.append("SamrGetMembersInAlias")
         membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
         if debug:
             print("[debug] SamrGetMembersInAlias response dump:")
             print(membersResp.dump())
 
-        members = membersResp['Members']['Sids']
+        # Typically the alias members are "PSAMPR_SID_INFORMATION" structures in 'Sids'
+        members = []
+        if 'Members' in membersResp and 'Sids' in membersResp['Members']:
+            members = membersResp['Members']['Sids']
+
+        for m_info in members:
+            log_debug(debug, f"[debug] alias item type={type(m_info)} fields={getattr(m_info, 'fields', None)}")
+
+            if not hasattr(m_info, 'fields'):
+                # fallback or unexpected older structure
+                results.append(("<unexpected alias item>", 0))
+                continue
+
+            # By name: 'SidPointer' and 'SidAttributes'
+            sid_obj = m_info['SidPointer']  # string key, not numeric index
+            if hasattr(sid_obj, "formatCanonical"):
+                sid_str = sid_obj.formatCanonical()
+            else:
+                sid_str = "<no-SID>"
+
+            # Check for 'SidAttributes' presence
+            if 'SidAttributes' in m_info.fields:
+                sid_attr = m_info['SidAttributes']
+            else:
+                sid_attr = 0
+
+            results.append((sid_str, sid_attr))
+
         samr.hSamrCloseHandle(dce, aliasHandle)
-        additional_ops.append("SamrCloseHandle")  # closed alias handle
+        additional_ops.append("SamrCloseHandle")
 
-        results = [(m['SidPointer']['Data'].hex(), m['SidAttributes']) for m in members]
-
-    elif sidUse in (samr.SID_NAME_GROUP, samr.SID_NAME_WKN_GRP):
+    elif sidUse in (SID_NAME_GROUP, SID_NAME_WKN_GRP):
         log_debug(debug, "[debug] SamrOpenGroup -> domain group")
         additional_ops.append("SamrOpenGroup")
-        openGroupResp = samr.hSamrOpenGroup(dce, domainHandle,
-                                            samr.GROUP_LIST_MEMBERS, groupRid)
+
+        openGroupResp = samr.hSamrOpenGroup(
+            dce, domainHandle,
+            samr.GROUP_LIST_MEMBERS,  # desiredAccess
+            groupRid
+        )
         if debug:
             print("[debug] SamrOpenGroup response dump:")
             print(openGroupResp.dump())
 
         groupHandle = openGroupResp['GroupHandle']
+
         additional_ops.append("SamrGetMembersInGroup")
         membersResp = samr.hSamrGetMembersInGroup(dce, groupHandle)
         if debug:
             print("[debug] SamrGetMembersInGroup response dump:")
             print(membersResp.dump())
 
-        rids_list = [extract_ndr_value(rid) for rid in membersResp['Members']['Members']]
-        samr.hSamrCloseHandle(dce, groupHandle)
-        additional_ops.append("SamrCloseHandle")  # closed group handle
+        # domain group membership => 'Members' is a list of RIDs or NDR objects
+        rids_list = []
+        for ridEntry in membersResp['Members']['Members']:
+            if isinstance(ridEntry, int):
+                rids_list.append(ridEntry)
+            elif hasattr(ridEntry, 'fields'):
+                # e.g. an NDRULONG
+                ridVal = extract_ndr_value(ridEntry)
+                rids_list.append(ridVal)
+            else:
+                # Possibly a SAMPR_RID_ENUMERATION with 'RelativeId'
+                ridVal = extract_ndr_value(ridEntry['RelativeId'])
+                rids_list.append(ridVal)
 
+        samr.hSamrCloseHandle(dce, groupHandle)
+        additional_ops.append("SamrCloseHandle")
+
+        # Look up each RID's account name
         additional_ops.append("SamrLookupIdsInDomain")
-        lookupResp = samr.hSamrLookupIdsInDomain(dce, domainHandle, rids_list)
-        names = [safe_str(name['Data']) for name in lookupResp['Names']['Element']]
-        results = [(names[i], rid) for i, rid in enumerate(rids_list)]
+        lookupResp2 = samr.hSamrLookupIdsInDomain(dce, domainHandle, rids_list)
+
+        names = [safe_str(name['Data']) for name in lookupResp2['Names']['Element']]
+        for i, ridVal in enumerate(rids_list):
+            results.append((names[i], ridVal))
 
     else:
+        # e.g. sidUse == SID_NAME_USER or something else
         raise Exception(f"Unsupported SID type: {sidUse}")
 
+    # We also might do SamrLookupIdsInDomain again if needed
+    additional_ops.append("SamrLookupIdsInDomain")
     return results, additional_ops
 
 
@@ -569,7 +636,7 @@ def main():
     debug = args.get('debug', 'false').lower() == 'true'
     export_file = args.get('export', '')
     export_format = args.get('format', 'txt').lower()
-    auth_mode = args.get('auth', 'ntlm').lower()  # "Kerberos" or "ntlm" default
+    auth_mode = args.get('auth', 'ntlm').lower()  # "kerberos" or "ntlm" default
     domain = args.get('domain', '')  # mandatory for Kerberos authentication
 
     # If password is empty, prompt user. getpass hides the input on CLI
@@ -649,7 +716,7 @@ def main():
             add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
 
         elif enumeration == 'group-members':
-            # Need domain handle for the group
+            # Need domain handle (primary), but the group might be in Builtin, so pass serverHandle as well
             domainHandle, domainName, domainSidString = get_domain_handle(dce,
                                                                           serverHandle,
                                                                           debug)
@@ -661,6 +728,7 @@ def main():
                 raise Exception("group parameter required for group-members enumeration.")
             enumerated_objects, additional_ops = list_group_members(
                 dce,
+                serverHandle,  # pass serverHandle so we can fallback to Builtin if needed
                 domainHandle,
                 groupName,
                 debug
@@ -699,13 +767,12 @@ def main():
     print("====")
 
     if enumerated_objects and execution_status == "success":
-        max_username_length = max(len(str(obj[0])) for obj in enumerated_objects) \
-            if enumerated_objects else 20
-        print(f"{'Username':<{max_username_length}} RID")
-        print("-" * (max_username_length + 5))
+        max_length = max(len(str(obj[0])) for obj in enumerated_objects) if enumerated_objects else 25
+        print(f"{'Member':<{max_length}} Details")
+        print("-" * (max_length + 15))
         for obj in enumerated_objects:
             if isinstance(obj, tuple) and len(obj) >= 2:
-                print(f"{obj[0]:<{max_username_length}} {obj[1]}")
+                print(f"{obj[0]:<{max_length}}")  # SIDs only, no attributes
 
     # Optionally export data
     if export_file and execution_status == "success" and enumerated_objects:
