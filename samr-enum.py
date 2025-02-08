@@ -453,155 +453,100 @@ def enumerate_users_in_domain(dce, domainHandle, debug):
     return users
 
 
-def list_group_members(dce, serverHandle, domainHandle, groupName, debug):
-    """
-    Enumerate members of a group (alias or domain group).
-    If not found in the primary domain, fallback to Builtin domain if possible.
-
-    :param dce: The DCE/RPC connection
-    :param serverHandle: SAMR server handle (needed for fallback to Builtin)
-    :param domainHandle: The opened domain handle (usually the primary domain)
-    :param groupName: Name of the group
-    :param debug: Boolean for debug prints
-    :return: (list_of_members, additional_ops_list)
-    """
-    log_debug(debug, f"[debug] SamrLookupNamesInDomain -> looking up group: {groupName}")
+def list_domain_group_members(dce, serverHandle, domainHandle, groupName, debug):
+    """Enumerate members of domain groups with name resolution"""
+    log_debug(debug, f"[debug] Domain group lookup: {groupName}")
     additional_ops = ["SamrLookupNamesInDomain"]
 
-    # Attempt a normal domain lookup first
-    try:
-        lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [groupName])
-    except samr.DCERPCSessionError as e:
-        # STATUS_NONE_MAPPED => fallback to Builtin domain
-        if e.get_error_code() == 0xC0000073:  # STATUS_NONE_MAPPED
-            log_debug(debug, f"[debug] Group '{groupName}' not found in primary domain, trying Builtin domain.")
-            builtinDomainHandle, _, _ = get_builtin_domain_handle(dce, serverHandle, debug)
-            lookupResp = samr.hSamrLookupNamesInDomain(dce, builtinDomainHandle, [groupName])
-            domainHandle = builtinDomainHandle
-        else:
-            raise
+    # Lookup group in primary domain
+    lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [groupName])
 
     if debug:
-        print("[debug-lookupResp] SamrLookupNamesInDomain response dump:")
+        print("[debug] SamrLookupNamesInDomain response:")
         print(lookupResp.dump())
 
-    # The 'RelativeIds' is a list of NDR types or ints, we only need the first
     rids = lookupResp['RelativeIds']['Element']
     uses = lookupResp['Use']['Element']
-    if not rids or not uses:
-        raise Exception(f"No mapped result for '{groupName}'")
 
-    groupRid = extract_ndr_value(rids[0])  # convert to int
-    sidUse = extract_ndr_value(uses[0])    # e.g. 4 => SID_NAME_ALIAS
-    results = []
+    if not rids or extract_ndr_value(uses[0]) not in (SID_NAME_GROUP, SID_NAME_WKN_GRP):
+        raise Exception("Not a valid domain group")
 
-    # Check whether it's a local alias or domain group
-    if sidUse == SID_NAME_ALIAS:
-        log_debug(debug, "[debug] SamrOpenAlias -> local group/alias")
-        additional_ops.append("SamrOpenAlias")
+    groupRid = extract_ndr_value(rids[0])
 
-        openAliasResp = samr.hSamrOpenAlias(
-            dce, domainHandle,
-            samr.ALIAS_LIST_MEMBERS,  # desiredAccess
-            groupRid
-        )
-        if debug:
-            print("[debug] SamrOpenAlias response dump:")
-            print(openAliasResp.dump())
+    # Open domain group
+    additional_ops.append("SamrOpenGroup")
+    groupHandle = samr.hSamrOpenGroup(
+        dce, domainHandle, samr.GROUP_LIST_MEMBERS, groupRid
+    )['GroupHandle']
 
-        aliasHandle = openAliasResp['AliasHandle']
+    # Get members - CORRECTED SECTION
+    additional_ops.append("SamrGetMembersInGroup")
+    membersResp = samr.hSamrGetMembersInGroup(dce, groupHandle)
 
-        additional_ops.append("SamrGetMembersInAlias")
-        membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
-        if debug:
-            print("[debug] SamrGetMembersInAlias response dump:")
-            print(membersResp.dump())
+    # Proper RID extraction matching working user enumeration
+    rids_list = []
+    for ridEntry in membersResp['Members']['Members']:
+        if isinstance(ridEntry, int):
+            rids_list.append(ridEntry)
+        elif hasattr(ridEntry, 'fields'):
+            ridVal = extract_ndr_value(ridEntry)
+            rids_list.append(ridVal)
+        else:
+            ridVal = extract_ndr_value(ridEntry['RelativeId'])
+            rids_list.append(ridVal)
 
-        # Typically the alias members are "PSAMPR_SID_INFORMATION" structures in 'Sids'
-        members = []
-        if 'Members' in membersResp and 'Sids' in membersResp['Members']:
-            members = membersResp['Members']['Sids']
-
-        for m_info in members:
-            log_debug(debug, f"[debug] alias item type={type(m_info)} fields={getattr(m_info, 'fields', None)}")
-
-            if not hasattr(m_info, 'fields'):
-                # fallback or unexpected older structure
-                results.append(("<unexpected alias item>", 0))
-                continue
-
-            # By name: 'SidPointer' and 'SidAttributes'
-            sid_obj = m_info['SidPointer']  # string key, not numeric index
-            if hasattr(sid_obj, "formatCanonical"):
-                sid_str = sid_obj.formatCanonical()
-            else:
-                sid_str = "<no-SID>"
-
-            # Check for 'SidAttributes' presence
-            if 'SidAttributes' in m_info.fields:
-                sid_attr = m_info['SidAttributes']
-            else:
-                sid_attr = 0
-
-            results.append((sid_str, sid_attr))
-
-        samr.hSamrCloseHandle(dce, aliasHandle)
-        additional_ops.append("SamrCloseHandle")
-
-    elif sidUse in (SID_NAME_GROUP, SID_NAME_WKN_GRP):
-        log_debug(debug, "[debug] SamrOpenGroup -> domain group")
-        additional_ops.append("SamrOpenGroup")
-
-        openGroupResp = samr.hSamrOpenGroup(
-            dce, domainHandle,
-            samr.GROUP_LIST_MEMBERS,  # desiredAccess
-            groupRid
-        )
-        if debug:
-            print("[debug] SamrOpenGroup response dump:")
-            print(openGroupResp.dump())
-
-        groupHandle = openGroupResp['GroupHandle']
-
-        additional_ops.append("SamrGetMembersInGroup")
-        membersResp = samr.hSamrGetMembersInGroup(dce, groupHandle)
-        if debug:
-            print("[debug] SamrGetMembersInGroup response dump:")
-            print(membersResp.dump())
-
-        # domain group membership => 'Members' is a list of RIDs or NDR objects
-        rids_list = []
-        for ridEntry in membersResp['Members']['Members']:
-            if isinstance(ridEntry, int):
-                rids_list.append(ridEntry)
-            elif hasattr(ridEntry, 'fields'):
-                # e.g. an NDRULONG
-                ridVal = extract_ndr_value(ridEntry)
-                rids_list.append(ridVal)
-            else:
-                # Possibly a SAMPR_RID_ENUMERATION with 'RelativeId'
-                ridVal = extract_ndr_value(ridEntry['RelativeId'])
-                rids_list.append(ridVal)
-
-        samr.hSamrCloseHandle(dce, groupHandle)
-        additional_ops.append("SamrCloseHandle")
-
-        # Look up each RID's account name
-        additional_ops.append("SamrLookupIdsInDomain")
-        lookupResp2 = samr.hSamrLookupIdsInDomain(dce, domainHandle, rids_list)
-
-        names = [safe_str(name['Data']) for name in lookupResp2['Names']['Element']]
-        for i, ridVal in enumerate(rids_list):
-            results.append((names[i], ridVal))
-
-    else:
-        # e.g. sidUse == SID_NAME_USER or something else
-        raise Exception(f"Unsupported SID type: {sidUse}")
-
-    # We also might do SamrLookupIdsInDomain again if needed
+    # Resolve RIDs to names
     additional_ops.append("SamrLookupIdsInDomain")
+    lookupResp2 = samr.hSamrLookupIdsInDomain(dce, domainHandle, rids_list)
+    names = [safe_str(name['Data']) for name in lookupResp2['Names']['Element']]
+    results = list(zip(names, rids_list))
+
+    samr.hSamrCloseHandle(dce, groupHandle)
+    additional_ops.append("SamrCloseHandle")
+
     return results, additional_ops
 
+
+def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug):
+    """Enumerate members of local groups (aliases) with SIDs"""
+    log_debug(debug, f"[debug] Local group lookup: {groupName}")
+    additional_ops = ["SamrLookupNamesInDomain"]
+    results = []
+
+    # First try Builtin domain for local groups
+    builtinHandle, _, _ = get_builtin_domain_handle(dce, serverHandle, debug)
+    lookupResp = samr.hSamrLookupNamesInDomain(dce, builtinHandle, [groupName])
+
+    if debug:
+        print("[debug] SamrLookupNamesInDomain response:")
+        print(lookupResp.dump())
+
+    rids = lookupResp['RelativeIds']['Element']
+    uses = lookupResp['Use']['Element']
+
+    if not rids or extract_ndr_value(uses[0]) != SID_NAME_ALIAS:
+        raise Exception("Not a valid local group")
+
+    groupRid = extract_ndr_value(rids[0])
+
+    # Open local alias
+    additional_ops.append("SamrOpenAlias")
+    aliasHandle = samr.hSamrOpenAlias(
+        dce, builtinHandle, samr.ALIAS_LIST_MEMBERS, groupRid
+    )['AliasHandle']
+
+    # Get members
+    additional_ops.append("SamrGetMembersInAlias")
+    membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
+
+    if membersResp['Members'] is not None:
+        results = [(sid['SidPointer'].formatCanonical(), 0)
+                   for sid in membersResp['Members']['Sids']]
+
+    samr.hSamrCloseHandle(dce, aliasHandle)
+    additional_ops.append("SamrCloseHandle")
+
+    return results, additional_ops
 
 def main():
     """
@@ -663,13 +608,29 @@ def main():
     execution_status = "success"
 
     try:
-        # SamrConnect (with possible Kerberos, password prompt, etc.)
-        dce, serverHandle = samr_connect(server, username, password,
-                                         domain, debug, auth_mode)
+        dce, serverHandle = samr_connect(server, username, password, domain, debug, auth_mode)
         add_opnum_call(opnums_called, "SamrConnect")
 
-        # Distinguish between enumerating normal domain groups vs builtin domain groups
-        if enumeration == 'groups-domain':
+        if enumeration == 'domain-group-members':
+            domainHandle, _, domainSidString = get_domain_handle(dce, serverHandle, debug)
+            enumerated_objects, additional_ops = list_domain_group_members(
+                dce, serverHandle, domainHandle, groupName, debug
+            )
+
+        elif enumeration == 'local-group-members':
+            # Use Builtin domain by default
+            domainHandle, _, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug)
+            enumerated_objects, additional_ops = list_local_group_members(
+                dce, serverHandle, domainHandle, groupName, debug
+            )
+        elif enumeration == 'users':
+            domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug)
+            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
+            add_opnum_call(opnums_called, "SamrOpenDomain")
+            enumerated_objects = enumerate_users_in_domain(dce, domainHandle, debug)
+            add_opnum_call(opnums_called, "SamrEnumerateUsersInSamServer")
+        elif enumeration == 'groups-domain':
             domainHandle, domainName, domainSidString = get_domain_handle(dce,
                                                                           serverHandle,
                                                                           debug)
@@ -702,39 +663,6 @@ def main():
             if did_aliases:
                 add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
             enumerated_objects = groups_result
-
-        elif enumeration == 'users':
-            # Get the primary domain handle for enumerating users
-            domainHandle, domainName, domainSidString = get_domain_handle(dce,
-                                                                          serverHandle,
-                                                                          debug)
-            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-            add_opnum_call(opnums_called, "SamrOpenDomain")
-
-            enumerated_objects = enumerate_users_in_domain(dce, domainHandle, debug)
-            add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
-
-        elif enumeration == 'group-members':
-            # Need domain handle (primary), but the group might be in Builtin, so pass serverHandle as well
-            domainHandle, domainName, domainSidString = get_domain_handle(dce,
-                                                                          serverHandle,
-                                                                          debug)
-            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-            add_opnum_call(opnums_called, "SamrOpenDomain")
-
-            if not groupName:
-                raise Exception("group parameter required for group-members enumeration.")
-            enumerated_objects, additional_ops = list_group_members(
-                dce,
-                serverHandle,  # pass serverHandle so we can fallback to Builtin if needed
-                domainHandle,
-                groupName,
-                debug
-            )
-            for op_name in additional_ops:
-                add_opnum_call(opnums_called, op_name)
 
         else:
             raise Exception(f"Unknown enumeration: {enumeration}")
