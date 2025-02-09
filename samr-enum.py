@@ -539,9 +539,50 @@ def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug):
     additional_ops.append("SamrGetMembersInAlias")
     membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
 
-    if membersResp['Members'] is not None:
-        results = [(sid['SidPointer'].formatCanonical(), 0)
-                   for sid in membersResp['Members']['Sids']]
+    # Enumerate domains to resolve SIDs
+    additional_ops.append("SamrEnumerateDomainsInSamServer")
+    enumDomainsResp = samr.hSamrEnumerateDomainsInSamServer(dce, serverHandle)
+    domains = []
+    for domain in enumDomainsResp['Buffer']['Buffer']:
+        domain_name = safe_str(domain['Name'])
+        additional_ops.append("SamrLookupDomainInSamServer")
+        lookup_resp = samr.hSamrLookupDomainInSamServer(dce, serverHandle, domain_name)
+        domains.append((domain_name, lookup_resp['DomainId']))
+
+    # Process each member SID
+    for sid in membersResp['Members']['Sids']:
+        sid_str = sid['SidPointer'].formatCanonical()
+        parts = sid_str.split('-')
+        rid = parts[-1]
+        domain_sid_part = '-'.join(parts[:-1])
+        resolved = False
+
+        # Find matching domain
+        for domain_name, domain_sid in domains:
+            if domain_sid.formatCanonical() == domain_sid_part:
+                try:
+                    additional_ops.append("SamrOpenDomain")
+                    dom_handle = samr.hSamrOpenDomain(
+                        dce, serverHandle,
+                        samr.DOMAIN_LOOKUP | samr.DOMAIN_LIST_ACCOUNTS,
+                        domain_sid
+                    )['DomainHandle']
+
+                    additional_ops.append("SamrLookupIdsInDomain")
+                    lookup = samr.hSamrLookupIdsInDomain(dce, dom_handle, [int(rid)])
+                    if lookup['Names']['Element']:
+                        username = safe_str(lookup['Names']['Element'][0]['Data'])
+                        results.append((username, rid))
+                        resolved = True
+
+                    additional_ops.append("SamrCloseHandle")
+                    samr.hSamrCloseHandle(dce, dom_handle)
+                except Exception as e:
+                    log_debug(debug, f"[debug] SID resolution failed: {str(e)}")
+                break  # Exit domain loop after processing matching domain
+
+        if not resolved:
+            results.append((sid_str, 'SID'))  # Maintain original output format
 
     samr.hSamrCloseHandle(dce, aliasHandle)
     additional_ops.append("SamrCloseHandle")
