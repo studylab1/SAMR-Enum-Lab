@@ -11,6 +11,8 @@ formats (TXT, CSV, JSON).
 Usage Examples:
   python samr-enum.py enumerate=users server=dc1.company.local username=someuser password=somepass
   python samr-enum.py enumerate=groups-domain server=dc1.company.local username=someuser password=somepass
+  print("python samr-enum.py enumerate=user-memberships-domaingroups user=john server=dc1.company.local username=admin password=pass")
+  print("python samr-enum.py enumerate=user-memberships-localgroups user=john server=dc1.company.local username=admin password=pass")
   python samr-enum.py enumerate=groups-local server=dc1.company.local username=someuser password=somepass
   python samr-enum.py enumerate=group-members server=dc1.company.local username=someuser password=somepass group="Domain Admins"
 
@@ -41,6 +43,8 @@ SID_NAME_WKN_GRP = 5
 SAMR_FUNCTION_OPNUMS = {
     'SamrConnect': 0,
     'SamrCloseHandle': 1,
+    'SamrOpenUser': 34,
+    'SamrGetGroupsForUser': 39,
     'SamrEnumerateDomainsInSamServer': 6,
     'SamrLookupDomainInSamServer': 5,
     'SamrOpenDomain': 7,
@@ -61,6 +65,7 @@ SAMR_FUNCTION_OPNUMS = {
 # in your code. Others show no Access Mask.
 ###########################################################
 SAMR_FUNCTION_ACCESS = {
+    'SamrOpenUser':    0x00000100,  # USER_LIST_GROUPS
     'SamrConnect':     0x00000031,  # desiredAccess=0x31
     'SamrOpenDomain':  0x00000300,  # DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS
     'SamrOpenGroup':   0x00000010,  # GROUP_LIST_MEMBERS
@@ -112,6 +117,7 @@ def print_help():
     print("Example usage:")
     print("  python samr-enum.py enumerate=users server=dc1.company.local username=someuser password=somepass")
     print("  python samr-enum.py enumerate=groups-domain server=dc1.company.local username=someuser password=somepass")
+    print("  python samr-enum.py enumerate=user-memberships user=someuser server=dc1.company.local username=admin password=pass")
     print("  python samr-enum.py enumerate=groups-local server=dc1.company.local username=someuser password=somepass")
     print("  python samr-enum.py enumerate=group-members server=dc1.company.local username=someuser password=somepass group=\"Domain Admins\"")
     print("Optional arguments:")
@@ -507,6 +513,81 @@ def list_domain_group_members(dce, serverHandle, domainHandle, groupName, debug)
     return results, additional_ops
 
 
+def list_user_domain_memberships(dce, domainHandle, username, domain_sid, debug, opnums_called):
+    """Enumerate domain groups a user belongs to using SamrGetGroupsForUser"""
+    log_debug(debug, f"[debug] Looking up user '{username}' in domain...")
+    lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [username])
+    add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
+
+    rids = lookupResp['RelativeIds']['Element']
+    uses = lookupResp['Use']['Element']
+    if not rids or extract_ndr_value(uses[0]) != SID_NAME_USER:
+        raise Exception(f"User '{username}' not found")
+
+    user_rid = extract_ndr_value(rids[0])
+    log_debug(debug, f"[debug] User RID: {user_rid}")
+
+    userHandle = samr.hSamrOpenUser(dce, domainHandle, samr.USER_LIST_GROUPS, user_rid)['UserHandle']
+    add_opnum_call(opnums_called, "SamrOpenUser")
+
+    groupsResp = samr.hSamrGetGroupsForUser(dce, userHandle)
+    add_opnum_call(opnums_called, "SamrGetGroupsForUser")
+
+    group_rids = [g['RelativeId'] for g in groupsResp['Groups']['Groups']]
+    samr.hSamrCloseHandle(dce, userHandle)
+    add_opnum_call(opnums_called, "SamrCloseHandle")
+
+    if not group_rids:
+        return []
+
+    lookupGroupsResp = samr.hSamrLookupIdsInDomain(dce, domainHandle, group_rids)
+    add_opnum_call(opnums_called, "SamrLookupIdsInDomain")
+    return [(safe_str(name['Data']), rid) for name, rid in zip(lookupGroupsResp['Names']['Element'], group_rids)]
+
+
+def list_user_local_memberships(dce, serverHandle, username, domain_sid, debug, opnums_called):
+    """Check Builtin domain aliases for user SID membership"""
+    # Get user RID from primary domain
+    domainHandle, _, _ = get_domain_handle(dce, serverHandle, debug)
+    try:
+        log_debug(debug, f"[debug] Looking up user '{username}' in primary domain...")
+        lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [username])
+        add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
+
+        rids = lookupResp['RelativeIds']['Element']
+        uses = lookupResp['Use']['Element']
+        if not rids or extract_ndr_value(uses[0]) != SID_NAME_USER:
+            raise Exception(f"User '{username}' not found in primary domain")
+
+        user_rid = extract_ndr_value(rids[0])
+        user_sid = f"{domain_sid}-{user_rid}"
+        log_debug(debug, f"[debug] User SID: {user_sid}")
+    finally:
+        samr.hSamrCloseHandle(dce, domainHandle)
+        add_opnum_call(opnums_called, "SamrCloseHandle")
+
+    # Check Builtin domain aliases
+    builtinHandle, _, _ = get_builtin_domain_handle(dce, serverHandle, debug)
+    try:
+        enumAliasesResp = samr.hSamrEnumerateAliasesInDomain(dce, builtinHandle)
+        add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
+
+        local_memberships = []
+        for alias in enumAliasesResp['Buffer']['Buffer']:
+            aliasHandle = samr.hSamrOpenAlias(dce, builtinHandle, samr.ALIAS_LIST_MEMBERS, alias['RelativeId'])[
+                'AliasHandle']
+            try:
+                membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
+                if any(sid['SidPointer'].formatCanonical() == user_sid for sid in membersResp['Members']['Sids']):
+                    local_memberships.append((safe_str(alias['Name']), alias['RelativeId']))
+            finally:
+                samr.hSamrCloseHandle(dce, aliasHandle)
+        return local_memberships
+    finally:
+        samr.hSamrCloseHandle(dce, builtinHandle)
+        add_opnum_call(opnums_called, "SamrCloseHandle")
+
+
 def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug):
     """Enumerate members of local groups (aliases) with SIDs"""
     log_debug(debug, f"[debug] Local group lookup: {groupName}")
@@ -588,6 +669,7 @@ def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug):
     additional_ops.append("SamrCloseHandle")
 
     return results, additional_ops
+
 
 def main():
     """
@@ -704,6 +786,23 @@ def main():
             if did_aliases:
                 add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
             enumerated_objects = groups_result
+
+        elif enumeration == 'user-memberships-domaingroups':
+            user = args.get('user', '')
+            if not user:
+                raise Exception("Missing 'user=' argument")
+            domainHandle, _, domainSidString = get_domain_handle(dce, serverHandle, debug)
+            enumerated_objects = list_user_domain_memberships(dce, domainHandle, user, domainSidString, debug,
+                                                              opnums_called)
+
+        elif enumeration == 'user-memberships-localgroups':
+            user = args.get('user', '')
+            if not user:
+                raise Exception("Missing 'user=' argument")
+            # Get primary domain SID for user SID construction
+            domainHandle, _, domainSidString = get_domain_handle(dce, serverHandle, debug)
+            enumerated_objects = list_user_local_memberships(dce, serverHandle, user, domainSidString, debug,
+                                                             opnums_called)
 
         else:
             raise Exception(f"Unknown enumeration: {enumeration}")
