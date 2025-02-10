@@ -671,6 +671,58 @@ def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug):
     return results, additional_ops
 
 
+def enumerate_computers_in_domain(dce, domainHandle, debug):
+    """
+    Enumerate all domain computers (workstations AND domain controllers) by
+    using both USER_WORKSTATION_TRUST_ACCOUNT and USER_SERVER_TRUST_ACCOUNT flags.
+    """
+    log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating computers...")
+    computers = []
+    resumeHandle = 0
+    max_retries = 3
+    retry_count = 0
+
+    # Combined flags for both workstation and server trust accounts
+    ACCOUNT_FILTER = samr.USER_WORKSTATION_TRUST_ACCOUNT | samr.USER_SERVER_TRUST_ACCOUNT
+
+    while True:
+        try:
+            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
+                dce,
+                domainHandle,
+                enumerationContext=resumeHandle,
+                userAccountControl=ACCOUNT_FILTER
+            )
+            retry_count = 0
+
+        except samr.DCERPCSessionError as e:
+            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
+                enumUsersResp = e.get_packet()
+                retry_count = 0
+            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
+                log_debug(debug, "[debug] Server busy, retrying after delay...")
+                time.sleep(2)
+                retry_count += 1
+                if retry_count > max_retries:
+                    raise Exception("Server resource limit reached after retries")
+                continue
+            else:
+                raise
+
+        chunk = enumUsersResp['Buffer']['Buffer'] or []
+        for accountEntry in chunk:  # Changed variable name for clarity
+            computername = safe_str(accountEntry['Name'])
+            rid = accountEntry['RelativeId']
+            computers.append((computername, rid))
+
+        resumeHandle = enumUsersResp['EnumerationContext']
+        if enumUsersResp['ErrorCode'] != 0x00000105:
+            break
+        time.sleep(0.1)
+
+    return computers
+
+
 def main():
     """
     Main entry point for the SAMR enumeration script.
@@ -803,6 +855,13 @@ def main():
             domainHandle, _, domainSidString = get_domain_handle(dce, serverHandle, debug)
             enumerated_objects = list_user_local_memberships(dce, serverHandle, user, domainSidString, debug,
                                                              opnums_called)
+        elif enumeration == 'computers':
+            domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug)
+            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
+            add_opnum_call(opnums_called, "SamrOpenDomain")
+            enumerated_objects = enumerate_computers_in_domain(dce, domainHandle, debug)
+            add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
 
         else:
             raise Exception(f"Unknown enumeration: {enumeration}")
