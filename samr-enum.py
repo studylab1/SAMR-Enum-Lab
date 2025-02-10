@@ -92,6 +92,16 @@ def add_opnum_call(opnums_list, func_name):
         opnums_list.append(func_name)
 
 
+def format_time(timestamp):
+    """Convert Windows FILETIME to human-readable string"""
+    if timestamp == 0 or timestamp == 0x7FFFFFFFFFFFFFFF:
+        return 'Never'
+    try:
+        return datetime.fromtimestamp(timestamp // 10000000 - 11644473600).strftime('%Y-%m-%d %H:%M:%S')
+    except:
+        return 'Invalid timestamp'
+
+
 def parse_named_args(argv):
     """
     Parse named arguments of the form key=value from the command line.
@@ -723,6 +733,94 @@ def enumerate_computers_in_domain(dce, domainHandle, debug):
     return computers
 
 
+def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
+    """Retrieve detailed user information from SAMR"""
+    try:
+        # Check if input is numeric RID
+        if user_input.isdigit():
+            rid = int(user_input)
+            log_debug(debug, f"[debug] Looking up RID {rid}...")
+            lookup_resp = samr.hSamrLookupIdsInDomain(dce, domainHandle, [rid])
+            add_opnum_call(opnums_called, "SamrLookupIdsInDomain")
+
+            if not lookup_resp['Names']['Element']:
+                raise Exception(f"No user found with RID {rid}")
+
+            username = safe_str(lookup_resp['Names']['Element'][0]['Data'])
+        else:
+            # Treat as username
+            username = user_input
+            log_debug(debug, f"[debug] Looking up username '{username}'...")
+            lookup_resp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [username])
+            add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
+
+            rids = lookup_resp['RelativeIds']['Element']
+            if not rids:
+                raise Exception(f"User '{username}' not found")
+
+            rid = extract_ndr_value(rids[0])
+
+    except Exception as e:
+        raise Exception(f"User lookup failed: {str(e)}")
+    
+    log_debug(debug, f"[debug] Looking up user '{username}'...")
+
+    # Lookup username to get RID
+    lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [username])
+    add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
+
+    rids = lookupResp['RelativeIds']['Element']
+    uses = lookupResp['Use']['Element']
+    if not rids or extract_ndr_value(uses[0]) != SID_NAME_USER:
+        raise Exception(f"User '{username}' not found")
+
+    user_rid = extract_ndr_value(rids[0])
+
+    # Open user with needed access
+    userHandle = samr.hSamrOpenUser(dce, domainHandle,
+                                    samr.MAXIMUM_ALLOWED,  # Broad access
+                                    user_rid
+                                    )['UserHandle']
+    add_opnum_call(opnums_called, "SamrOpenUser")
+
+    # Query user information with proper Impacket object handling
+    try:
+        # Attempt UserAllInformation with elevated access
+        response = samr.hSamrQueryInformationUser(
+            dce,
+            userHandle,
+            samr.USER_INFORMATION_CLASS.UserAllInformation
+        )
+        info = response['Buffer']['All']  # Correct dictionary access
+    except Exception as e:
+        log_debug(debug, f"[debug] UserAllInformation failed: {str(e)}, trying GeneralInformation")
+        response = samr.hSamrQueryInformationUser(
+            dce,
+            userHandle,
+            samr.USER_INFORMATION_CLASS.UserGeneralInformation
+        )
+        info = response['Buffer']['General']
+
+        # Add null checks for critical fields
+    return {
+        'username': safe_str(info.UserName) if hasattr(info, 'UserName') else '',
+        'full_name': safe_str(info.FullName) if hasattr(info, 'FullName') else '',
+        'home_directory': safe_str(info.HomeDirectory) if hasattr(info, 'HomeDirectory') else '',
+        'home_drive': safe_str(info.HomeDrive) if hasattr(info, 'HomeDrive') else '',
+        'script_path': safe_str(info.ScriptPath) if hasattr(info, 'ScriptPath') else '',
+        'profile_path': safe_str(info.ProfilePath) if hasattr(info, 'ProfilePath') else '',
+        'account_expires': info.AccountExpires if hasattr(info, 'AccountExpires') else 0,
+        'last_logon': info.LastLogon if hasattr(info, 'LastLogon') else 0,
+        'last_logoff': info.LastLogoff if hasattr(info, 'LastLogoff') else 0,
+        'password_last_set': info.PasswordLastSet if hasattr(info, 'PasswordLastSet') else 0,
+        'password_expires': info.PasswordExpired if hasattr(info, 'PasswordExpired') else False,
+        'rid': user_rid,
+        'account_disabled': bool(info.UserAccountControl & samr.USER_ACCOUNT_DISABLED) if hasattr(info, 'UserAccountControl') else False,
+        'smartcard_required': bool(info.UserAccountControl & samr.USER_SMARTCARD_REQUIRED) if hasattr(info, 'UserAccountControl') else False,
+        'password_never_expires': bool(info.UserAccountControl & samr.USER_DONT_EXPIRE_PASSWORD) if hasattr(info, 'UserAccountControl') else False,
+    }
+
+
 def main():
     """
     Main entry point for the SAMR enumeration script.
@@ -863,6 +961,14 @@ def main():
             enumerated_objects = enumerate_computers_in_domain(dce, domainHandle, debug)
             add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
 
+        elif enumeration == 'account-details':
+            user = args.get('user', '')
+            if not user:
+                raise Exception("Missing 'user=' argument")
+            domainHandle, _, domainSidString = get_domain_handle(dce, serverHandle, debug)
+            user_details = get_user_details(dce, domainHandle, user, debug, opnums_called)
+            enumerated_objects = [user_details]
+
         else:
             raise Exception(f"Unknown enumeration: {enumeration}")
 
@@ -894,12 +1000,33 @@ def main():
     print("====")
 
     if enumerated_objects and execution_status == "success":
-        max_length = max(len(str(obj[0])) for obj in enumerated_objects) if enumerated_objects else 25
-        print(f"{'Member':<{max_length}} Details")
-        print("-" * (max_length + 15))
-        for obj in enumerated_objects:
-            if isinstance(obj, tuple) and len(obj) >= 2:
-                print(f"{obj[0]:<{max_length}}")  # SIDs only, no attributes
+        if enumeration == 'account-details':
+            # Handle account details display
+            details = enumerated_objects[0]
+            print(f"\nAccount Details for {details.get('username', 'N/A')}:")
+            print(f"  Full Name:          {details.get('full_name', 'N/A')}")
+            print(f"  RID:                {details.get('rid', 'N/A')}")
+            print(f"  Home Directory:     {details.get('home_directory', 'N/A')}")
+            print(f"  Home Drive:         {details.get('home_drive', 'N/A')}")
+            print(f"  Profile Path:       {details.get('profile_path', 'N/A')}")
+            print(f"  Script Path:        {details.get('script_path', 'N/A')}")
+            print(f"  Account Expires:    {format_time(details.get('account_expires', 0))}")
+            print(f"  Password Last Set:  {format_time(details.get('password_last_set', 0))}")
+            print(f"  Last Logon:         {format_time(details.get('last_logon', 0))}")
+            print(f"  Password Expired:   {details.get('password_expires', False)}")
+            print(f"  Account Disabled:   {details.get('account_disabled', False)}")
+            print(f"  Smartcard Required: {details.get('smartcard_required', False)}")
+            print(f"  Password Never Exp: {details.get('password_never_expires', False)}")
+        else:
+            # Handle regular enumerations (users/groups/computers)
+            max_length = max(len(str(obj[0])) for obj in enumerated_objects) if enumerated_objects else 25
+            print(f"\n{'Member':<{max_length}} Details")
+            print("-" * (max_length + 15))
+            for obj in enumerated_objects:
+                if isinstance(obj, tuple) and len(obj) >= 2:
+                    print(f"{obj[0]:<{max_length}} {obj[1]}")
+                elif isinstance(obj, dict):  # Additional safety check
+                    print(f"{obj.get('username', 'N/A'):<{max_length}} {obj.get('rid', 'N/A')}")
 
     # Optionally export data
     if export_file and execution_status == "success" and enumerated_objects:
