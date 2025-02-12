@@ -57,6 +57,7 @@ SAMR_FUNCTION_OPNUMS = {
     'SamrGetMembersInGroup': 25,
     'SamrOpenAlias': 27,
     'SamrGetMembersInAlias': 33,
+    'SamrQueryInformationDomain2': 46,
 }
 
 ###########################################################
@@ -65,11 +66,11 @@ SAMR_FUNCTION_OPNUMS = {
 # in your code. Others show no Access Mask.
 ###########################################################
 SAMR_FUNCTION_ACCESS = {
-    'SamrOpenUser':    0x00000100,  # USER_LIST_GROUPS
-    'SamrConnect':     0x00000031,  # desiredAccess=0x31
-    'SamrOpenDomain':  0x00000300,  # DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS
-    'SamrOpenGroup':   0x00000010,  # GROUP_LIST_MEMBERS
-    'SamrOpenAlias':   0x00000004,  # ALIAS_LIST_MEMBERS
+    'SamrOpenUser': 0x00000100,  # USER_LIST_GROUPS
+    'SamrConnect': 0x00000031,  # desiredAccess=0x31
+    'SamrOpenDomain': 0x00000300,  # DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS
+    'SamrOpenGroup': 0x00000010,  # GROUP_LIST_MEMBERS
+    'SamrOpenAlias': 0x00000004,  # ALIAS_LIST_MEMBERS
 }
 
 
@@ -130,6 +131,7 @@ def print_help():
     print("  python samr-enum.py enumerate=user-memberships user=someuser server=dc1.company.local username=admin password=pass")
     print("  python samr-enum.py enumerate=groups-local server=dc1.company.local username=someuser password=somepass")
     print("  python samr-enum.py enumerate=group-members server=dc1.company.local username=someuser password=somepass group=\"Domain Admins\"")
+    print("  python samr-enum.py enumerate=password-policy server=dc1.company.local username=someuser password=somepass")
     print("Optional arguments:")
     print("  domain=<DOMAIN>      The domain for the user credentials (for NTLM or Kerberos)")
     print("  group=<GroupName>    Required only if enumerate=group-members")
@@ -306,10 +308,11 @@ def get_domain_handle(dce, serverHandle, debug):
     log_debug(debug, f"[debug] Domain SID: {sidString}")
 
     log_debug(debug, "[debug] SamrOpenDomain -> opening domain handle...")
+
     openDomResp = samr.hSamrOpenDomain(
         dce,
         serverHandle,
-        samr.DOMAIN_LOOKUP | samr.DOMAIN_LIST_ACCOUNTS,
+        samr.DOMAIN_LOOKUP | samr.DOMAIN_LIST_ACCOUNTS | samr.DOMAIN_READ_PASSWORD_PARAMETERS,
         domainSidObj
     )
     if debug:
@@ -762,7 +765,7 @@ def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
 
     except Exception as e:
         raise Exception(f"User lookup failed: {str(e)}")
-    
+
     log_debug(debug, f"[debug] Looking up user '{username}'...")
 
     # Lookup username to get RID
@@ -815,10 +818,88 @@ def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
         'password_last_set': info.PasswordLastSet if hasattr(info, 'PasswordLastSet') else 0,
         'password_expires': info.PasswordExpired if hasattr(info, 'PasswordExpired') else False,
         'rid': user_rid,
-        'account_disabled': bool(info.UserAccountControl & samr.USER_ACCOUNT_DISABLED) if hasattr(info, 'UserAccountControl') else False,
-        'smartcard_required': bool(info.UserAccountControl & samr.USER_SMARTCARD_REQUIRED) if hasattr(info, 'UserAccountControl') else False,
-        'password_never_expires': bool(info.UserAccountControl & samr.USER_DONT_EXPIRE_PASSWORD) if hasattr(info, 'UserAccountControl') else False,
+        'account_disabled': bool(info.UserAccountControl & samr.USER_ACCOUNT_DISABLED) if hasattr(info,
+                                                                                                  'UserAccountControl') else False,
+        'smartcard_required': bool(info.UserAccountControl & samr.USER_SMARTCARD_REQUIRED) if hasattr(info,
+                                                                                                      'UserAccountControl') else False,
+        'password_never_expires': bool(info.UserAccountControl & samr.USER_DONT_EXPIRE_PASSWORD) if hasattr(info,
+                                                                                                            'UserAccountControl') else False,
     }
+
+
+def get_password_policy(dce, domainHandle, debug, opnums_called):
+    log_debug(debug, "[debug] Querying domain password policy...")
+    add_opnum_call(opnums_called, "SamrQueryInformationDomain2")
+
+    try:
+        resp = samr.hSamrQueryInformationDomain2(
+            dce,
+            domainHandle,
+            samr.DOMAIN_INFORMATION_CLASS.DomainPasswordInformation
+        )
+        password_info = resp['Buffer']['Password']
+
+        resp_lockout = samr.hSamrQueryInformationDomain2(
+            dce,
+            domainHandle,
+            samr.DOMAIN_INFORMATION_CLASS.DomainLockoutInformation
+        )
+        lockout_info = resp_lockout['Buffer']['Lockout']
+
+        # Convert time intervals with special handling
+        def ticks_to_days(ticks_obj):
+            """Convert OLD_LARGE_INTEGER to days with Windows special value handling"""
+            if not isinstance(ticks_obj, samr.OLD_LARGE_INTEGER):
+                return 0
+
+            # Handle "Never expire" special case (HighPart = 0x80000000)
+            if ticks_obj['HighPart'] == -2147483648:  # 0x80000000 in signed int32
+                return 0
+
+            # Combine HighPart and LowPart into 64-bit integer
+            ticks = (ticks_obj['HighPart'] << 32) | (ticks_obj['LowPart'] & 0xFFFFFFFF)
+
+            # Handle negative values (two's complement)
+            if ticks_obj['HighPart'] < 0:
+                ticks = -((~ticks + 1) & 0xFFFFFFFFFFFFFFFF)
+
+            seconds = abs(ticks) // 10000000  # 100ns -> seconds
+            return seconds // 86400  # seconds -> days
+
+        max_age_days = ticks_to_days(password_info['MaxPasswordAge'])
+        min_age_days = ticks_to_days(password_info['MinPasswordAge'])
+
+        lockout_threshold = lockout_info['LockoutThreshold']
+        lockout_duration = ticks_to_days(lockout_info['LockoutDuration'])
+        lockout_window = ticks_to_days(lockout_info['LockoutObservationWindow'])
+
+        # Decode password properties flags
+        properties = []
+        props = password_info['PasswordProperties']
+        if props & samr.DOMAIN_PASSWORD_COMPLEX:
+            properties.append("Complexity required")
+        if props & samr.DOMAIN_PASSWORD_NO_ANON_CHANGE:
+            properties.append("No anonymous changes")
+        if props & samr.DOMAIN_PASSWORD_NO_CLEAR_CHANGE:
+            properties.append("No clear text password")
+        if props & samr.DOMAIN_PASSWORD_STORE_CLEARTEXT:
+            properties.append("Store cleartext")
+
+        return {
+            'min_length': password_info['MinPasswordLength'],
+            'history_length': password_info['PasswordHistoryLength'],
+            'max_age_days': max_age_days,
+            'min_age_days': min_age_days,
+            'properties': properties,
+            'lockout_threshold': lockout_threshold,
+            'lockout_duration': lockout_duration,
+            'lockout_window': lockout_window
+        }
+
+    except Exception as e:
+        if debug:
+            print(f"[debug] Full error: {str(e)}")
+        raise
 
 
 def main():
@@ -969,6 +1050,14 @@ def main():
             user_details = get_user_details(dce, domainHandle, user, debug, opnums_called)
             enumerated_objects = [user_details]
 
+        elif enumeration == 'password-policy':  # New enumeration type
+            domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug)
+            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
+            add_opnum_call(opnums_called, "SamrOpenDomain")
+            password_policy = get_password_policy(dce, domainHandle, debug, opnums_called)
+            enumerated_objects = [password_policy]
+
         else:
             raise Exception(f"Unknown enumeration: {enumeration}")
 
@@ -1017,6 +1106,20 @@ def main():
             print(f"  Account Disabled:   {details.get('account_disabled', False)}")
             print(f"  Smartcard Required: {details.get('smartcard_required', False)}")
             print(f"  Password Never Exp: {details.get('password_never_expires', False)}")
+        elif enumeration == 'password-policy':  # Handle password policy output
+            policy = enumerated_objects[0]
+            print("\nDomain Password Policy:")
+            print(f"  Minimum password length:       {policy['min_length']}")
+            print(f"  Password history length:       {policy['history_length']}")
+            print(
+                f"  Maximum password age (days):   {policy['max_age_days'] if policy['max_age_days'] > 0 else 'Never expire'}")
+            print(f"  Minimum password age (days):   {policy['min_age_days']}")
+            print(f"  Account lockout threshold:     {policy['lockout_threshold']}")
+            print(f"  Lockout duration (days):       {policy['lockout_duration']}")
+            print(f"  Lockout observation window:    {policy['lockout_window']}")
+            print("  Password properties:")
+            for prop in policy['properties']:
+                print(f"    - {prop}")
         else:
             # Handle regular enumerations (users/groups/computers)
             max_length = max(len(str(obj[0])) for obj in enumerated_objects) if enumerated_objects else 25
