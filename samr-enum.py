@@ -902,6 +902,63 @@ def get_password_policy(dce, domainHandle, debug, opnums_called):
         raise
 
 
+def get_lockout_policy(dce, domainHandle, debug, opnums_called):
+    """
+    Retrieve the domain lockout policy using SamrQueryInformationDomain2.
+
+    :param dce: DCE/RPC connection object.
+    :param domainHandle: Handle to the opened domain.
+    :param debug: Boolean indicating debug output.
+    :param opnums_called: List to track SAMR functions called.
+    :return: Dictionary containing lockout policy details.
+    """
+    log_debug(debug, "[debug] Querying domain lockout policy...")
+    add_opnum_call(opnums_called, "SamrQueryInformationDomain2")
+
+    try:
+        resp_lockout = samr.hSamrQueryInformationDomain2(
+            dce,
+            domainHandle,
+            samr.DOMAIN_INFORMATION_CLASS.DomainLockoutInformation
+        )
+        lockout_info = resp_lockout['Buffer']['Lockout']
+
+        # Convert time intervals with special handling
+        def ticks_to_days(ticks_obj):
+            """Convert OLD_LARGE_INTEGER to days with Windows special value handling"""
+            if not isinstance(ticks_obj, samr.OLD_LARGE_INTEGER):
+                return 0
+
+            # Handle "Never expire" special case (HighPart = 0x80000000)
+            if ticks_obj['HighPart'] == -2147483648:  # 0x80000000 in signed int32
+                return 0
+
+            # Combine HighPart and LowPart into 64-bit integer
+            ticks = (ticks_obj['HighPart'] << 32) | (ticks_obj['LowPart'] & 0xFFFFFFFF)
+
+            # Handle negative values (two's complement)
+            if ticks_obj['HighPart'] < 0:
+                ticks = -((~ticks + 1) & 0xFFFFFFFFFFFFFFFF)
+
+            seconds = abs(ticks) // 10000000  # 100ns -> seconds
+            return seconds // 86400  # seconds -> days
+
+        lockout_threshold = lockout_info['LockoutThreshold']
+        lockout_duration = ticks_to_days(lockout_info['LockoutDuration'])
+        lockout_window = ticks_to_days(lockout_info['LockoutObservationWindow'])
+
+        return {
+            'lockout_threshold': lockout_threshold,
+            'lockout_duration': lockout_duration,
+            'lockout_window': lockout_window
+        }
+
+    except Exception as e:
+        if debug:
+            print(f"[debug] Full error: {str(e)}")
+        raise
+
+
 def main():
     """
     Main entry point for the SAMR enumeration script.
@@ -1058,6 +1115,14 @@ def main():
             password_policy = get_password_policy(dce, domainHandle, debug, opnums_called)
             enumerated_objects = [password_policy]
 
+        elif enumeration == 'lockout-policy':
+            domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug)
+            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
+            add_opnum_call(opnums_called, "SamrOpenDomain")
+            lockout_policy = get_lockout_policy(dce, domainHandle, debug, opnums_called)
+            enumerated_objects = [lockout_policy]
+
         else:
             raise Exception(f"Unknown enumeration: {enumeration}")
 
@@ -1106,6 +1171,7 @@ def main():
             print(f"  Account Disabled:   {details.get('account_disabled', False)}")
             print(f"  Smartcard Required: {details.get('smartcard_required', False)}")
             print(f"  Password Never Exp: {details.get('password_never_expires', False)}")
+
         elif enumeration == 'password-policy':  # Handle password policy output
             policy = enumerated_objects[0]
             print("\nDomain Password Policy:")
@@ -1120,6 +1186,15 @@ def main():
             print("  Password properties:")
             for prop in policy['properties']:
                 print(f"    - {prop}")
+
+        elif enumeration == 'lockout-policy':
+            policy = enumerated_objects[0]
+            print("\nDomain Lockout Policy:")
+            print(f"  Account lockout threshold:     {policy['lockout_threshold']}")
+            print(
+                f"  Lockout duration (days):       {policy['lockout_duration'] if policy['lockout_duration'] > 0 else 'Indefinite'}")
+            print(f"  Lockout observation window:    {policy['lockout_window']} days")
+
         else:
             # Handle regular enumerations (users/groups/computers)
             max_length = max(len(str(obj[0])) for obj in enumerated_objects) if enumerated_objects else 25
