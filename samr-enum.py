@@ -29,6 +29,8 @@ Optional OPTIONS:
   auth              Authentication protocol. Acceptable values: 'ntlm' (default) or 'kerberos'.
   debug             Display debug details of the SAMR calls. Acceptable values: 'true' or 'false' (default: 'false').
   export            Export the data. Acceptable values: 'txt' (default), 'csv', or 'json'.
+    format          Acceptable values are 'txt', 'csv' or 'json', with the default being 'txt'.
+  opnums            Set to 'true' to display SAMR OpNums in output (default: 'true').
   help              Print help page.
 
 ENUMERATION PARAMETERS:
@@ -171,7 +173,7 @@ def parse_named_args(argv):
 
     :param argv: sys.argv or similar list of command-line tokens
     :return: dict mapping lowercase key -> string value
-    Example: python samr-enum.py server=server1 user=admin password=pass123
+    Example: python samr-enum.py target=server1 user=admin password=pass123
     """
     args = {}
     for item in argv[1:]:
@@ -201,9 +203,11 @@ def print_help():
 
     Optional OPTIONS:
       domain            Domain of the user to authenticate. It is required if Kerberos authentication is used.
-      auth              Authentication protocol. Acceptable values are 'ntlm' or 'kerberos', with the default being ntlm.
-      debug             Display debug details of the SAMR calls. Acceptable values are true or false, with the default being false.
-      export            Export the data. Acceptable values are txt, 'csv' or json, with the default being txt.
+      auth              Authentication protocol. Acceptable values are 'ntlm' or 'kerberos', with the default being 'ntlm'.
+      debug             Display debug details of the SAMR calls. Acceptable values are 'true' or 'false', with the default being 'false'.
+      export            Export data to a specified file.
+        format          Acceptable values are 'txt', 'csv' or 'json', with the default being 'txt'.
+      opnums            Set to 'true' to display SAMR OpNums called (default: 'false').
       help              Print this page.
 
 
@@ -251,6 +255,7 @@ def print_help():
       samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-members group="Administrators"
       samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
       samr-enum.py target=dc1.domain-a.com username=micky password= domain=domain-y.local auth=kerberos enumerate=password-policy
+      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users opnums=true export=export.txt format=txt
 
     """
     print(help_text)
@@ -359,28 +364,38 @@ def export_data(filename, fmt, data):
                         json_data.append({'Username': item[0], 'RID': item[1]})
                 json.dump(json_data, f, indent=2)
 
+
+
             elif fmt == 'txt':
-                max_username_length = max(len(str(item[0])) for item in data) if data else 20
-                header = f"{'Username':<{max_username_length}} RID"
-                separator = "-" * (max_username_length + 5)
-                f.write(f"{header}\n{separator}\n")
-                for item in data:
-                    if isinstance(item, tuple) and len(item) >= 2:
-                        f.write(f"{item[0]:<{max_username_length}} {item[1]}\n")
+
+                # Check if the first item is a dictionary; if so, export key-value pairs.
+
+                if isinstance(data[0], dict):
+                    for item in data:
+                        for key, value in item.items():
+                            f.write(f"{key}: {value}\n")
+                        f.write("\n")
+                else:
+                    max_username_length = max(len(str(item[0])) for item in data) if data else 20
+                    header = f"{'Username':<{max_username_length}} RID"
+                    f.write(f"{header}\n")
+                    for item in data:
+                        if isinstance(item, tuple) and len(item) >= 2:
+                            f.write(f"{item[0]:<{max_username_length}} {item[1]}\n")
 
         print(f"Data exported to {filename} ({fmt.upper()})")
     except Exception as e:
         print(f"Export failed: {str(e)}")
 
 
-def samr_connect(server, username, password, domain, debug, auth_mode):
+def samr_connect(target, username, password, domain, debug, auth_mode):
     """
-    Connect to \\pipe\\samr on the remote server and return (dce, serverHandle).
+    Connect to \\pipe\\samr on the remote target and return (dce, serverHandle).
     If auth_mode=='kerberos', sets Kerberos = True in the transport.
 
     desiredAccess=0x00000031 for SamrConnect
 
-    :param server: Hostname or IP of the remote server
+    :param target: Hostname or IP of the remote target
     :param username: The username for authentication
     :param password: The password for authentication (could be empty, then user is prompted)
     :param domain: The domain of the user (can be blank if not needed)
@@ -388,7 +403,7 @@ def samr_connect(server, username, password, domain, debug, auth_mode):
     :param auth_mode: "kerberos" or "ntlm" (default)
     :return: (dce, serverHandle)
     """
-    binding_str = rf"ncacn_np:{server}[\pipe\samr]"
+    binding_str = rf"ncacn_np:{target}[\pipe\samr]"
     log_debug(debug, f"[debug] Using binding string: {binding_str}")
     rpc_transport = transport.DCERPCTransportFactory(binding_str)
 
@@ -402,14 +417,14 @@ def samr_connect(server, username, password, domain, debug, auth_mode):
     rpc_transport.set_credentials(username, password, domain=domain)
 
     dce = rpc_transport.get_dce_rpc()
-    log_debug(debug, f"[debug] Connecting to {server} via SMB (auth={auth_mode})...")
+    log_debug(debug, f"[debug] Connecting to {target} via SMB (auth={auth_mode})...")
     dce.connect()
 
     log_debug(debug, "[debug] Binding to SAMR interface (MSRPC_UUID_SAMR)...")
     dce.bind(samr.MSRPC_UUID_SAMR)
 
     log_debug(debug, "[debug] Calling SamrConnect...")
-    connectResp = samr.hSamrConnect(dce, serverName=server, desiredAccess=0x00000031)
+    connectResp = samr.hSamrConnect(dce, serverName=target, desiredAccess=0x00000031)
 
     if debug:
         print("[debug] SamrConnect response dump:")
@@ -443,7 +458,7 @@ def get_domain_handle(dce, serverHandle, debug):
 
     domains = enumDomainsResp['Buffer']['Buffer']
     if not domains:
-        raise Exception("No domains found on server.")
+        raise Exception("No domains found on target.")
 
     domainName = safe_str(domains[0]['Name'])
     log_debug(debug, f"[debug] Found domain: {domainName}")
@@ -496,7 +511,7 @@ def get_builtin_domain_handle(dce, serverHandle, debug):
 
     domains = enumDomainsResp['Buffer']['Buffer']
     if not domains:
-        raise Exception("No domains found on server.")
+        raise Exception("No domains found on target.")
 
     builtin_domain = None
     for dom in domains:
@@ -506,7 +521,7 @@ def get_builtin_domain_handle(dce, serverHandle, debug):
             break
 
     if not builtin_domain:
-        raise Exception("Builtin domain not found on server.")
+        raise Exception("Builtin domain not found on target.")
 
     lookupResp = samr.hSamrLookupDomainInSamServer(dce, serverHandle, builtin_domain)
     if debug:
@@ -1130,7 +1145,7 @@ def get_domain_info(dce, serverHandle, debug, opnums_called):
 
     domains = enumDomainsResp['Buffer']['Buffer']
     if not domains:
-        raise Exception("No domains found on server.")
+        raise Exception("No domains found on target.")
     domainName = safe_str(domains[0]['Name'])
 
     log_debug(debug, f"[debug] Looking up domain '{domainName}'...")
@@ -1204,9 +1219,9 @@ def main():
 
     # If no args given, print usage
     if len(sys.argv) == 1:
-        print("Usage:\n  python samr-enum.py enumerate=groups-domain server=dc1.domain-a.local"
+        print("Usage:\n  python samr-enum.py enumerate=groups-domain target=dc1.domain-a.local"
               " username=user123 password=Password123 [domain=domain-b.local] [group=MyGroup]"
-              " [debug=true] [export=output.txt [format=txt|csv|json]] [auth=kerberos]")
+              " [debug=true] [export=output.txt [format=txt|csv|json]] [auth=kerberos] [opnums=true]")
         print("  or enumerate=groups-local for builtin domain groups")
         sys.exit(1)
 
@@ -1215,7 +1230,7 @@ def main():
         print_help()
 
     enumeration = args.get('enumerate', 'groups-domain').lower()
-    server = args.get('server', '')
+    target = args.get('target', '')
     username = args.get('username', '')
     password = args.get('password', '')  # might be empty -> prompt
     groupName = args.get('group', '')
@@ -1224,16 +1239,17 @@ def main():
     export_format = args.get('format', 'txt').lower()
     auth_mode = args.get('auth', 'ntlm').lower()  # "kerberos" or "ntlm" default
     domain = args.get('domain', '')  # mandatory for Kerberos authentication
+    opnums_param = args.get('opnums', 'false').lower() == 'true'
 
     # If password is empty, prompt user. getpass hides the input on CLI
     if password == '':
         password = getpass.getpass(prompt="Enter password (hidden): ")
 
     # If required parameters are missing, show usage
-    if not server or not username:
-        print("Usage:\n  python samr-enum.py enumerate=groups-domain server=dc1.domain-a.local"
+    if not target or not username:
+        print("Usage:\n  python samr-enum.py enumerate=groups-domain target=dc1.domain-a.local"
               " username=user123 password=Password123 [group=MyGroup]"
-              " [debug=true] [export=output.txt [format=txt|csv|json]] [domain=domain-b.local [auth=kerberos]]")
+              " [debug=true] [export=output.txt [format=txt|csv|json]] [domain=domain-b.local [auth=kerberos]] [opnums=true]")
         sys.exit(1)
 
     start_time = time.time()
@@ -1249,7 +1265,7 @@ def main():
     execution_status = "success"
 
     try:
-        dce, serverHandle = samr_connect(server, username, password, domain, debug, auth_mode)
+        dce, serverHandle = samr_connect(target, username, password, domain, debug, auth_mode)
         add_opnum_call(opnums_called, "SamrConnect")
 
         if enumeration == 'domain-group-members':
@@ -1377,12 +1393,13 @@ def main():
 
     duration = time.time() - start_time
     print(f"\nExecution time: {duration:.2f} seconds")
-    print(f"Destination server: {server}")
+    print(f"Destination target: {target}")
     print(f"Domain SID: {domainSidString}")
     print(f"Account: {username}")
     print(f"Enumerate: {enumeration}")
     print(f"Authentication: {auth_mode.upper()}")
-    print(f"OpNums called: {', '.join(opnums_called)}")
+    if opnums_param:
+        print(f"OpNums called: {', '.join(opnums_called)}")
     print(f"Execution status: {execution_status}")
     print(f"Number of objects: {len(enumerated_objects) if execution_status == 'success' else 0}")
     print("====")
