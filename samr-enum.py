@@ -851,7 +851,7 @@ def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug):
     return results, additional_ops
 
 
-def enumerate_computers_in_domain(dce, domainHandle, debug):
+def display_info_computers(dce, domainHandle, debug):
     """
     Enumerate all domain computers (workstations AND domain controllers) by
     using both USER_WORKSTATION_TRUST_ACCOUNT and USER_SERVER_TRUST_ACCOUNT flags.
@@ -1273,11 +1273,18 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
         samr.hSamrCloseHandle(dce, domainHandle)
         add_opnum_call(opnums_called, "SamrCloseHandle")
 
+
     elif info_type == 'groups-local':
         # Use the Builtin domain to enumerate local groups (aliases)
         domainHandle, domainName, domainSid = get_builtin_domain_handle(dce, serverHandle, debug)
-        groups, did_aliases = enumerate_groups_in_domain(dce, domainHandle, debug)
-        for group_name, group_rid in groups:
+        try:
+            aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
+            aliases = aliasResp['Buffer']['Buffer'] or []
+        except Exception as e:
+            aliases = []
+        results = []
+        group_tuples = [(safe_str(alias['Name']), alias['RelativeId']) for alias in aliases]
+        for group_name, group_rid in group_tuples:
             try:
                 details = get_local_group_details(dce, domainHandle, group_name, group_rid, debug, opnums_called)
                 results.append(details)
@@ -1286,18 +1293,76 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
         samr.hSamrCloseHandle(dce, domainHandle)
         add_opnum_call(opnums_called, "SamrCloseHandle")
 
+
     elif info_type == 'computers':
-        # Enumerate computers in the primary domain
+        # Enumerate computers in the primary domain using display_info_computers
         domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug)
-        computers = enumerate_computers_in_domain(dce, domainHandle, debug)
-        for comp_name, rid in computers:
-            # No extra descriptive info is available, so return the basic details.
-            results.append({'computer_name': comp_name, 'rid': rid})
+        # display_info_computers returns a list of dictionaries with detailed fields
+        results = display_info_computers(dce, domainHandle, debug)
         samr.hSamrCloseHandle(dce, domainHandle)
         add_opnum_call(opnums_called, "SamrCloseHandle")
     else:
         raise Exception(f"Invalid type parameter for display-info: {info_type}")
     return results
+
+
+def display_info_computers(dce, domainHandle, debug):
+    """
+    Enumerate all domain computers (workstations AND domain controllers) by
+    using both USER_WORKSTATION_TRUST_ACCOUNT and USER_SERVER_TRUST_ACCOUNT flags.
+    Returns a list of dictionaries with all fields returned by the server.
+    """
+    log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating computers...")
+    computers = []
+    resumeHandle = 0
+    max_retries = 3
+    retry_count = 0
+
+    # Combined flags for both workstation and server trust accounts
+    ACCOUNT_FILTER = samr.USER_WORKSTATION_TRUST_ACCOUNT | samr.USER_SERVER_TRUST_ACCOUNT
+
+    while True:
+        try:
+            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
+                dce,
+                domainHandle,
+                enumerationContext=resumeHandle,
+                userAccountControl=ACCOUNT_FILTER
+            )
+            retry_count = 0
+        except samr.DCERPCSessionError as e:
+            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
+                enumUsersResp = e.get_packet()
+                retry_count = 0
+            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
+                log_debug(debug, "[debug] Server busy, retrying after delay...")
+                time.sleep(2)
+                retry_count += 1
+                if retry_count > max_retries:
+                    raise Exception("Server resource limit reached after retries")
+                continue
+            else:
+                raise
+
+        chunk = enumUsersResp['Buffer']['Buffer'] or []
+        for accountEntry in chunk:
+            computername = safe_str(accountEntry['Name'])
+            rid = accountEntry['RelativeId']
+            # Build a dictionary with basic details...
+            computer_dict = {'computer_name': computername, 'rid': rid}
+            # If additional fields exist, add them (skipping Name and RelativeId)
+            if hasattr(accountEntry, 'fields'):
+                for field, value in accountEntry.fields.items():
+                    if field not in ['Name', 'RelativeId']:
+                        computer_dict[field] = safe_str(value)
+            computers.append(computer_dict)
+
+        resumeHandle = enumUsersResp['EnumerationContext']
+        if enumUsersResp['ErrorCode'] != 0x00000105:
+            break
+        time.sleep(0.1)
+
+    return computers
 
 
 def main():
@@ -1439,7 +1504,7 @@ def main():
             add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
             add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
             add_opnum_call(opnums_called, "SamrOpenDomain")
-            enumerated_objects = enumerate_computers_in_domain(dce, domainHandle, debug)
+            enumerated_objects = display_info_computers(dce, domainHandle, debug)
             add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
 
         elif enumeration == 'account-details':
@@ -1471,14 +1536,12 @@ def main():
             enumerated_objects = [domain_info]
             domainSidString = domain_info.get('domain_sid', '')
 
-
         elif enumeration == 'display-info':
             info_type = args.get('type', '').lower()
             if not info_type:
                 raise Exception("Missing 'type=' argument for display-info")
             if info_type not in ['users', 'groups-domain', 'groups-local', 'computers']:
-                raise Exception(
-                    "Invalid 'type' for display-info. Must be one of: 'users', 'groups-domain', 'groups-local', 'computers'")
+                raise Exception("Invalid 'type' for display-info. Must be one of: 'users', 'groups-domain', 'groups-local', 'computers'")
             enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
 
         else:
@@ -1609,6 +1672,38 @@ def main():
                     print(f"Smartcard Required:   {obj.get('smartcard_required', False)}")
                     print(f"RID:                  {obj.get('rid', 'N/A')}")
                     print()
+
+        elif enumeration == 'display-info' and args.get('type', '').lower() == 'groups-local':
+            print("\nLocal Group Details")
+            print("-------------------")
+            for obj in enumerated_objects:
+                if 'error' in obj:
+                    print(
+                        f"Local Group: {obj.get('group_name', 'N/A')} (RID: {obj.get('rid', 'N/A')}) ERROR: {obj['error']}")
+                else:
+                    for key, value in obj.items():
+                        print(f"{key}: {value}")
+                    print()
+
+        elif enumeration == 'display-info' and args.get('type', '').lower() == 'computers':
+            print("\nComputer Details")
+            print("----------------")
+            for obj in enumerated_objects:
+                if 'error' in obj:
+                    print(
+                        f"Computer: {obj.get('computer_name', 'N/A')} (RID: {obj.get('rid', 'N/A')}) ERROR: {obj['error']}")
+                else:
+                    for key, value in obj.items():
+                        print(f"{key}: {value}")
+                    print()
+
+        elif enumeration == 'display-info':
+            info_type = args.get('type', '').lower()
+            if not info_type:
+                raise Exception("Missing 'type=' argument for display-info")
+            if info_type not in ['users', 'groups-domain', 'groups-local', 'computers']:
+                raise Exception("Invalid 'type' for display-info. Must be one of: 'users', 'groups-domain', 'groups-local', 'computers'")
+            enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
 
         else:
             # Handle regular enumerations (users/groups/computers)
