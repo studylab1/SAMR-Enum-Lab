@@ -1,26 +1,88 @@
 #!/usr/bin/env python3
 """
-samr-enum.py - SAMR enumeration tool using Impacket.
+samr-enum.py - A SAMR Enumeration Tool using Impacket
 Copyright (c) 2025. Licensed under the MIT License.
 
-A Python tool to enumerate domain accounts and groups via the Microsoft
-SAMR interface. Supports enumerating domain users,
-groups, and group members, optionally exporting the results in various
-formats (TXT, CSV, JSON).
+This Python tool leverages the Microsoft SAMR protocol to enumerate domain
+users, groups, computers, password policies, and other account-related information
+from a target system. It supports both NTLM (default) and Kerberos authentication,
+and can optionally export results in various formats (TXT, CSV, JSON).
+
+Features:
+  - Enumerate domain users, local groups, domain groups, and more.
+  - Display detailed debug output for SAMR calls.
+  - Securely prompt for a password if none is provided.
+  - Export enumeration results in multiple formats.
+  - Supports NTLM (default) and Kerberos authentication.
+
+Usage:
+    samr-enum.py <OPTIONS> <ENUMERATION PARAMETER> [ENUMERATION PARAMETER OPTIONS]
+
+Required OPTIONS:
+  target            Target system (IP address or hostname).
+  username          Username used for authentication on the remote server.
+  password          Password for authentication. If empty (i.e., password=), the tool will securely prompt for it.
+  enumerate         The enumeration type. See the ENUMERATION PARAMETERS section below.
+
+Optional OPTIONS:
+  domain            Domain of the user for authentication (required if using Kerberos).
+  auth              Authentication protocol. Acceptable values: 'ntlm' (default) or 'kerberos'.
+  debug             Display debug details of the SAMR calls. Acceptable values: 'true' or 'false' (default: 'false').
+  export            Export the data. Acceptable values: 'txt' (default), 'csv', or 'json'.
+  help              Print help page.
+
+ENUMERATION PARAMETERS:
+  The following parameters control what to enumerate. Provide one of these (omitting the "enumerate=" prefix)
+  along with any required options:
+
+    users
+         List all user accounts.
+
+    groups-local
+         List all local groups.
+
+    groups-domain
+         List all domain groups.
+
+    domain-group-members group=<GROUP>
+         List all members of a domain group. (Parameter option: group)
+
+    local-group-members group=<GROUP>
+         List all members of a local group. (Parameter option: group)
+
+    user-memberships-domaingroups
+         List all domain groups that a user is a member of.
+
+    user-memberships-localgroups
+         List all local groups that a user is a member of.
+
+    computers
+         List all computer accounts.
+
+    account-details user=<USERNAME/RID>
+         Display account details for a specific user (by username or RID). (Parameter option: user)
+
+    password-policy
+         Display the password policy.
+
+    lockout-policy
+         Display the account lockout policy.
 
 Usage Examples:
-  python samr-enum.py enumerate=users server=dc1.company.local username=someuser password=somepass
-  python samr-enum.py enumerate=groups-domain server=dc1.company.local username=someuser password=somepass
-  print("python samr-enum.py enumerate=user-memberships-domaingroups user=john server=dc1.company.local username=admin password=pass")
-  print("python samr-enum.py enumerate=user-memberships-localgroups user=john server=dc1.company.local username=admin password=pass")
-  python samr-enum.py enumerate=groups-local server=dc1.company.local username=someuser password=somepass
-  python samr-enum.py enumerate=group-members server=dc1.company.local username=someuser password=somepass group="Domain Admins"
+  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
+  samr-enum.py target=dc1.example.com username=micky password=mouse123 enumerate=groups-domain
+  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
+  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-members group="Administrators"
+  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
+  samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
 
-Also supports:
-  - auth=kerberos  (defaults to NTLM)
-  - prompting for password if 'password=' is empty (hidden entry)
+For help, run:
+    samr-enum.py help
 
-Use 'help=true' or run "python samr-enum.py help" for a short help message.
+Additional Notes:
+  - This tool requires the Impacket libraries.
+  - Ensure you have the appropriate privileges to perform enumeration tasks.
+  - Report bugs or contribute to the project at the official repository: https://github.com/studylab1/SAMR-Enum-Lab
 """
 
 import sys
@@ -67,8 +129,8 @@ SAMR_FUNCTION_OPNUMS = {
 ###########################################################
 SAMR_FUNCTION_ACCESS = {
     'SamrOpenUser': 0x00000100,  # USER_LIST_GROUPS
-    'SamrConnect': 0x00000031,  # desiredAccess=0x31
-    'SamrOpenDomain': 0x00000300,  # DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS
+    'SamrConnect': 0x02000000,  # desiredAccess=0x31
+    'SamrOpenDomain': 0x02000000,  # DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS (OLD value 300)
     'SamrOpenGroup': 0x00000010,  # GROUP_LIST_MEMBERS
     'SamrOpenAlias': 0x00000004,  # ALIAS_LIST_MEMBERS
 }
@@ -121,25 +183,78 @@ def parse_named_args(argv):
 
 def print_help():
     """
-    Print a short help/description about the script usage,
-    then exit.
+    Print a short help/description about the script usage, then exit.
     """
-    print("samr-enum.py - A tool to enumerate domain users and groups via SAMR.")
-    print("Example usage:")
-    print("  python samr-enum.py enumerate=users server=dc1.company.local username=someuser password=somepass")
-    print("  python samr-enum.py enumerate=groups-domain server=dc1.company.local username=someuser password=somepass")
-    print("  python samr-enum.py enumerate=user-memberships user=someuser server=dc1.company.local username=admin password=pass")
-    print("  python samr-enum.py enumerate=groups-local server=dc1.company.local username=someuser password=somepass")
-    print("  python samr-enum.py enumerate=group-members server=dc1.company.local username=someuser password=somepass group=\"Domain Admins\"")
-    print("  python samr-enum.py enumerate=password-policy server=dc1.company.local username=someuser password=somepass")
-    print("Optional arguments:")
-    print("  domain=<DOMAIN>      The domain for the user credentials (for NTLM or Kerberos)")
-    print("  group=<GroupName>    Required only if enumerate=group-members")
-    print("  debug=true           Show debug details of the SAMR calls")
-    print("  export=<filename>    Export the data (default format=txt, can do format=csv,json)")
-    print("  auth=kerberos        Use Kerberos instead of NTLM (default=NTLM)")
-    print("If 'password=' is empty, the program will prompt you securely.")
-    sys.exit(0)
+
+    help_text = r"""
+    samr-enum.py - A tool for enumerating domain users, groups, computers, password policies, and other information via SAMR protocol.
+
+    Usage: samr-enum.py <OPTIONS> <ENUMERATION PARAMETER> [ENUMERATION PARAMETER OPTIONS]
+
+    This tool performs various enumerations on a target system.
+
+    Required OPTIONS:
+      target            Target system (IP address or hostname).
+      username          Username which will be used to authenticate on remote server.
+      password          if an empty value is provided (i.e., password= with nothing following), the tool will securely prompt the user for a password.
+      enumerate         The enumeration type. Details are in 'Enumeration Parameters' section below.
+
+    Optional OPTIONS:
+      domain            Domain of the user to authenticate. It is required if Kerberos authentication is used.
+      auth              Authentication protocol. Acceptable values are 'ntlm' or 'kerberos', with the default being ntlm.
+      debug             Display debug details of the SAMR calls. Acceptable values are true or false, with the default being false.
+      export            Export the data. Acceptable values are txt, 'csv' or json, with the default being txt.
+      help              Print this page.
+
+
+    ENUMERATION PARAMETERS:
+      The following parameters control what to enumerate. Simply supply one of these (omitting the "enumerate=" prefix)
+      along with any required options.
+
+        users
+             List all user accounts.
+
+        groups-local
+             List all local groups.
+
+        groups-domain
+             List all domain groups.
+
+        domain-group-members group=<GROUP>
+             List all members of the domain group. PARAMETER OPTION = 'group'
+
+        local-group-members group=<GROUP>
+             List all members of the local group. PARAMETER OPTION = 'group'
+
+        user-memberships-domaingroups
+             List all domain groups that a user is a member of.
+
+        user-memberships-localgroups
+             List all local groups that a user is a member of.
+
+        computers
+             List all computer accounts.
+
+        account-details user=<USERNAME/RID>
+             Display account details for a specific user (by username or RID). PARAMETER OPTION = 'user'
+
+        password-policy
+             Display the password policy.
+
+        lockout-policy
+             Display the account lockout policy.
+
+    Usage Examples:
+      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
+      samr-enum.py target=dc1.example.com username=micky password=mouse123 enumerate=groups-domain
+      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
+      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-members group="Administrators"
+      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
+      samr-enum.py target=dc1.domain-a.com username=micky password= domain=domain-y.local auth=kerberos enumerate=password-policy
+
+    """
+    print(help_text)
+    sys.exit(1)
 
 
 def log_debug(debug, message):
@@ -166,14 +281,49 @@ def extract_ndr_value(ndr_object):
 
 def safe_str(value):
     """
-    Convert the given value to a string, decoding UTF-16-LE bytes if needed.
-
-    :param value: Possibly a bytes object (UTF-16-LE) or already a string
-    :return: Proper Python string
+    Convert a value to a Unicode string safely.
+    If str(value) fails or returns bytes, fallback to decoding or repr().
     """
-    if isinstance(value, bytes):
-        return value.decode('utf-16-le', errors='replace')
-    return str(value)
+    # If the value is an Exception, try to extract its first argument if it's bytes.
+    if isinstance(value, Exception):
+        if value.args and isinstance(value.args[0], bytes):
+            try:
+                return value.args[0].decode('utf-8', errors='replace')
+            except Exception:
+                return repr(value)
+        else:
+            try:
+                return str(value)
+            except Exception:
+                return repr(value)
+    # If the value has a 'fields' attribute with a 'Buffer', assume it's an NDR structure.
+    if hasattr(value, 'fields') and 'Buffer' in value.fields:
+        try:
+            return value.fields['Buffer'].decode('utf-16-le', errors='replace').rstrip('\x00')
+        except Exception:
+            return repr(value)
+    # If it's already bytes, try decoding.
+    elif isinstance(value, bytes):
+        try:
+            return value.decode('utf-16-le', errors='replace').rstrip('\x00')
+        except Exception:
+            try:
+                return value.decode('utf-8', errors='replace')
+            except Exception:
+                return repr(value)
+    else:
+        # Try a normal string conversion.
+        try:
+            s = str(value)
+        except Exception:
+            s = repr(value)
+        # If the result is bytes, decode it.
+        if isinstance(s, bytes):
+            try:
+                s = s.decode('utf-8', errors='replace')
+            except Exception:
+                s = s.decode('latin-1', errors='replace')
+        return s
 
 
 def export_data(filename, fmt, data):
@@ -959,6 +1109,86 @@ def get_lockout_policy(dce, domainHandle, debug, opnums_called):
         raise
 
 
+def get_domain_info(dce, serverHandle, debug, opnums_called):
+    """
+    Retrieve general domain information using SamrQueryInformationDomain2.
+    """
+    def ticks_to_days(ticks_obj):
+        """Convert OLD_LARGE_INTEGER to days with Windows special value handling."""
+        if not isinstance(ticks_obj, samr.OLD_LARGE_INTEGER):
+            return 0
+        if ticks_obj['HighPart'] == -2147483648:  # 0x80000000
+            return 0
+        ticks = (ticks_obj['HighPart'] << 32) | (ticks_obj['LowPart'] & 0xFFFFFFFF)
+        if ticks_obj['HighPart'] < 0:
+            ticks = -((~ticks + 1) & 0xFFFFFFFFFFFFFFFF)
+        return (abs(ticks) // 10000000) // 86400
+
+    log_debug(debug, "[debug] Enumerating domains to get domain name...")
+    enumDomainsResp = samr.hSamrEnumerateDomainsInSamServer(dce, serverHandle)
+    add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+
+    domains = enumDomainsResp['Buffer']['Buffer']
+    if not domains:
+        raise Exception("No domains found on server.")
+    domainName = safe_str(domains[0]['Name'])
+
+    log_debug(debug, f"[debug] Looking up domain '{domainName}'...")
+    lookupResp = samr.hSamrLookupDomainInSamServer(dce, serverHandle, domainName)
+    domainSid = lookupResp['DomainId']
+    sidString = domainSid.formatCanonical()
+
+    log_debug(debug, "[debug] Opening domain with MAXIMUM_ALLOWED access...")
+    openDomResp = samr.hSamrOpenDomain(dce, serverHandle, 0x02000000, domainSid)
+    domainHandle = openDomResp['DomainHandle']
+
+    try:
+        resp_general = samr.hSamrQueryInformationDomain2(
+            dce,
+            domainHandle,
+            samr.DOMAIN_INFORMATION_CLASS.DomainGeneralInformation2
+        )
+        # Impacket returns a flattened structure with a 'fields' dict.
+        general_info = resp_general['Buffer']['General2']
+
+        # Query password policy (for max/min password age)
+        resp_password = samr.hSamrQueryInformationDomain2(
+            dce,
+            domainHandle,
+            samr.DOMAIN_INFORMATION_CLASS.DomainPasswordInformation
+        )
+        password_info = resp_password['Buffer']['Password']
+
+        # Safely extract DomainModifiedCount; default to 0 if missing.
+        modified_struct = general_info.fields.get('DomainModifiedCount')
+        modified_count = modified_struct.fields.get('LowPart', 0) if modified_struct is not None else 0
+
+        return {
+            'domain_sid': sidString,
+            'domain_name': domainName,
+            'oem_information': safe_str(general_info.fields.get('OemInformation', b'')),
+            'modified_count': modified_count,
+            'force_logoff_days': ticks_to_days(general_info.fields.get('ForceLogoff', 0)),
+            'max_password_age_days': ticks_to_days(password_info.fields['MaxPasswordAge']),
+            'min_password_age_days': ticks_to_days(password_info.fields['MinPasswordAge']),
+            'lockout_threshold': safe_str(extract_ndr_value(general_info.fields.get('LockoutThreshold', 0))),
+            'lockout_duration_days': ticks_to_days(general_info.fields['LockoutDuration']),
+            'lockout_window_days': ticks_to_days(general_info.fields['LockoutObservationWindow']),
+            'server_state': general_info.fields.get('DomainServerState', 0),
+            'server_role': {2: "Backup", 3: "Primary"}.get(general_info.fields.get('DomainServerRole', 0), "Unknown"),
+            'uas_compatible': general_info.fields.get('UasCompatibilityRequired', False),
+            'num_users_total': general_info.fields.get('UserCount', 0),
+            'num_global_groups': general_info.fields.get('GroupCount', 0),
+            'num_aliases': general_info.fields.get('AliasCount', 0)
+        }
+
+    except Exception as e:
+        raise Exception("Domain info query failed: " + safe_str(e))
+    finally:
+        samr.hSamrCloseHandle(dce, domainHandle)
+        add_opnum_call(opnums_called, "SamrCloseHandle")
+
+
 def main():
     """
     Main entry point for the SAMR enumeration script.
@@ -1122,6 +1352,10 @@ def main():
             add_opnum_call(opnums_called, "SamrOpenDomain")
             lockout_policy = get_lockout_policy(dce, domainHandle, debug, opnums_called)
             enumerated_objects = [lockout_policy]
+        elif enumeration == 'domain-info':
+            domain_info = get_domain_info(dce, serverHandle, debug, opnums_called)
+            enumerated_objects = [domain_info]
+            domainSidString = domain_info.get('domain_sid', '')
 
         else:
             raise Exception(f"Unknown enumeration: {enumeration}")
@@ -1194,6 +1428,29 @@ def main():
             print(
                 f"  Lockout duration (days):       {policy['lockout_duration'] if policy['lockout_duration'] > 0 else 'Indefinite'}")
             print(f"  Lockout observation window:    {policy['lockout_window']} days")
+
+        elif enumeration == 'domain-info':
+            info = enumerated_objects[0]
+            # In main() function where domain-info is printed:
+            print("\nDomain Information:")
+            print(f"  Domain Name:             {info['domain_name']}")
+            print(f"  OEM Information:         {info['oem_information']}")
+            print(f"  Modified Count:          {info['modified_count']}")
+            print(
+                f"  Max Password Age (days): {info['max_password_age_days'] if info['max_password_age_days'] > 0 else 'Never'}")
+            print(f"  Min Password Age (days): {info['min_password_age_days']}")
+            print(
+                f"  Force Logoff (days):     {info['force_logoff_days'] if info['force_logoff_days'] > 0 else 'Never'}")
+            print(f"  Lockout Threshold:       {info['lockout_threshold']}")
+            print(
+                f"  Lockout Duration (days): {info['lockout_duration_days'] if info['lockout_duration_days'] > 0 else 'Never'}")
+            print(f"  Lockout Window (days):   {info['lockout_window_days']}")
+            print(f"  Server State:            0x{info['server_state']:08X}")
+            print(f"  Server Role:             {info['server_role']}")
+            print(f"  UAS Compatible:          {info['uas_compatible']}")
+            print(f"  Total Users:             {info['num_users_total']}")
+            print(f"  Global Groups:           {info['num_global_groups']}")
+            print(f"  Aliases:                 {info['num_aliases']}")
 
         else:
             # Handle regular enumerations (users/groups/computers)
