@@ -30,7 +30,7 @@ Optional OPTIONS:
   debug             Display debug details of the SAMR calls. Acceptable values: 'true' or 'false' (default: 'false').
   export            Export the data. Acceptable values: 'txt' (default), 'csv', or 'json'.
     format          Acceptable values are 'txt', 'csv' or 'json', with the default being 'txt'.
-  opnums            Set to 'true' to display SAMR OpNums in output (default: 'true').
+  opnums            Set to 'true' to display SAMR OpNums in output (default: 'false').
   help              Print help page.
 
 ENUMERATION PARAMETERS:
@@ -77,6 +77,8 @@ Usage Examples:
   samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-members group="Administrators"
   samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
   samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
+  samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=lockout-policy opnums=true
+  samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=groups-local export=export.txt format=txt
 
 For help, run:
     samr-enum.py help
