@@ -67,6 +67,12 @@ ENUMERATION PARAMETERS:
     account-details user=<USERNAME/RID>
          Display account details for a specific user (by username or RID). (Parameter option: user)
 
+    domain-details group=<GROUP>
+         Display domain group details. (Parameter option: group)
+         
+    alias-details group=<GROUP>
+         Display local/builtin group details. (Parameter option: group)
+
     password-policy
          Display the password policy.
 
@@ -85,6 +91,7 @@ Usage Examples:
   samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
   samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
   samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=groups-domain
+  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-details group="Domain Admins"
 
 For help, run:
     samr-enum.py help
@@ -252,6 +259,12 @@ def print_help():
 
         account-details user=<USERNAME/RID>
              Display account details for a specific user (by username or RID). PARAMETER OPTION = 'user'
+             
+        domain-details group=<GROUP>
+            Display domain group details. (Parameter option: group)
+         
+        alias-details group=<GROUP>
+            Display local/builtin group details. (Parameter option: group)
 
         password-policy
              Display the password policy.
@@ -270,6 +283,7 @@ def print_help():
       samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
       samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
       samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=groups-domain
+      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-details group="Domain Admins"
 
     """
     print(help_text)
@@ -994,6 +1008,93 @@ def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
     }
 
 
+def get_group_details(dce, domainHandle, group_name, debug, opnums_called):
+    """
+    Retrieve detailed information about a domain group.
+
+    This function looks up the group by its name in the given domain,
+    opens the group with GROUP_LIST_MEMBERS access, retrieves the member list,
+    and returns a dictionary with the group name, RID, and member count.
+
+    :param dce: DCE/RPC connection object
+    :param domainHandle: Handle to the domain obtained via SamrOpenDomain
+    :param group_name: The name of the group to look up
+    :param debug: Boolean for debug output
+    :param opnums_called: List tracking SAMR operations performed
+    :return: Dictionary with keys 'group_name', 'rid', and 'member_count'
+    """
+    # Lookup the group by name
+    lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [group_name])
+    add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
+    rids = lookupResp['RelativeIds']['Element']
+    uses = lookupResp['Use']['Element']
+    if not rids or extract_ndr_value(uses[0]) not in (SID_NAME_GROUP, SID_NAME_WKN_GRP):
+        raise Exception(f"Group '{group_name}' not found or not a valid domain group.")
+    group_rid = extract_ndr_value(rids[0])
+
+    # Open the group to retrieve members
+    groupHandle = samr.hSamrOpenGroup(dce, domainHandle, samr.GROUP_LIST_MEMBERS, group_rid)['GroupHandle']
+    add_opnum_call(opnums_called, "SamrOpenGroup")
+
+    membersResp = samr.hSamrGetMembersInGroup(dce, groupHandle)
+    add_opnum_call(opnums_called, "SamrGetMembersInGroup")
+    member_count = len(membersResp['Members']['Members'])
+
+    # Close the group handle
+    samr.hSamrCloseHandle(dce, groupHandle)
+    add_opnum_call(opnums_called, "SamrCloseHandle")
+
+    return {
+        'group_name': group_name,
+        'rid': group_rid,
+        'member_count': member_count,
+    }
+
+
+def get_alias_details(dce, domainHandle, alias_name, debug, opnums_called):
+    """
+    Retrieve detailed information about a local alias (group) from the Builtin domain.
+
+    This function looks up the alias by its name in the provided Builtin domain,
+    opens the alias with ALIAS_LIST_MEMBERS access, retrieves the member list,
+    and returns a dictionary with the alias name, its RID, and member count.
+
+    :param dce: DCE/RPC connection object
+    :param domainHandle: Handle to the Builtin domain (obtained via get_builtin_domain_handle)
+    :param alias_name: The alias name to look up (passed with group=<alias name>)
+    :param debug: Boolean indicating whether to output debug information
+    :param opnums_called: List to record SAMR operations performed
+    :return: Dictionary with keys 'alias_name', 'rid', and 'member_count'
+    """
+    # Lookup the alias by name
+    lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [alias_name])
+    add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
+    rids = lookupResp['RelativeIds']['Element']
+    uses = lookupResp['Use']['Element']
+    if not rids or extract_ndr_value(uses[0]) != SID_NAME_ALIAS:
+        raise Exception(f"Alias '{alias_name}' not found or not a valid alias.")
+    alias_rid = extract_ndr_value(rids[0])
+
+    # Open the alias with ALIAS_LIST_MEMBERS access
+    aliasHandle = samr.hSamrOpenAlias(dce, domainHandle, samr.ALIAS_LIST_MEMBERS, alias_rid)['AliasHandle']
+    add_opnum_call(opnums_called, "SamrOpenAlias")
+
+    # Retrieve the members
+    membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
+    add_opnum_call(opnums_called, "SamrGetMembersInAlias")
+    member_count = len(membersResp['Members']['Sids'])
+
+    # Close the alias handle
+    samr.hSamrCloseHandle(dce, aliasHandle)
+    add_opnum_call(opnums_called, "SamrCloseHandle")
+
+    return {
+        'alias_name': alias_name,
+        'rid': alias_rid,
+        'member_count': member_count,
+    }
+
+
 def get_password_policy(dce, domainHandle, debug, opnums_called):
     log_debug(debug, "[debug] Querying domain password policy...")
     add_opnum_call(opnums_called, "SamrQueryInformationDomain2")
@@ -1515,6 +1616,23 @@ def main():
             user_details = get_user_details(dce, domainHandle, user, debug, opnums_called)
             enumerated_objects = [user_details]
 
+        elif enumeration == 'group-details':
+            groupName = args.get('group', '')
+            if not groupName:
+                raise Exception("Missing 'group=' argument for group-details")
+            domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug)
+            group_details = get_group_details(dce, domainHandle, groupName, debug, opnums_called)
+            enumerated_objects = [group_details]
+
+        elif enumeration == 'alias-details':
+            aliasName = args.get('group', '')
+            if not aliasName:
+                raise Exception("Missing 'group=' argument for alias-details")
+            # Use the Builtin domain to look up the alias
+            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug)
+            alias_details = get_alias_details(dce, domainHandle, aliasName, debug, opnums_called)
+            enumerated_objects = [alias_details]
+
         elif enumeration == 'password-policy':  # New enumeration type
             domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug)
             add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
@@ -1593,6 +1711,22 @@ def main():
             print(f"  Account Disabled:   {details.get('account_disabled', False)}")
             print(f"  Smartcard Required: {details.get('smartcard_required', False)}")
             print(f"  Password Never Exp: {details.get('password_never_expires', False)}")
+
+        elif enumeration == 'group-details':
+            print("\nGroup Details")
+            print("-------------")
+            details = enumerated_objects[0]
+            for key, value in details.items():
+                print(f"{key}: {value}")
+            print()
+
+        elif enumeration == 'alias-details':
+            print("\nAlias Group Details")
+            print("-------------------")
+            details = enumerated_objects[0]
+            for key, value in details.items():
+                print(f"{key}: {value}")
+            print()
 
         elif enumeration == 'password-policy':  # Handle password policy output
             policy = enumerated_objects[0]
