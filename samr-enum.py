@@ -69,7 +69,7 @@ ENUMERATION PARAMETERS:
 
     domain-details group=<GROUP>
          Display domain group details. (Parameter option: group)
-         
+
     alias-details group=<GROUP>
          Display local/builtin group details. (Parameter option: group)
 
@@ -78,6 +78,16 @@ ENUMERATION PARAMETERS:
 
     lockout-policy
          Display the account lockout policy.
+
+    summary
+        Display a summary report for the domain. The summary includes:
+           - Domain Information (name, SID, etc.)
+           - Total number of user accounts
+           - Total number of computer accounts
+           - Total number of domain groups
+           - Total number of local groups (aliases)
+           - Password policy details
+           - Lockout policy details
 
 Usage Examples:
   samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
@@ -92,6 +102,7 @@ Usage Examples:
   samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
   samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=groups-domain
   samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-details group="Domain Admins"
+  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=summary
 
 For help, run:
     samr-enum.py help
@@ -271,19 +282,30 @@ def print_help():
 
         lockout-policy
              Display the account lockout policy.
+        
+        summary
+            Display a summary report for the domain. The summary includes:
+               - Domain Information (name, SID, etc.)
+               - Total number of user accounts
+               - Total number of computer accounts
+               - Total number of domain groups
+               - Total number of local groups (aliases)
+               - Password policy details
+               - Lockout policy details
 
     Usage Examples:
       samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
-      samr-enum.py target=dc1.example.com username=micky password=mouse123 enumerate=groups-domain
-      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
-      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-members group="Administrators"
-      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
+      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=groups-domain
+      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
+      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=local-group-members group="Administrators"
+      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
       samr-enum.py target=dc1.domain-a.com username=micky password= domain=domain-y.local auth=kerberos enumerate=password-policy
-      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users export=export.txt format=txt opnums=true
-      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
-      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
-      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=groups-domain
-      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-details group="Domain Admins"
+      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=users export=export.txt format=txt opnums=true
+      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
+      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=display-info type=users
+      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=display-info type=groups-domain
+      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=domain-details group="Domain Admins"
+      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=summary
 
     """
     print(help_text)
@@ -1466,6 +1488,71 @@ def display_info_computers(dce, domainHandle, debug):
     return computers
 
 
+def get_summary(dce, serverHandle, debug, opnums_called):
+    """
+    Retrieve summary information about the domain:
+      - Domain info
+      - Total number of users
+      - Total number of computers
+      - Total number of domain groups
+      - Total number of local groups (aliases)
+      - Password policy summary
+      - Lockout policy summary
+
+    :param dce: DCE/RPC connection object
+    :param serverHandle: Handle to the SAMR server
+    :param debug: Boolean indicating debug output
+    :param opnums_called: List tracking SAMR operations performed
+    :return: A dictionary with the summary information
+    """
+    summary = {}
+
+    # Get domain info (opens/closes its own handle)
+    domain_info = get_domain_info(dce, serverHandle, debug, opnums_called)
+    summary['domain_info'] = domain_info
+
+    # Open primary domain handle for users, computers, domain groups, and policies
+    domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug)
+    try:
+        # Enumerate users
+        users = enumerate_users_in_domain(dce, domainHandle, debug)
+        summary['total_users'] = len(users)
+
+        # Enumerate computers using the renamed function (display_info_computers returns a list of dicts)
+        computers = display_info_computers(dce, domainHandle, debug)
+        summary['total_computers'] = len(computers)
+
+        # Enumerate domain groups
+        domain_groups, _ = enumerate_groups_in_domain(dce, domainHandle, debug)
+        summary['total_domain_groups'] = len(domain_groups)
+
+        # Get password policy
+        password_policy = get_password_policy(dce, domainHandle, debug, opnums_called)
+        summary['password_policy'] = password_policy
+
+        # Get lockout policy
+        lockout_policy = get_lockout_policy(dce, domainHandle, debug, opnums_called)
+        summary['lockout_policy'] = lockout_policy
+    finally:
+        samr.hSamrCloseHandle(dce, domainHandle)
+        add_opnum_call(opnums_called, "SamrCloseHandle")
+
+    # Open Builtin domain handle for local groups (aliases)
+    builtinHandle, builtinName, builtinSid = get_builtin_domain_handle(dce, serverHandle, debug)
+    try:
+        try:
+            aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, builtinHandle)
+            aliases = aliasResp['Buffer']['Buffer'] or []
+        except Exception as e:
+            aliases = []
+        summary['total_local_groups'] = len(aliases)
+    finally:
+        samr.hSamrCloseHandle(dce, builtinHandle)
+        add_opnum_call(opnums_called, "SamrCloseHandle")
+
+    return summary
+
+
 def main():
     """
     Main entry point for the SAMR enumeration script.
@@ -1662,6 +1749,11 @@ def main():
                 raise Exception("Invalid 'type' for display-info. Must be one of: 'users', 'groups-domain', 'groups-local', 'computers'")
             enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
 
+        elif enumeration == 'summary':
+            # Call get_summary() to get the aggregated domain summary info
+            summary = get_summary(dce, serverHandle, debug, opnums_called)
+            enumerated_objects = [summary]
+
         else:
             raise Exception(f"Unknown enumeration: {enumeration}")
 
@@ -1838,6 +1930,30 @@ def main():
             if info_type not in ['users', 'groups-domain', 'groups-local', 'computers']:
                 raise Exception("Invalid 'type' for display-info. Must be one of: 'users', 'groups-domain', 'groups-local', 'computers'")
             enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
+
+        elif enumeration == 'summary':
+            print("\nDomain Summary")
+            print("--------------")
+            summary = enumerated_objects[0]
+            # Print Domain Info summary
+            domain_info = summary.get('domain_info', {})
+            print("Domain Information:")
+            for key, value in domain_info.items():
+                print(f"  {key}: {value}")
+            print()
+            print(f"Total Users:           {summary.get('total_users', 'N/A')}")
+            print(f"Total Computers:       {summary.get('total_computers', 'N/A')}")
+            print(f"Total Domain Groups:   {summary.get('total_domain_groups', 'N/A')}")
+            print(f"Total Local Groups:    {summary.get('total_local_groups', 'N/A')}")
+            print()
+            print("Password Policy:")
+            for key, value in summary.get('password_policy', {}).items():
+                print(f"  {key}: {value}")
+            print()
+            print("Lockout Policy:")
+            for key, value in summary.get('lockout_policy', {}).items():
+                print(f"  {key}: {value}")
+            print()
 
         else:
             # Handle regular enumerations (users/groups/computers)
