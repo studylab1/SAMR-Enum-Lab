@@ -90,7 +90,7 @@ ENUMERATION PARAMETERS:
            - Lockout policy details
 
 Usage Examples:
-  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
   samr-enum.py target=dc1.example.com username=micky password=mouse123 enumerate=groups-domain
   samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
   samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-members group="Administrators"
@@ -400,38 +400,92 @@ def export_data(filename, fmt, data):
         with open(filename, 'w') as f:
             if fmt == 'csv':
                 import csv
-                writer = csv.writer(f)
-                writer.writerow(['Username', 'RID'])
-                for item in data:
-                    if isinstance(item, tuple) and len(item) >= 2:
-                        writer.writerow([item[0], item[1]])
+                try:
+                    with open(filename, 'w', newline='') as f:
+                        writer = csv.writer(f)
+
+                        if not data:
+                            writer.writerow(["No data"])
+                            return
+
+                        # 1) If first item is a dict with "computer_name"
+                        if isinstance(data[0], dict) and 'computer_name' in data[0]:
+                            writer.writerow(['Name', 'RID'])
+                            for item in data:
+                                name_val = item.get('computer_name', '').rstrip('$')
+                                rid_val = item.get('rid', 'N/A')
+                                writer.writerow([name_val, rid_val])
+
+                        # 2) If first item is a dict with "username"
+                        elif isinstance(data[0], dict) and 'username' in data[0]:
+                            writer.writerow(['Username', 'RID'])
+                            for item in data:
+                                user_val = item.get('username', 'N/A')
+                                rid_val = item.get('rid', 'N/A')
+                                writer.writerow([user_val, rid_val])
+
+                        # 3) If first item is a tuple => treat it as (username, rid)
+                        elif isinstance(data[0], tuple) and len(data[0]) >= 2:
+                            writer.writerow(['Username', 'RID'])
+                            for item in data:
+                                writer.writerow([item[0], item[1]])
+
+                        else:
+                            # fallback if structure is unknown
+                            writer.writerow(['Unknown', 'N/A'])
+
+                    print(f"Data exported to {filename} (CSV)")
+                except Exception as e:
+                    print(f"Export failed: {str(e)}")
 
             elif fmt == 'json':
                 import json
                 json_data = []
                 for item in data:
                     if isinstance(item, tuple) and len(item) >= 2:
-                        json_data.append({'Username': item[0], 'RID': item[1]})
+                        first_field = item[0]
+                        rid_value = item[1]
+                        # Use "Name" if the field ends with '$', otherwise "Username"
+                        if isinstance(first_field, str) and first_field.endswith('$'):
+                            json_data.append({'Name': first_field.rstrip('$'), 'RID': rid_value})
+                        else:
+                            json_data.append({'Username': first_field, 'RID': rid_value})
+                    elif isinstance(item, dict):
+                        # For computer dictionaries, use key "computer_name"
+                        if 'computer_name' in item:
+                            json_data.append({'Name': item['computer_name'].rstrip('$'), 'RID': item.get('rid')})
+                        elif 'username' in item:
+                            json_data.append({'Username': item['username'], 'RID': item.get('rid')})
+                        else:
+                            json_data.append(item)
                 json.dump(json_data, f, indent=2)
 
-
-
             elif fmt == 'txt':
-
-                # Check if the first item is a dictionary; if so, export key-value pairs.
-
+                # For TXT export, do not include dashed lines.
                 if isinstance(data[0], dict):
-                    for item in data:
-                        for key, value in item.items():
-                            f.write(f"{key}: {value}\n")
-                        f.write("\n")
-                else:
-                    max_username_length = max(len(str(item[0])) for item in data) if data else 20
-                    header = f"{'Username':<{max_username_length}} RID"
+                    # Determine header based on the keys.
+                    if 'computer_name' in data[0]:
+                        col_header = "Name"
+                        max_length = max(
+                            len(str(item.get('computer_name', '')).rstrip('$')) for item in data) if data else 20
+                    elif 'username' in data[0]:
+                        col_header = "Username"
+                        max_length = max(len(str(item.get('username', ''))) for item in data) if data else 20
+                    header = f"{col_header:<{max_length}} RID"
                     f.write(f"{header}\n")
                     for item in data:
-                        if isinstance(item, tuple) and len(item) >= 2:
-                            f.write(f"{item[0]:<{max_username_length}} {item[1]}\n")
+                        if 'computer_name' in item:
+                            name = str(item['computer_name']).rstrip('$')
+                            f.write(f"{name:<{max_length}} {item.get('rid', 'N/A')}\n")
+                        elif 'username' in item:
+                            f.write(f"{item['username']:<{max_length}} {item.get('rid', 'N/A')}\n")
+                elif isinstance(data[0], tuple) and len(data[0]) >= 2:
+                    max_length = max(len(str(item[0])) for item in data) if data else 20
+                    header = f"{'Username':<{max_length}} RID"
+                    f.write(f"{header}\n")
+                    for item in data:
+                        f.write(f"{item[0]:<{max_length}} {item[1]}\n")
+
 
         print(f"Data exported to {filename} ({fmt.upper()})")
     except Exception as e:
@@ -601,27 +655,7 @@ def get_builtin_domain_handle(dce, serverHandle, debug):
     return domainHandle, builtin_domain, sidString
 
 
-def enumerate_groups_in_domain(dce, domainHandle, debug):
-    """
-    Enumerate domain groups.
-
-    :param dce: The DCE/RPC connection
-    :param domainHandle: Handle to the opened domain
-    :param debug: Boolean indicating debug output
-    :return: (list_of_groups_plus_aliases, did_aliases_bool)
-    """
-    log_debug(debug, "[debug] SamrEnumerateGroupsInDomain -> enumerating groups...")
-    enumGroupsResp = samr.hSamrEnumerateGroupsInDomain(dce, domainHandle)
-    if debug:
-        print("[debug] SamrEnumerateGroupsInDomain response dump:")
-        print(enumGroupsResp.dump())
-
-    groups = enumGroupsResp['Buffer']['Buffer'] or []
-    group_tuples = [(safe_str(g['Name']), g['RelativeId']) for g in groups]
-    return group_tuples, False
-
-
-def enumerate_users_in_domain(dce, domainHandle, debug):
+def enumerate_users(dce, domainHandle, debug):
     """
     Enumerate all domain users by repeatedly calling SamrEnumerateUsersInDomain
     until the server no longer returns STATUS_MORE_ENTRIES.
@@ -673,6 +707,78 @@ def enumerate_users_in_domain(dce, domainHandle, debug):
         time.sleep(0.1)
 
     return users
+
+
+def enumerate_computers(dce, domainHandle, debug):
+    """
+    Enumerate all domain computers (workstations AND domain controllers) by
+    using both USER_WORKSTATION_TRUST_ACCOUNT and USER_SERVER_TRUST_ACCOUNT flags.
+    """
+    log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating computers...")
+    computers = []
+    resumeHandle = 0
+    max_retries = 3
+    retry_count = 0
+
+    # Combined flags for both workstation and server trust accounts
+    ACCOUNT_FILTER = samr.USER_WORKSTATION_TRUST_ACCOUNT | samr.USER_SERVER_TRUST_ACCOUNT
+
+    while True:
+        try:
+            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
+                dce,
+                domainHandle,
+                enumerationContext=resumeHandle,
+                userAccountControl=ACCOUNT_FILTER
+            )
+            retry_count = 0
+
+        except samr.DCERPCSessionError as e:
+            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
+                enumUsersResp = e.get_packet()
+                retry_count = 0
+            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
+                log_debug(debug, "[debug] Server busy, retrying after delay...")
+                time.sleep(2)
+                retry_count += 1
+                if retry_count > max_retries:
+                    raise Exception("Server resource limit reached after retries")
+                continue
+            else:
+                raise
+
+        chunk = enumUsersResp['Buffer']['Buffer'] or []
+        for accountEntry in chunk:  # Changed variable name for clarity
+            computername = safe_str(accountEntry['Name'])
+            rid = accountEntry['RelativeId']
+            computers.append((computername, rid))
+
+        resumeHandle = enumUsersResp['EnumerationContext']
+        if enumUsersResp['ErrorCode'] != 0x00000105:
+            break
+        time.sleep(0.1)
+
+    return computers
+
+
+def enumerate_groups_in_domain(dce, domainHandle, debug):
+    """
+    Enumerate domain groups.
+
+    :param dce: The DCE/RPC connection
+    :param domainHandle: Handle to the opened domain
+    :param debug: Boolean indicating debug output
+    :return: (list_of_groups_plus_aliases, did_aliases_bool)
+    """
+    log_debug(debug, "[debug] SamrEnumerateGroupsInDomain -> enumerating groups...")
+    enumGroupsResp = samr.hSamrEnumerateGroupsInDomain(dce, domainHandle)
+    if debug:
+        print("[debug] SamrEnumerateGroupsInDomain response dump:")
+        print(enumGroupsResp.dump())
+
+    groups = enumGroupsResp['Buffer']['Buffer'] or []
+    group_tuples = [(safe_str(g['Name']), g['RelativeId']) for g in groups]
+    return group_tuples, False
 
 
 def list_domain_group_members(dce, serverHandle, domainHandle, groupName, debug):
@@ -885,58 +991,6 @@ def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug):
     additional_ops.append("SamrCloseHandle")
 
     return results, additional_ops
-
-
-def display_info_computers(dce, domainHandle, debug):
-    """
-    Enumerate all domain computers (workstations AND domain controllers) by
-    using both USER_WORKSTATION_TRUST_ACCOUNT and USER_SERVER_TRUST_ACCOUNT flags.
-    """
-    log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating computers...")
-    computers = []
-    resumeHandle = 0
-    max_retries = 3
-    retry_count = 0
-
-    # Combined flags for both workstation and server trust accounts
-    ACCOUNT_FILTER = samr.USER_WORKSTATION_TRUST_ACCOUNT | samr.USER_SERVER_TRUST_ACCOUNT
-
-    while True:
-        try:
-            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
-                dce,
-                domainHandle,
-                enumerationContext=resumeHandle,
-                userAccountControl=ACCOUNT_FILTER
-            )
-            retry_count = 0
-
-        except samr.DCERPCSessionError as e:
-            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
-                enumUsersResp = e.get_packet()
-                retry_count = 0
-            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
-                log_debug(debug, "[debug] Server busy, retrying after delay...")
-                time.sleep(2)
-                retry_count += 1
-                if retry_count > max_retries:
-                    raise Exception("Server resource limit reached after retries")
-                continue
-            else:
-                raise
-
-        chunk = enumUsersResp['Buffer']['Buffer'] or []
-        for accountEntry in chunk:  # Changed variable name for clarity
-            computername = safe_str(accountEntry['Name'])
-            rid = accountEntry['RelativeId']
-            computers.append((computername, rid))
-
-        resumeHandle = enumUsersResp['EnumerationContext']
-        if enumUsersResp['ErrorCode'] != 0x00000105:
-            break
-        time.sleep(0.1)
-
-    return computers
 
 
 def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
@@ -1372,7 +1426,7 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
     if info_type == 'users':
         # Get primary domain handle and enumerate users
         domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug)
-        users = enumerate_users_in_domain(dce, domainHandle, debug)
+        users = enumerate_users(dce, domainHandle, debug)
         for username, rid in users:
             try:
                 details = get_user_details(dce, domainHandle, username, debug, opnums_called)
@@ -1418,10 +1472,10 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
 
 
     elif info_type == 'computers':
-        # Enumerate computers in the primary domain using display_info_computers
+        # Enumerate computers in the primary domain using enumerate_computers
         domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug)
-        # display_info_computers returns a list of dictionaries with detailed fields
-        results = display_info_computers(dce, domainHandle, debug)
+        # enumerate_computers returns a list of dictionaries with detailed fields
+        results = enumerate_computers(dce, domainHandle, debug)
         samr.hSamrCloseHandle(dce, domainHandle)
         add_opnum_call(opnums_called, "SamrCloseHandle")
     else:
@@ -1429,7 +1483,7 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
     return results
 
 
-def display_info_computers(dce, domainHandle, debug):
+def enumerate_computers(dce, domainHandle, debug):
     """
     Enumerate all domain computers (workstations AND domain controllers) by
     using both USER_WORKSTATION_TRUST_ACCOUNT and USER_SERVER_TRUST_ACCOUNT flags.
@@ -1515,11 +1569,11 @@ def get_summary(dce, serverHandle, debug, opnums_called):
     domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug)
     try:
         # Enumerate users
-        users = enumerate_users_in_domain(dce, domainHandle, debug)
+        users = enumerate_users(dce, domainHandle, debug)
         summary['total_users'] = len(users)
 
-        # Enumerate computers using the renamed function (display_info_computers returns a list of dicts)
-        computers = display_info_computers(dce, domainHandle, debug)
+        # Enumerate computers using the renamed function (enumerate_computers returns a list of dicts)
+        computers = enumerate_computers(dce, domainHandle, debug)
         summary['total_computers'] = len(computers)
 
         # Enumerate domain groups
@@ -1618,7 +1672,23 @@ def main():
         dce, serverHandle = samr_connect(target, username, password, domain, debug, auth_mode)
         add_opnum_call(opnums_called, "SamrConnect")
 
-        if enumeration == 'domain-group-members':
+        if enumeration == 'users':
+            domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug)
+            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
+            add_opnum_call(opnums_called, "SamrOpenDomain")
+            enumerated_objects = enumerate_users(dce, domainHandle, debug)
+            add_opnum_call(opnums_called, "SamrEnumerateUsersInSamServer")
+
+        elif enumeration == 'computers':
+            domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug)
+            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
+            add_opnum_call(opnums_called, "SamrOpenDomain")
+            enumerated_objects = enumerate_computers(dce, domainHandle, debug)
+            add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
+
+        elif enumeration == 'domain-group-members':
             domainHandle, _, domainSidString = get_domain_handle(dce, serverHandle, debug)
             enumerated_objects, additional_ops = list_domain_group_members(
                 dce, serverHandle, domainHandle, groupName, debug)
@@ -1628,14 +1698,6 @@ def main():
             domainHandle, _, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug)
             enumerated_objects, additional_ops = list_local_group_members(
                 dce, serverHandle, domainHandle, groupName, debug)
-
-        elif enumeration == 'users':
-            domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug)
-            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-            add_opnum_call(opnums_called, "SamrOpenDomain")
-            enumerated_objects = enumerate_users_in_domain(dce, domainHandle, debug)
-            add_opnum_call(opnums_called, "SamrEnumerateUsersInSamServer")
 
         elif enumeration == 'groups-domain':
             domainHandle, domainName, domainSidString = get_domain_handle(dce,
@@ -1687,13 +1749,6 @@ def main():
             domainHandle, _, domainSidString = get_domain_handle(dce, serverHandle, debug)
             enumerated_objects = list_user_local_memberships(dce, serverHandle, user, domainSidString, debug,
                                                              opnums_called)
-        elif enumeration == 'computers':
-            domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug)
-            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-            add_opnum_call(opnums_called, "SamrOpenDomain")
-            enumerated_objects = display_info_computers(dce, domainHandle, debug)
-            add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
 
         elif enumeration == 'account-details':
             user = args.get('user', '')
@@ -1786,7 +1841,37 @@ def main():
     print("====")
 
     if enumerated_objects and execution_status == "success":
-        if enumeration == 'account-details':
+
+        if enumeration == 'users':
+            max_length = max(
+                len(str(obj[0])) for obj in enumerated_objects if isinstance(obj, tuple)
+            ) if enumerated_objects else 25
+
+            # Add +2 instead of +1 to shift "RID" a bit further right
+            print("\nUsername".ljust(max_length + 4), "RID")
+            print("-" * (max_length + 4), "----")
+            for obj in enumerated_objects:
+                if isinstance(obj, tuple) and len(obj) >= 2:
+                    user_name = obj[0]
+                    user_rid = obj[1]
+                    # Also use max_length + 2 here
+                    print(f"{user_name:<{max_length + 4}} {user_rid}")
+
+        elif enumeration == 'computers':
+            max_length = max(
+                len(str(comp.get('computer_name', '')).rstrip('$'))
+                for comp in enumerated_objects if isinstance(comp, dict)
+            ) if enumerated_objects else 25
+
+            print("\nName".ljust(max_length + 4), "RID")
+            print("-" * (max_length + 4), "----")
+            for comp in enumerated_objects:
+                if isinstance(comp, dict):
+                    comp_name = str(comp.get('computer_name', '')).rstrip('$')
+                    comp_rid = comp.get('rid', 'N/A')
+                    print(f"{comp_name:<{max_length + 4}} {comp_rid}")
+
+        elif enumeration == 'account-details':
             # Handle account details display
             details = enumerated_objects[0]
             print(f"\nAccount Details for {details.get('username', 'N/A')}:")
