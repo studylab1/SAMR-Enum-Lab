@@ -91,18 +91,19 @@ ENUMERATION PARAMETERS:
 
 Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
-  samr-enum.py target=dc1.example.com username=micky password=mouse123 enumerate=groups-domain
-  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
-  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-members group="Administrators"
-  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
-  samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
-  samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=lockout-policy opnums=true
-  samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=groups-local export=export.txt format=txt
-  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
-  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
-  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=groups-domain
-  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-details group="Domain Admins"
-  samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=summary
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=computers
+  python samr-enum.py target=dc1.example.com username=micky password=mouse123 enumerate=groups-domain
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-members group="Administrators"
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
+  python samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
+  python samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=lockout-policy opnums=true
+  python samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=groups-local export=export.txt format=txt
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=groups-domain
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-details group="Domain Admins"
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=summary
 
 For help, run:
     samr-enum.py help
@@ -433,8 +434,6 @@ def export_data(filename, fmt, data):
                         else:
                             # fallback if structure is unknown
                             writer.writerow(['Unknown', 'N/A'])
-
-                    print(f"Data exported to {filename} (CSV)")
                 except Exception as e:
                     print(f"Export failed: {str(e)}")
 
@@ -1848,7 +1847,7 @@ def main():
             ) if enumerated_objects else 25
 
             # Add +2 instead of +1 to shift "RID" a bit further right
-            print("\nUsername".ljust(max_length + 4), "RID")
+            print("\nUsername".ljust(max_length + 5), "RID")
             print("-" * (max_length + 4), "----")
             for obj in enumerated_objects:
                 if isinstance(obj, tuple) and len(obj) >= 2:
@@ -1857,13 +1856,13 @@ def main():
                     # Also use max_length + 2 here
                     print(f"{user_name:<{max_length + 4}} {user_rid}")
 
+
         elif enumeration == 'computers':
             max_length = max(
                 len(str(comp.get('computer_name', '')).rstrip('$'))
                 for comp in enumerated_objects if isinstance(comp, dict)
             ) if enumerated_objects else 25
-
-            print("\nName".ljust(max_length + 4), "RID")
+            print("\nName".ljust(max_length + 5), "RID")
             print("-" * (max_length + 4), "----")
             for comp in enumerated_objects:
                 if isinstance(comp, dict):
