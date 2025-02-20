@@ -40,6 +40,9 @@ ENUMERATION PARAMETERS:
     users
          List all user accounts.
 
+    computers
+         List all computer accounts.
+
     groups-local
          List all local groups.
 
@@ -60,9 +63,6 @@ ENUMERATION PARAMETERS:
 
     display-info
          List all objects with additional descriptive fields. (Parameter option: 'type' with values 'users', 'groups-domain', 'groups-local', 'computers')
-
-    computers
-         List all computer accounts.
 
     account-details user=<USERNAME/RID>
          Display account details for a specific user (by username or RID). (Parameter option: user)
@@ -92,13 +92,14 @@ ENUMERATION PARAMETERS:
 Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=computers
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=groups-local export=export.csv format=csv
+
   python samr-enum.py target=dc1.example.com username=micky password=mouse123 enumerate=groups-domain
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-members group="Administrators"
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
   python samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
   python samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=lockout-policy opnums=true
-  python samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=groups-local export=export.txt format=txt
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=groups-domain
@@ -158,8 +159,8 @@ SAMR_FUNCTION_OPNUMS = {
 ###########################################################
 SAMR_FUNCTION_ACCESS = {
     'SamrOpenUser': 0x00000100,  # USER_LIST_GROUPS
-    'SamrConnect': 0x02000000,  # desiredAccess=0x31
-    'SamrOpenDomain': 0x02000000,  # DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS (OLD value 300)
+    'SamrConnect': 0x00000031,  # desiredAccess=0x31
+    'SamrOpenDomain': 0x00000301,  # DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS (OLD value 300)
     'SamrOpenGroup': 0x00000010,  # GROUP_LIST_MEMBERS
     'SamrOpenAlias': 0x00000004,  # ALIAS_LIST_MEMBERS
 }
@@ -247,6 +248,9 @@ def print_help():
 
         groups-local
              List all local groups.
+        
+        computers
+             List all computer accounts.
 
         groups-domain
              List all domain groups.
@@ -265,9 +269,6 @@ def print_help():
              
         display-info
             List all objects with additional descriptive fields. PARAMETER OPTION = 'type'. The ‘type’ parameter accepts the following values: ‘users’, ‘groups-domain’, ‘groups-local’, and ‘computers’.
-
-        computers
-             List all computer accounts.
 
         account-details user=<USERNAME/RID>
              Display account details for a specific user (by username or RID). PARAMETER OPTION = 'user'
@@ -1687,6 +1688,20 @@ def main():
             enumerated_objects = enumerate_computers(dce, domainHandle, debug)
             add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
 
+        elif enumeration == 'groups-local':
+            # Builtin domain
+            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug)
+            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
+            add_opnum_call(opnums_called, "SamrOpenDomain")
+
+            # Enumerate local groups (aliases) via SamrEnumerateAliasesInDomain:
+            aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
+            add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
+            groups_result = [(safe_str(alias['Name']), alias['RelativeId']) for alias in
+                             aliasResp['Buffer']['Buffer'] or []]
+
+            enumerated_objects = groups_result
         elif enumeration == 'domain-group-members':
             domainHandle, _, domainSidString = get_domain_handle(dce, serverHandle, debug)
             enumerated_objects, additional_ops = list_domain_group_members(
@@ -1707,23 +1722,6 @@ def main():
             add_opnum_call(opnums_called, "SamrOpenDomain")
 
             # SamrEnumerateGroupsInDomain
-            groups_result, did_aliases = enumerate_groups_in_domain(dce,
-                                                                    domainHandle,
-                                                                    debug)
-            add_opnum_call(opnums_called, "SamrEnumerateGroupsInDomain")
-            if did_aliases:
-                add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
-            enumerated_objects = groups_result
-
-        elif enumeration == 'groups-local':
-            # Builtin domain
-            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce,
-                                                                                  serverHandle,
-                                                                                  debug)
-            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-            add_opnum_call(opnums_called, "SamrOpenDomain")
-
             groups_result, did_aliases = enumerate_groups_in_domain(dce,
                                                                     domainHandle,
                                                                     debug)
@@ -2053,7 +2051,7 @@ def main():
                         print(f"{obj.get('username', 'N/A'):<{max_length}} {obj.get('rid', 'N/A')}")
             else:
                 max_length = max(len(str(obj[0])) for obj in enumerated_objects) if enumerated_objects else 25
-                print(f"\n{'Member':<{max_length}} Details")
+                print(f"\n{'Member':<{max_length}} RID")
                 print("-" * (max_length + 15))
                 for obj in enumerated_objects:
                     if isinstance(obj, tuple) and len(obj) >= 2:
