@@ -93,13 +93,13 @@ Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=computers
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=groups-local export=export.csv format=csv
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=groups-domain opnums=true
 
-  python samr-enum.py target=dc1.example.com username=micky password=mouse123 enumerate=groups-domain
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-members group="Administrators"
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
   python samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
-  python samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=lockout-policy opnums=true
+  python samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=lockout-policy
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=groups-domain
@@ -166,22 +166,25 @@ SAMR_FUNCTION_ACCESS = {
 }
 
 
-def add_opnum_call(opnums_list, func_name):
+def add_opnum_call(opnums_list, func_name, actual_access=None):
     """
     Append the given SAMR function name, its OpNum, and (if relevant) the Access Mask
     to the tracking list, with the Access Mask inside the parentheses.
     """
     opnum = SAMR_FUNCTION_OPNUMS.get(func_name)
-    access_val = SAMR_FUNCTION_ACCESS.get(func_name)
-
-    if opnum is not None and access_val is not None:
-        # Both an OpNum and an Access Mask
-        opnums_list.append(f"{func_name} (OpNum {opnum}, Access Mask: 0x{access_val:08X})")
-    elif opnum is not None:
-        # Only an OpNum
-        opnums_list.append(f"{func_name} (OpNum {opnum})")
+    if opnum is not None:
+        if actual_access is not None:
+            # Show the *actual* Access Mask if provided
+            opnums_list.append(f"{func_name} (OpNum {opnum}, Access Mask: 0x{actual_access:08X})")
+        else:
+            # Fall back to the old dictionary-based Access Mask
+            access_val = SAMR_FUNCTION_ACCESS.get(func_name)
+            if access_val is not None:
+                opnums_list.append(f"{func_name} (OpNum {opnum}, Access Mask: 0x{access_val:08X})")
+            else:
+                opnums_list.append(f"{func_name} (OpNum {opnum})")
     else:
-        # Neither OpNum nor Access Mask is known
+        # Neither OpNum nor Access is known
         opnums_list.append(func_name)
 
 
@@ -486,7 +489,6 @@ def export_data(filename, fmt, data):
                     for item in data:
                         f.write(f"{item[0]:<{max_length}} {item[1]}\n")
 
-
         print(f"Data exported to {filename} ({fmt.upper()})")
     except Exception as e:
         print(f"Export failed: {str(e)}")
@@ -596,7 +598,7 @@ def get_domain_handle(dce, serverHandle, debug):
     return domainHandle, domainName, sidString
 
 
-def get_builtin_domain_handle(dce, serverHandle, debug):
+def get_builtin_domain_handle(dce, serverHandle, debug, opnums_called):
     """
     Enumerate the domain list, find the one named "Builtin", then open it.
     SamrOpenDomain uses desiredAccess=0x00000300
@@ -637,10 +639,11 @@ def get_builtin_domain_handle(dce, serverHandle, debug):
     log_debug(debug, f"[debug] Builtin Domain SID: {sidString}")
 
     log_debug(debug, "[debug] SamrOpenDomain -> opening Builtin domain handle...")
+    desired_access = 0x00000300
     openDomResp = samr.hSamrOpenDomain(
         dce,
         serverHandle,
-        samr.DOMAIN_LOOKUP | samr.DOMAIN_LIST_ACCOUNTS,
+        desired_access,
         domainSidObj
     )
     if debug:
@@ -889,7 +892,7 @@ def list_user_local_memberships(dce, serverHandle, username, domain_sid, debug, 
         add_opnum_call(opnums_called, "SamrCloseHandle")
 
     # Check Builtin domain aliases
-    builtinHandle, _, _ = get_builtin_domain_handle(dce, serverHandle, debug)
+    builtinHandle, _, _ = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
     try:
         enumAliasesResp = samr.hSamrEnumerateAliasesInDomain(dce, builtinHandle)
         add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
@@ -917,7 +920,7 @@ def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug):
     results = []
 
     # First try Builtin domain for local groups
-    builtinHandle, _, _ = get_builtin_domain_handle(dce, serverHandle, debug)
+    builtinHandle, _, _ = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
     lookupResp = samr.hSamrLookupNamesInDomain(dce, builtinHandle, [groupName])
 
     if debug:
@@ -1418,7 +1421,7 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
     Enumerate objects of a given type and display additional descriptive fields.
 
     Parameters:
-      - info_type: one of 'users', 'groups-domain', 'groups-local', or 'computers'
+      - info_type: one of 'users', 'computers', 'groups-local', or 'groups-domain'.
 
     Returns a list of dictionaries with detailed information.
     """
@@ -1453,7 +1456,7 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
 
     elif info_type == 'groups-local':
         # Use the Builtin domain to enumerate local groups (aliases)
-        domainHandle, domainName, domainSid = get_builtin_domain_handle(dce, serverHandle, debug)
+        domainHandle, domainName, domainSid = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
         try:
             aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
             aliases = aliasResp['Buffer']['Buffer'] or []
@@ -1592,7 +1595,7 @@ def get_summary(dce, serverHandle, debug, opnums_called):
         add_opnum_call(opnums_called, "SamrCloseHandle")
 
     # Open Builtin domain handle for local groups (aliases)
-    builtinHandle, builtinName, builtinSid = get_builtin_domain_handle(dce, serverHandle, debug)
+    builtinHandle, builtinName, builtinSid = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
     try:
         try:
             aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, builtinHandle)
@@ -1621,12 +1624,11 @@ def main():
             print_help()
 
     # If no args given, print usage
-        # If no args given, print usage
+    # If no args given, print usage
     if len(sys.argv) == 1:
-        print("Usage:\n  python samr-enum.py enumerate=groups-domain target=dc1.domain-a.local"
-            " username=user123 password=Password123 [domain=domain-b.local] [group=MyGroup]"
-            " [debug=true] [export=output.txt [format=txt|csv|json]] [auth=kerberos] [opnums=true]")
-        print("  or enumerate=groups-local for builtin domain groups")
+        print("Usage:\n  python samr-enum.py target=dc1.domain-a.local"
+              " username=user123 password=Password123 enumerate=groups-domain [domain=domain-b.local]"
+              " [debug=true] [export=output.txt [format=txt|csv|json]] [auth=kerberos] [opnums=true]")
         sys.exit(1)
 
     args = parse_named_args(sys.argv)
@@ -1690,28 +1692,16 @@ def main():
 
         elif enumeration == 'groups-local':
             # Builtin domain
-            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug)
+            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
             add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
             add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-            add_opnum_call(opnums_called, "SamrOpenDomain")
+            add_opnum_call(opnums_called, "SamrOpenDomain", 0x00000300)
 
             # Enumerate local groups (aliases) via SamrEnumerateAliasesInDomain:
             aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
             add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
             groups_result = [(safe_str(alias['Name']), alias['RelativeId']) for alias in
                              aliasResp['Buffer']['Buffer'] or []]
-
-            enumerated_objects = groups_result
-        elif enumeration == 'domain-group-members':
-            domainHandle, _, domainSidString = get_domain_handle(dce, serverHandle, debug)
-            enumerated_objects, additional_ops = list_domain_group_members(
-                dce, serverHandle, domainHandle, groupName, debug)
-
-        elif enumeration == 'local-group-members':
-            # Use Builtin domain by default
-            domainHandle, _, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug)
-            enumerated_objects, additional_ops = list_local_group_members(
-                dce, serverHandle, domainHandle, groupName, debug)
 
         elif enumeration == 'groups-domain':
             domainHandle, domainName, domainSidString = get_domain_handle(dce,
@@ -1729,6 +1719,18 @@ def main():
             if did_aliases:
                 add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
             enumerated_objects = groups_result
+
+            enumerated_objects = groups_result
+        elif enumeration == 'domain-group-members':
+            domainHandle, _, domainSidString = get_domain_handle(dce, serverHandle, debug)
+            enumerated_objects, additional_ops = list_domain_group_members(
+                dce, serverHandle, domainHandle, groupName, debug)
+
+        elif enumeration == 'local-group-members':
+            # Use Builtin domain by default
+            domainHandle, _, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
+            enumerated_objects, additional_ops = list_local_group_members(
+                dce, serverHandle, domainHandle, groupName, debug)
 
         elif enumeration == 'user-memberships-domaingroups':
             user = args.get('user', '')
@@ -1768,7 +1770,7 @@ def main():
             if not aliasName:
                 raise Exception("Missing 'group=' argument for alias-details")
             # Use the Builtin domain to look up the alias
-            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug)
+            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
             alias_details = get_alias_details(dce, domainHandle, aliasName, debug, opnums_called)
             enumerated_objects = [alias_details]
 
@@ -1798,7 +1800,8 @@ def main():
             if not info_type:
                 raise Exception("Missing 'type=' argument for display-info")
             if info_type not in ['users', 'groups-domain', 'groups-local', 'computers']:
-                raise Exception("Invalid 'type' for display-info. Must be one of: 'users', 'groups-domain', 'groups-local', 'computers'")
+                raise Exception(
+                    "Invalid 'type' for display-info. Must be one of: 'users', 'groups-domain', 'groups-local', 'computers'")
             enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
 
         elif enumeration == 'summary':
@@ -2010,7 +2013,8 @@ def main():
             if not info_type:
                 raise Exception("Missing 'type=' argument for display-info")
             if info_type not in ['users', 'groups-domain', 'groups-local', 'computers']:
-                raise Exception("Invalid 'type' for display-info. Must be one of: 'users', 'groups-domain', 'groups-local', 'computers'")
+                raise Exception(
+                    "Invalid 'type' for display-info. Must be one of: 'users', 'groups-domain', 'groups-local', 'computers'")
             enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
 
         elif enumeration == 'summary':
