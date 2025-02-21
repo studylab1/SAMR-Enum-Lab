@@ -407,7 +407,7 @@ def export_data(filename, fmt, data):
                 import csv
                 try:
                     with open(filename, 'w', newline='') as f:
-                        writer = csv.writer(f)
+                        writer = csv.writer(f, delimiter=';')
 
                         if not data:
                             writer.writerow(["No data"])
@@ -434,7 +434,6 @@ def export_data(filename, fmt, data):
                             writer.writerow(['Username', 'RID'])
                             for item in data:
                                 writer.writerow([item[0], item[1]])
-
                         else:
                             # fallback if structure is unknown
                             writer.writerow(['Unknown', 'N/A'])
@@ -604,7 +603,6 @@ def get_domain_handle(dce, serverHandle, debug, opnums_called):
 def get_builtin_domain_handle(dce, serverHandle, debug, opnums_called):
     """
     Enumerate the domain list, find the one named "Builtin", then open it.
-    SamrOpenDomain uses desiredAccess=0x00000300
     (DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS).
 
     :param dce: The DCE/RPC connection object
@@ -614,6 +612,7 @@ def get_builtin_domain_handle(dce, serverHandle, debug, opnums_called):
     """
     log_debug(debug, "[debug] SamrEnumerateDomainsInSamServer -> looking for Builtin domain...")
     enumDomainsResp = samr.hSamrEnumerateDomainsInSamServer(dce, serverHandle)
+    add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
     if debug:
         print("[debug] SamrEnumerateDomainsInSamServer response dump:")
         print(enumDomainsResp.dump())
@@ -633,6 +632,7 @@ def get_builtin_domain_handle(dce, serverHandle, debug, opnums_called):
         raise Exception("Builtin domain not found on target.")
 
     lookupResp = samr.hSamrLookupDomainInSamServer(dce, serverHandle, builtin_domain)
+    add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
     if debug:
         print("[debug] SamrLookupDomainInSamServer (Builtin) response dump:")
         print(lookupResp.dump())
@@ -643,12 +643,7 @@ def get_builtin_domain_handle(dce, serverHandle, debug, opnums_called):
 
     log_debug(debug, "[debug] SamrOpenDomain -> opening Builtin domain handle...")
     desired_access = 0x00000300
-    openDomResp = samr.hSamrOpenDomain(
-        dce,
-        serverHandle,
-        desired_access,
-        domainSidObj
-    )
+    openDomResp = samr.hSamrOpenDomain(dce, serverHandle, desired_access, domainSidObj)
     add_opnum_call(opnums_called, "SamrOpenDomain", desired_access)
     if debug:
         print("[debug] SamrOpenDomain (Builtin) response dump:")
@@ -1693,33 +1688,23 @@ def main():
 
         elif enumeration == 'computers':
             domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug, opnums_called)
-            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-            add_opnum_call(opnums_called, "SamrOpenDomain")
             enumerated_objects = enumerate_computers(dce, domainHandle, debug)
             add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
 
         elif enumeration == 'local-groups':
             # Builtin domain
             domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
-            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-
             # Enumerate local groups (aliases) via SamrEnumerateAliasesInDomain:
             aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
             add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
             groups_result = [(safe_str(alias['Name']), alias['RelativeId']) for alias in
                              aliasResp['Buffer']['Buffer'] or []]
+            enumerated_objects = groups_result
 
         elif enumeration == 'domain-groups':
             domainHandle, domainName, domainSidString = get_domain_handle(dce,
                                                                           serverHandle,
                                                                           debug, opnums_called)
-            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-            add_opnum_call(opnums_called, "SamrOpenDomain")
-
-            # SamrEnumerateGroupsInDomain
             groups_result, did_aliases = enumerate_groups_in_domain(dce,
                                                                     domainHandle,
                                                                     debug)
@@ -1852,7 +1837,6 @@ def main():
                     user_rid = obj[1]
                     # Also use max_length + 2 here
                     print(f"{user_name:<{max_length + 4}} {user_rid}")
-
 
         elif enumeration == 'computers':
             max_length = max(
