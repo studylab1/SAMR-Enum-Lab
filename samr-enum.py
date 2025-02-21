@@ -95,8 +95,8 @@ Usage Examples:
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=local-groups export=export.csv format=csv
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=domain-groups opnums=true
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-members group="Administrators"
-
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
+
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
   python samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
   python samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=lockout-policy
@@ -783,7 +783,7 @@ def enumerate_groups_in_domain(dce, domainHandle, debug):
     return group_tuples, False
 
 
-def list_domain_group_members(dce, serverHandle, domainHandle, groupName, debug):
+def list_domain_group_members(dce, serverHandle, domainHandle, groupName, debug, opnums_called):
     """Enumerate members of domain groups with name resolution"""
     log_debug(debug, f"[debug] Domain group lookup: {groupName}")
     additional_ops = ["SamrLookupNamesInDomain"]
@@ -805,13 +805,13 @@ def list_domain_group_members(dce, serverHandle, domainHandle, groupName, debug)
     groupRid = extract_ndr_value(rids[0])
 
     # Open domain group
-    additional_ops.append("SamrOpenGroup")
+    add_opnum_call(opnums_called, "SamrOpenGroup")
     groupHandle = samr.hSamrOpenGroup(
         dce, domainHandle, samr.GROUP_LIST_MEMBERS, groupRid
     )['GroupHandle']
 
     # Get members - CORRECTED SECTION
-    additional_ops.append("SamrGetMembersInGroup")
+    add_opnum_call(opnums_called, "SamrGetMembersInGroup")
     membersResp = samr.hSamrGetMembersInGroup(dce, groupHandle)
 
     # Proper RID extraction matching working user enumeration
@@ -827,7 +827,7 @@ def list_domain_group_members(dce, serverHandle, domainHandle, groupName, debug)
             rids_list.append(ridVal)
 
     # Resolve RIDs to names
-    additional_ops.append("SamrLookupIdsInDomain")
+    add_opnum_call(opnums_called, "SamrLookupIdsInDomain")
     lookupResp2 = samr.hSamrLookupIdsInDomain(dce, domainHandle, rids_list)
     names = [safe_str(name['Data']) for name in lookupResp2['Names']['Element']]
     results = list(zip(names, rids_list))
@@ -1722,7 +1722,7 @@ def main():
         elif enumeration == 'domain-group-members':
             domainHandle, _, domainSidString = get_domain_handle(dce, serverHandle, debug, opnums_called)
             enumerated_objects, additional_ops = list_domain_group_members(
-                dce, serverHandle, domainHandle, groupName, debug)
+                dce, serverHandle, domainHandle, groupName, debug, opnums_called)
 
         elif enumeration == 'user-memberships-domaingroups':
             user = args.get('user', '')
