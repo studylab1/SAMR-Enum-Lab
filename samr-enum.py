@@ -96,7 +96,8 @@ Usage Examples:
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=domain-groups opnums=true
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-members group="Administrators"
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-localgroups user=Administrator export=export.txt
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-localgroups user=Administrator
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
 
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
   python samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
@@ -261,7 +262,7 @@ def print_help():
 
         local-group-members group=<GROUP>
              List all members of the local group. PARAMETER OPTION = 'group'
-             
+
         domain-group-members group=<GROUP>
              List all members of the domain group. PARAMETER OPTION = 'group'
 
@@ -272,7 +273,7 @@ def print_help():
              List all local groups that a user is a member of. PARAMETER OPTION = 'user'
 
         display-info
-            List all objects with additional descriptive fields. PARAMETER OPTION = 'type'. The ‘type’ parameter accepts the following values: ‘users’, ‘domain-groups’, ‘local-groups’, and ‘computers’.
+            List all objects with additional descriptive fields. PARAMETER OPTION = 'type'. The type parameter accepts the following values: users, domain-groups, local-groups, and computers.
 
         account-details user=<USERNAME/RID>
              Display account details for a specific user (by username or RID). PARAMETER OPTION = 'user'
@@ -385,6 +386,24 @@ def safe_str(value):
             except Exception:
                 s = s.decode('latin-1', errors='replace')
         return s
+
+
+def decode_group_attributes(attr):
+    """
+    Decode a group attributes bitmask into a comma-separated string of attribute names.
+    """
+    flags = []
+    if attr & 0x00000001:
+        flags.append("SE_GROUP_MANDATORY")
+    if attr & 0x00000002:
+        flags.append("SE_GROUP_ENABLED_BY_DEFAULT")
+    if attr & 0x00000004:
+        flags.append("SE_GROUP_ENABLED")
+    if attr & 0x00000008:
+        flags.append("SE_GROUP_OWNER")
+    if attr & 0x00000010:
+        flags.append("SE_GROUP_USE_FOR_DENY_ONLY")
+    return ", ".join(flags)
 
 
 def export_data(filename, fmt, data):
@@ -838,6 +857,7 @@ def list_domain_group_members(dce, serverHandle, domainHandle, groupName, debug,
 
     return results, additional_ops
 
+
 def list_user_local_memberships(dce, serverHandle, username, domain_sid, debug, opnums_called):
     """Check Builtin domain aliases for user SID membership"""
     # Get user RID from primary domain
@@ -921,13 +941,16 @@ def list_user_domain_memberships(dce, domainHandle, username, domain_sid, debug,
     samr.hSamrCloseHandle(dce, userHandle)
     add_opnum_call(opnums_called, "SamrCloseHandle")
 
-    if not group_rids:
+    if not groupsResp['Groups']['Groups']:
         return []
-
+    group_rids = [g['RelativeId'] for g in groupsResp['Groups']['Groups']]
     lookupGroupsResp = samr.hSamrLookupIdsInDomain(dce, domainHandle, group_rids)
     add_opnum_call(opnums_called, "SamrLookupIdsInDomain")
-    return [(safe_str(name['Data']), rid) for name, rid in zip(lookupGroupsResp['Names']['Element'], group_rids)]
-
+    groups_list = groupsResp['Groups']['Groups']
+    return [
+        (safe_str(lookup_name['Data']), g['RelativeId'], g['Attributes'])
+        for g, lookup_name in zip(groups_list, lookupGroupsResp['Names']['Element'])
+    ]
 
 
 def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug, opnums_called):
@@ -1710,7 +1733,8 @@ def main():
 
         elif enumeration == 'local-groups':
             # Builtin domain
-            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
+            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug,
+                                                                                  opnums_called)
             # Enumerate local groups (aliases) via SamrEnumerateAliasesInDomain:
             aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
             add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
@@ -1779,7 +1803,8 @@ def main():
             if not aliasName:
                 raise Exception("Missing 'group=' argument for alias-details")
             # Use the Builtin domain to look up the alias
-            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
+            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug,
+                                                                                  opnums_called)
             alias_details = get_alias_details(dce, domainHandle, aliasName, debug, opnums_called)
             enumerated_objects = [alias_details]
 
@@ -1867,6 +1892,14 @@ def main():
                     comp_name = str(comp.get('computer_name', '')).rstrip('$')
                     comp_rid = comp.get('rid', 'N/A')
                     print(f"{comp_name:<{max_length + 4}} {comp_rid}")
+
+        elif enumeration == 'user-memberships-domaingroups':
+            max_length = max(len(str(obj[0])) for obj in enumerated_objects) if enumerated_objects else 25
+            print(f"\n{'Member':<{max_length}} RID     Attributes")
+            print("-" * (max_length + 30))
+            for obj in enumerated_objects:
+                if isinstance(obj, tuple) and len(obj) >= 3:
+                    print(f"{obj[0]:<{max_length}} {obj[1]:<7} {decode_group_attributes(obj[2])}")
 
         elif enumeration == 'account-details':
             # Handle account details display
