@@ -61,6 +61,9 @@ ENUMERATION PARAMETERS:
     user-memberships-domaingroups
          List all domain groups that a user is a member of. (Parameter option: user)
 
+    account-details user=<USERNAME/RID>
+         Display account details for a specific user (by username or RID). (Parameter option: user)
+
     display-info
          List all objects with additional descriptive fields. (Parameter option: 'type' with values 'users', 'domain-groups', 'local-groups', 'computers')
 
@@ -98,6 +101,7 @@ Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-localgroups user=Administrator
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=Administrator
 
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
   python samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
@@ -151,7 +155,9 @@ SAMR_FUNCTION_OPNUMS = {
     'SamrGetMembersInGroup': 25,
     'SamrOpenAlias': 27,
     'SamrGetMembersInAlias': 33,
+    'SamrQueryInformationUser': 36,
     'SamrQueryInformationDomain2': 46,
+    'SamrQueryInformationUser2': 47,
 }
 
 ###########################################################
@@ -160,7 +166,7 @@ SAMR_FUNCTION_OPNUMS = {
 # in your code. Others show no Access Mask.
 ###########################################################
 SAMR_FUNCTION_ACCESS = {
-    'SamrOpenUser': 0x00000100,  # USER_LIST_GROUPS
+    'SamrOpenUser': 0x0002011b,  # USER_LIST_GROUPS
     'SamrConnect': 0x00000031,  # desiredAccess=0x31
     'SamrOpenDomain': 0x00000300,  # DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS
     'SamrOpenGroup': 0x00000010,  # GROUP_LIST_MEMBERS
@@ -190,14 +196,59 @@ def add_opnum_call(opnums_list, func_name, actual_access=None):
         opnums_list.append(func_name)
 
 
-def format_time(timestamp):
-    """Convert Windows FILETIME to human-readable string"""
-    if timestamp == 0 or timestamp == 0x7FFFFFFFFFFFFFFF:
+def format_time(filetime_64):
+    """
+    Convert a 64-bit Windows FILETIME (100-ns intervals since 1601-01-01)
+    into a human-readable string. Returns 'Never' if 0 or 0x7FFFFFFFFFFFFFFF.
+    """
+    if filetime_64 == 0 or filetime_64 == 0x7FFFFFFFFFFFFFFF:
         return 'Never'
     try:
-        return datetime.fromtimestamp(timestamp // 10000000 - 11644473600).strftime('%Y-%m-%d %H:%M:%S')
-    except:
+        # FILETIME is in 100-nanosecond increments, offset from 1601-01-01
+        # Convert to seconds from 1970-01-01 by subtracting the Windows->Unix epoch offset
+        seconds = filetime_64 / 10000000.0 - 11644473600
+        dt = datetime.utcfromtimestamp(seconds)
+        return dt.strftime('%Y-%m-%d %H:%M:%S')
+    except Exception:
         return 'Invalid timestamp'
+
+
+def to_int_uac(uac_value):
+    """
+    Safely convert a UserAccountControl (NDRULONG or int) into a Python integer.
+    """
+    if not uac_value:
+        return 0
+    # If it's already a plain Python int, return it as-is.
+    if isinstance(uac_value, int):
+        return uac_value
+    # If it's an NDR object with a 'fields' dict, we can extract the 'Data'.
+    if hasattr(uac_value, 'fields') and 'Data' in uac_value.fields:
+        return uac_value.fields['Data']
+    # If it's bytes (unlikely for UAC but let's be safe), convert from little-endian.
+    if isinstance(uac_value, bytes):
+        return int.from_bytes(uac_value, byteorder='little')
+    return 0
+
+
+def decode_filetime(value):
+    """
+    Convert an Impacket OLD_LARGE_INTEGER (with HighPart/LowPart) into
+    a 64-bit Windows FILETIME integer.
+    Returns 0 if value is None or missing fields.
+    """
+    if not value or not hasattr(value, 'fields'):
+        return 0
+
+    # Extract the NDR values from HighPart and LowPart
+    high_part_ndr = value.fields['HighPart']
+    low_part_ndr = value.fields['LowPart']
+
+    high_part_int = extract_ndr_value(high_part_ndr)  # becomes plain int
+    low_part_int = extract_ndr_value(low_part_ndr)    # becomes plain int
+
+    # Combine them into a 64-bit integer
+    return (high_part_int << 32) | (low_part_int & 0xFFFFFFFF)
 
 
 def parse_named_args(argv):
@@ -319,6 +370,18 @@ def print_help():
     sys.exit(1)
 
 
+def yes_no(value):
+    """
+    Convert a boolean value into 'Yes' or 'No'.
+    If the value is not strictly True or False, just return str(value).
+    """
+    if value is True:
+        return "Yes"
+    elif value is False:
+        return "No"
+    return str(value)
+
+
 def log_debug(debug, message):
     """
     Print debugging messages if debug is True.
@@ -332,60 +395,48 @@ def log_debug(debug, message):
 
 def extract_ndr_value(ndr_object):
     """
-    Extract the integer value from an impacket NDR object (e.g. NDRULONG).
-    Returns the input if it doesn't have 'fields' / 'Data'.
-
-    :param ndr_object: Impacket NDR object or plain int
-    :return: The integer or the original value
+    Safely extract an integer from an Impacket NDR object (e.g. NDRULONG).
+    If possible, this returns a plain Python int.
     """
-    return ndr_object.fields['Data'] if hasattr(ndr_object, 'fields') else ndr_object
+    if isinstance(ndr_object, int):
+        return ndr_object
+    try:
+        # Try to convert using the object's __int__ method.
+        return int(ndr_object)
+    except Exception:
+        if hasattr(ndr_object, 'fields') and 'Data' in ndr_object.fields:
+            return ndr_object.fields['Data']
+    return ndr_object
 
 
 def safe_str(value):
     """
     Convert a value to a Unicode string safely.
-    If str(value) fails or returns bytes, fallback to decoding or repr().
+    If the value is an RPC_UNICODE_STRING, extract and decode its Buffer.
     """
-    # If the value is an Exception, try to extract its first argument if it's bytes.
-    if isinstance(value, Exception):
-        if value.args and isinstance(value.args[0], bytes):
-            try:
-                return value.args[0].decode('utf-8', errors='replace')
-            except Exception:
-                return repr(value)
-        else:
-            try:
-                return str(value)
-            except Exception:
-                return repr(value)
-    # If the value has a 'fields' attribute with a 'Buffer', assume it's an NDR structure.
-    if hasattr(value, 'fields') and 'Buffer' in value.fields:
+    # If already a Python string, return it directly.
+    if isinstance(value, str):
+        return value
+    # If the object has a getData() method, use it.
+    if hasattr(value, 'getData') and callable(value.getData):
+        try:
+            data = value.getData()
+            if isinstance(data, str):
+                return data
+            return str(data)
+        except Exception:
+            pass
+    # If the class name indicates an RPC_UNICODE_STRING, decode the Buffer.
+    if hasattr(value, '__class__') and value.__class__.__name__ == 'RPC_UNICODE_STRING':
         try:
             return value.fields['Buffer'].decode('utf-16-le', errors='replace').rstrip('\x00')
         except Exception:
             return repr(value)
-    # If it's already bytes, try decoding.
-    elif isinstance(value, bytes):
-        try:
-            return value.decode('utf-16-le', errors='replace').rstrip('\x00')
-        except Exception:
-            try:
-                return value.decode('utf-8', errors='replace')
-            except Exception:
-                return repr(value)
-    else:
-        # Try a normal string conversion.
-        try:
-            s = str(value)
-        except Exception:
-            s = repr(value)
-        # If the result is bytes, decode it.
-        if isinstance(s, bytes):
-            try:
-                s = s.decode('utf-8', errors='replace')
-            except Exception:
-                s = s.decode('latin-1', errors='replace')
-        return s
+    # Fallback conversion.
+    try:
+        return str(value)
+    except Exception:
+        return repr(value)
 
 
 def decode_group_attributes(attr):
@@ -1043,93 +1094,116 @@ def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug, 
 
 
 def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
-    """Retrieve detailed user information from SAMR"""
+    """Retrieve detailed user information from SAMR using direct dictionary indexing."""
+    # First, perform the lookup for the user (by RID or username)
     try:
-        # Check if input is numeric RID
         if user_input.isdigit():
             rid = int(user_input)
             log_debug(debug, f"[debug] Looking up RID {rid}...")
             lookup_resp = samr.hSamrLookupIdsInDomain(dce, domainHandle, [rid])
             add_opnum_call(opnums_called, "SamrLookupIdsInDomain")
-
             if not lookup_resp['Names']['Element']:
                 raise Exception(f"No user found with RID {rid}")
-
             username = safe_str(lookup_resp['Names']['Element'][0]['Data'])
         else:
-            # Treat as username
             username = user_input
             log_debug(debug, f"[debug] Looking up username '{username}'...")
             lookup_resp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [username])
             add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
-
             rids = lookup_resp['RelativeIds']['Element']
             if not rids:
                 raise Exception(f"User '{username}' not found")
-
             rid = extract_ndr_value(rids[0])
-
     except Exception as e:
         raise Exception(f"User lookup failed: {str(e)}")
 
     log_debug(debug, f"[debug] Looking up user '{username}'...")
-
-    # Lookup username to get RID
     lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [username])
     add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
-
     rids = lookupResp['RelativeIds']['Element']
     uses = lookupResp['Use']['Element']
     if not rids or extract_ndr_value(uses[0]) != SID_NAME_USER:
         raise Exception(f"User '{username}' not found")
 
     user_rid = extract_ndr_value(rids[0])
-
-    # Open user with needed access
-    userHandle = samr.hSamrOpenUser(dce, domainHandle,
-                                    samr.MAXIMUM_ALLOWED,  # Broad access
-                                    user_rid
-                                    )['UserHandle']
+    userHandle = samr.hSamrOpenUser(dce, domainHandle, 0x0002011b, user_rid)['UserHandle']
     add_opnum_call(opnums_called, "SamrOpenUser")
 
-    # Query user information with proper Impacket object handling
+    # Query user information and retrieve the 'All' dictionary
     try:
-        # Attempt UserAllInformation with elevated access
-        response = samr.hSamrQueryInformationUser(
+        add_opnum_call(opnums_called, "SamrQueryInformationUser2")
+        response = samr.hSamrQueryInformationUser2(
             dce,
             userHandle,
             samr.USER_INFORMATION_CLASS.UserAllInformation
         )
-        info = response['Buffer']['All']  # Correct dictionary access
+        all_info = response['Buffer']['All']
     except Exception as e:
-        log_debug(debug, f"[debug] UserAllInformation failed: {str(e)}, trying GeneralInformation")
-        response = samr.hSamrQueryInformationUser(
+        log_debug(debug, f"[debug] UserAllInformation failed: {str(e)}, trying GeneralInformation2")
+        response = samr.hSamrQueryInformationUser2(
             dce,
             userHandle,
             samr.USER_INFORMATION_CLASS.UserGeneralInformation
         )
-        info = response['Buffer']['General']
+        all_info = response['Buffer']['General']
 
-        # Add null checks for critical fields
+    # Helper to decode numeric values if returned as bytes
+    def decode_int(val):
+        if isinstance(val, bytes):
+            return int.from_bytes(val, byteorder='little')
+        return val
+
+    # Process UserAccountControl for flag evaluation
+
+    uac_ndr = all_info['UserAccountControl']
+    uac_int = extract_ndr_value(uac_ndr)
+
+    # Process PasswordExpired field
+    pw_exp = all_info['PasswordExpired']
+    pw_exp_int = decode_int(pw_exp)
+    password_expired_bool = bool(pw_exp_int)
+    last_logon_ft = decode_filetime(all_info['LastLogon'])
+    last_logoff_ft = decode_filetime(all_info['LastLogoff'])
+    pwd_last_set_ft = decode_filetime(all_info['PasswordLastSet'])
+    acct_expires_ft = decode_filetime(all_info['AccountExpires'])
+    pwd_can_change_ft = decode_filetime(all_info['PasswordCanChange'])
+    pwd_must_change_ft = decode_filetime(all_info['PasswordMustChange'])
+    account_disabled = bool(uac_int & samr.USER_ACCOUNT_DISABLED)
+    smartcard_required = bool(uac_int & samr.USER_SMARTCARD_REQUIRED)
+    password_never_expires = bool(uac_int & samr.USER_DONT_EXPIRE_PASSWORD)
+
     return {
-        'username': safe_str(info.UserName) if hasattr(info, 'UserName') else '',
-        'full_name': safe_str(info.FullName) if hasattr(info, 'FullName') else '',
-        'home_directory': safe_str(info.HomeDirectory) if hasattr(info, 'HomeDirectory') else '',
-        'home_drive': safe_str(info.HomeDrive) if hasattr(info, 'HomeDrive') else '',
-        'script_path': safe_str(info.ScriptPath) if hasattr(info, 'ScriptPath') else '',
-        'profile_path': safe_str(info.ProfilePath) if hasattr(info, 'ProfilePath') else '',
-        'account_expires': info.AccountExpires if hasattr(info, 'AccountExpires') else 0,
-        'last_logon': info.LastLogon if hasattr(info, 'LastLogon') else 0,
-        'last_logoff': info.LastLogoff if hasattr(info, 'LastLogoff') else 0,
-        'password_last_set': info.PasswordLastSet if hasattr(info, 'PasswordLastSet') else 0,
-        'password_expires': info.PasswordExpired if hasattr(info, 'PasswordExpired') else False,
         'rid': user_rid,
-        'account_disabled': bool(info.UserAccountControl & samr.USER_ACCOUNT_DISABLED) if hasattr(info,
-                                                                                                  'UserAccountControl') else False,
-        'smartcard_required': bool(info.UserAccountControl & samr.USER_SMARTCARD_REQUIRED) if hasattr(info,
-                                                                                                      'UserAccountControl') else False,
-        'password_never_expires': bool(info.UserAccountControl & samr.USER_DONT_EXPIRE_PASSWORD) if hasattr(info,
-                                                                                                            'UserAccountControl') else False,
+        'username': safe_str(all_info['UserName']),
+        'full_name': safe_str(all_info['FullName']),
+        'description': safe_str(all_info['AdminComment']),
+        'last_logon': last_logon_ft,
+        'last_logoff': last_logoff_ft,
+        'logon_count': safe_str(all_info['LogonCount']),
+        'password_last_set': pwd_last_set_ft,
+        'password_can_change': pwd_can_change_ft,
+        'password_force_change': pwd_must_change_ft,
+        'password_expired': password_expired_bool,
+        'password_never_expires': password_never_expires,
+        'password_bad_count': safe_str(all_info['BadPasswordCount']),
+        'account_expires': acct_expires_ft,
+        'account_disabled': account_disabled,
+        'home_directory': safe_str(all_info['HomeDirectory']),
+        'home_drive': safe_str(all_info['HomeDirectoryDrive']),
+        'script_path': safe_str(all_info['ScriptPath']),
+        'profile_path': safe_str(all_info['ProfilePath']),
+        'workstations': safe_str(all_info['WorkStations']),
+        'usercomment': safe_str(all_info['UserComment']),
+        'primary_gid': safe_str(all_info['PrimaryGroupId']),
+        'user_account_control': safe_str(all_info['UserAccountControl']),
+        'which_fields': safe_str(all_info['WhichFields']),
+        'logon_hours': safe_str(all_info['LogonHours']),
+        'country_code': safe_str(all_info['CountryCode']),
+        'code_page': safe_str(all_info['CodePage']),
+        'usercomment': safe_str(all_info['UserComment']),
+
+
+        'smartcard_required': smartcard_required,
     }
 
 
@@ -1905,19 +1979,31 @@ def main():
             # Handle account details display
             details = enumerated_objects[0]
             print(f"\nAccount Details for {details.get('username', 'N/A')}:")
-            print(f"  Full Name:          {details.get('full_name', 'N/A')}")
-            print(f"  RID:                {details.get('rid', 'N/A')}")
-            print(f"  Home Directory:     {details.get('home_directory', 'N/A')}")
-            print(f"  Home Drive:         {details.get('home_drive', 'N/A')}")
-            print(f"  Profile Path:       {details.get('profile_path', 'N/A')}")
-            print(f"  Script Path:        {details.get('script_path', 'N/A')}")
-            print(f"  Account Expires:    {format_time(details.get('account_expires', 0))}")
-            print(f"  Password Last Set:  {format_time(details.get('password_last_set', 0))}")
-            print(f"  Last Logon:         {format_time(details.get('last_logon', 0))}")
-            print(f"  Password Expired:   {details.get('password_expires', False)}")
-            print(f"  Account Disabled:   {details.get('account_disabled', False)}")
-            print(f"  Smartcard Required: {details.get('smartcard_required', False)}")
-            print(f"  Password Never Exp: {details.get('password_never_expires', False)}")
+            print(f"  RID:                  {details.get('rid', 'N/A')}")
+            print(f"  Username:             {details.get('username', 'N/A')}")
+            print(f"  Full Name:            {details.get('full_name', 'N/A')}")
+            print(f"  Description:          {details.get('description', 'N/A')}")
+            print(f"  Last Logon:           {format_time(details.get('last_logon', 0))}")
+            print(f"  Logon Count:          {details.get('logon_count', 'N/A')}")
+            print(f"  Password Last Set:    {format_time(details.get('password_last_set', 0))}")
+            print(f"  Password Can Chg:     {format_time(details.get('password_can_change', 0))}")
+            print(f"  Password Force Chg:   {format_time(details.get('password_force_change', 0))}")
+            print(f"  Password Expired:     {yes_no(details.get('password_expired', False))}")
+            print(f"  Password Never Exp-s: {yes_no(details.get('password_never_expires', False))}")
+            print(f"  Password Bad Count:   {details.get('password_bad_count', False)}")
+            print(f"  Account Expires:      {format_time(details.get('account_expires', 0))}")
+            print(f"  Account Disabled:     {yes_no(details.get('account_disabled', False))}")
+
+            print(f"  Primary Group ID:     {details.get('primary_gid', 'N/A')}")
+            print(f"  Home Directory:       {details.get('home_directory', 'N/A')}")
+            print(f"  Home Drive:           {details.get('home_drive', 'N/A')}")
+            print(f"  Profile Path:         {details.get('profile_path', 'N/A')}")
+            print(f"  Script Path:          {details.get('script_path', 'N/A')}")
+            print(f"  Workstations:         {details.get('workstations', 'N/A')}")
+
+            # print(f"  Smartcard Required:   {details.get('smartcard_required', False)}")
+
+            # print(f"  Smartcard Required: {details.get('smartcard_required', False)}")
 
         elif enumeration == 'group-details':
             print("\nGroup Details")
