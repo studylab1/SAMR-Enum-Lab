@@ -1158,6 +1158,22 @@ def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
     uac_ndr = all_info['UserAccountControl']
     uac_int = extract_ndr_value(uac_ndr)
 
+    uac_value = response['Buffer']['All']['UserAccountControl']
+    uac_int = int(uac_value)
+
+    if uac_int & 0x00004000:
+        print("ACB_NOT_DELEGATED is set")
+        delegated = False
+    else:
+        delegated = True
+
+    if uac_int & 0x00010000:
+        print("ACB_DONT_REQUIRE_PREAUTH is set")
+        pre_auth = False
+    else:
+        pre_auth = True
+
+
     # Process PasswordExpired field
     pw_exp = all_info['PasswordExpired']
     pw_exp_int = decode_int(pw_exp)
@@ -1200,9 +1216,8 @@ def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
         'logon_hours': safe_str(all_info['LogonHours']),
         'country_code': safe_str(all_info['CountryCode']),
         'code_page': safe_str(all_info['CodePage']),
-        'usercomment': safe_str(all_info['UserComment']),
-
-
+        'delegated': delegated,
+        'pre_auth': pre_auth,
         'smartcard_required': smartcard_required,
     }
 
@@ -1993,6 +2008,10 @@ def main():
             print(f"  Password Bad Count:   {details.get('password_bad_count', False)}")
             print(f"  Account Expires:      {format_time(details.get('account_expires', 0))}")
             print(f"  Account Disabled:     {yes_no(details.get('account_disabled', False))}")
+            print(f"  Pre-Auth. Required:   {yes_no(details.get('pre_auth', False))}")
+            print(f"  Delegation Allowed:   {yes_no(details.get('delegated', False))}")
+            print(f"  Smartcard Required:   {yes_no(details.get('smartcard_required', False))}\n")
+
 
             print(f"  Primary Group ID:     {details.get('primary_gid', 'N/A')}")
             print(f"  Home Directory:       {details.get('home_directory', 'N/A')}")
@@ -2000,10 +2019,6 @@ def main():
             print(f"  Profile Path:         {details.get('profile_path', 'N/A')}")
             print(f"  Script Path:          {details.get('script_path', 'N/A')}")
             print(f"  Workstations:         {details.get('workstations', 'N/A')}")
-
-            # print(f"  Smartcard Required:   {details.get('smartcard_required', False)}")
-
-            # print(f"  Smartcard Required: {details.get('smartcard_required', False)}")
 
         elif enumeration == 'group-details':
             print("\nGroup Details")
