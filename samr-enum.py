@@ -64,14 +64,15 @@ ENUMERATION PARAMETERS:
     account-details user=<USERNAME/RID>
          Display account details for a specific user (by username or RID). (Parameter option: user)
 
+    domain-group-details group=<GROUP>
+         Display domain group details. (Parameter option: group)
+
     display-info
          List all objects with additional descriptive fields. (Parameter option: 'type' with values 'users', 'domain-groups', 'local-groups', 'computers')
 
     account-details user=<USERNAME/RID>
          Display account details for a specific user (by username or RID). (Parameter option: user)
 
-    domain-details group=<GROUP>
-         Display domain group details. (Parameter option: group)
 
     alias-details group=<GROUP>
          Display local/builtin group details. (Parameter option: group)
@@ -102,6 +103,8 @@ Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-localgroups user=Administrator
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=Administrator
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-details group="Domain Admins"
+
 
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
   python samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
@@ -109,7 +112,6 @@ Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=domain-groups
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-details group="Domain Admins"
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=summary
 
 For help, run:
@@ -329,7 +331,7 @@ def print_help():
         account-details user=<USERNAME/RID>
              Display account details for a specific user (by username or RID). PARAMETER OPTION = 'user'
 
-        domain-details group=<GROUP>
+        domain-group-details group=<GROUP>
             Display domain group details. (Parameter option: group)
 
         alias-details group=<GROUP>
@@ -362,7 +364,7 @@ def print_help():
       samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
       samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=display-info type=users
       samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=display-info type=domain-groups
-      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=domain-details group="Domain Admins"
+      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=domain-group-details group="Domain Admins"
       samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=summary
 
     """
@@ -491,22 +493,23 @@ def export_data(filename, fmt, data):
                                 name_val = item.get('computer_name', '').rstrip('$')
                                 rid_val = item.get('rid', 'N/A')
                                 writer.writerow([name_val, rid_val])
-
                         # 2) If first item is a dict with "username"
                         elif isinstance(data[0], dict) and 'username' in data[0]:
                             writer.writerow(['Username', 'RID'])
                             for item in data:
-                                user_val = item.get('username', 'N/A')
-                                rid_val = item.get('rid', 'N/A')
-                                writer.writerow([user_val, rid_val])
-
-                        # 3) If first item is a tuple => treat it as (username, rid)
+                                writer.writerow([item.get('username', 'N/A'), item.get('rid', 'N/A')])
+                        # 3) If first item is a dict with 'members' key (for group-details)
+                        elif isinstance(data[0], dict) and 'members' in data[0]:
+                            members = data[0].get('members', [])
+                            writer.writerow(['RID', 'Username'])
+                            for member in members:
+                                writer.writerow([member[0], member[1]])
+                        # 4) If first item is a tuple => treat it as (username, rid)
                         elif isinstance(data[0], tuple) and len(data[0]) >= 2:
                             writer.writerow(['Username', 'RID'])
                             for item in data:
                                 writer.writerow([item[0], item[1]])
                         else:
-                            # fallback if structure is unknown
                             writer.writerow(['Unknown', 'N/A'])
                 except Exception as e:
                     print(f"Export failed: {str(e)}")
@@ -536,7 +539,6 @@ def export_data(filename, fmt, data):
             elif fmt == 'txt':
                 # For TXT export, do not include dashed lines.
                 if isinstance(data[0], dict):
-                    # Determine header based on the keys.
                     if 'computer_name' in data[0]:
                         col_header = "Name"
                         max_length = max(
@@ -544,8 +546,24 @@ def export_data(filename, fmt, data):
                     elif 'username' in data[0]:
                         col_header = "Username"
                         max_length = max(len(str(item.get('username', ''))) for item in data) if data else 20
+                    elif 'members' in data[0]:
+                        # For group-details export, export the members table only
+                        members = data[0].get('members', [])
+                        if members:
+                            max_length = max(len(str(item[0])) for item in members) if members else 20
+                            header = f"{'RID':<{max_length}} Username"
+                            f.write(header + "\n")
+                            f.write("-" * (max_length + 9) + "\n")
+                            for item in members:
+                                f.write(f"{str(item[0]):<{max_length}} {item[1]}\n")
+                        else:
+                            f.write("No members\n")
+                        return
+                    else:
+                        col_header = "Unknown"
+                        max_length = 20
                     header = f"{col_header:<{max_length}} RID"
-                    f.write(f"{header}\n")
+                    f.write(header + "\n")
                     for item in data:
                         if 'computer_name' in item:
                             name = str(item['computer_name']).rstrip('$')
@@ -555,7 +573,7 @@ def export_data(filename, fmt, data):
                 elif isinstance(data[0], tuple) and len(data[0]) >= 2:
                     max_length = max(len(str(item[0])) for item in data) if data else 20
                     header = f"{'Username':<{max_length}} RID"
-                    f.write(f"{header}\n")
+                    f.write(header + "\n")
                     for item in data:
                         f.write(f"{item[0]:<{max_length}} {item[1]}\n")
 
@@ -834,7 +852,7 @@ def enumerate_computers(dce, domainHandle, debug):
     return computers
 
 
-def enumerate_groups_in_domain(dce, domainHandle, debug):
+def enumerate_domain_groups(dce, domainHandle, debug):
     """
     Enumerate domain groups.
 
@@ -852,6 +870,95 @@ def enumerate_groups_in_domain(dce, domainHandle, debug):
     groups = enumGroupsResp['Buffer']['Buffer'] or []
     group_tuples = [(safe_str(g['Name']), g['RelativeId']) for g in groups]
     return group_tuples, False
+
+
+def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug, opnums_called):
+    """Enumerate members of local groups (aliases) with SIDs"""
+    log_debug(debug, f"[debug] Local group lookup: {groupName}")
+    additional_ops = ["SamrLookupNamesInDomain"]
+    results = []
+
+    # First try Builtin domain for local groups
+    builtinHandle, _, _ = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
+    lookupResp = samr.hSamrLookupNamesInDomain(dce, builtinHandle, [groupName])
+    add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
+
+    if debug:
+        print("[debug] SamrLookupNamesInDomain response:")
+        print(lookupResp.dump())
+
+    rids = lookupResp['RelativeIds']['Element']
+    uses = lookupResp['Use']['Element']
+
+    if not rids or extract_ndr_value(uses[0]) != SID_NAME_ALIAS:
+        raise Exception("Not a valid local group")
+
+    groupRid = extract_ndr_value(rids[0])
+
+    # Open local alias
+    additional_ops.append("SamrOpenAlias")
+    aliasHandle = samr.hSamrOpenAlias(
+        dce, builtinHandle, samr.ALIAS_LIST_MEMBERS, groupRid
+    )['AliasHandle']
+    add_opnum_call(opnums_called, "SamrOpenAlias")
+    # Get members
+    additional_ops.append("SamrGetMembersInAlias")
+    membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
+    add_opnum_call(opnums_called, "SamrGetMembersInAlias")
+
+    # Enumerate domains to resolve SIDs
+    additional_ops.append("SamrEnumerateDomainsInSamServer")
+    enumDomainsResp = samr.hSamrEnumerateDomainsInSamServer(dce, serverHandle)
+    domains = []
+    for domain in enumDomainsResp['Buffer']['Buffer']:
+        add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
+        domain_name = safe_str(domain['Name'])
+        additional_ops.append("SamrLookupDomainInSamServer")
+        lookup_resp = samr.hSamrLookupDomainInSamServer(dce, serverHandle, domain_name)
+        add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
+        domains.append((domain_name, lookup_resp['DomainId']))
+
+    # Process each member SID
+    for sid in membersResp['Members']['Sids']:
+        sid_str = sid['SidPointer'].formatCanonical()
+        parts = sid_str.split('-')
+        rid = parts[-1]
+        domain_sid_part = '-'.join(parts[:-1])
+        resolved = False
+
+        # Find matching domain
+        for domain_name, domain_sid in domains:
+            if domain_sid.formatCanonical() == domain_sid_part:
+                try:
+                    additional_ops.append("SamrOpenDomain")
+                    dom_handle = samr.hSamrOpenDomain(
+                        dce, serverHandle,
+                        samr.DOMAIN_LOOKUP | samr.DOMAIN_LIST_ACCOUNTS,
+                        domain_sid
+                    )['DomainHandle']
+                    add_opnum_call(opnums_called, "SamrOpenDomain")
+                    additional_ops.append("SamrLookupIdsInDomain")
+                    lookup = samr.hSamrLookupIdsInDomain(dce, dom_handle, [int(rid)])
+                    add_opnum_call(opnums_called, "SamrLookupIdsInDomain")
+                    if lookup['Names']['Element']:
+                        username = safe_str(lookup['Names']['Element'][0]['Data'])
+                        results.append((username, rid))
+                        resolved = True
+
+                    additional_ops.append("SamrCloseHandle")
+                    samr.hSamrCloseHandle(dce, dom_handle)
+                    add_opnum_call(opnums_called, "SamrCloseHandle")
+                except Exception as e:
+                    log_debug(debug, f"[debug] SID resolution failed: {str(e)}")
+                break  # Exit domain loop after processing matching domain
+
+        if not resolved:
+            results.append((sid_str, 'SID'))  # Maintain original output format
+
+    samr.hSamrCloseHandle(dce, aliasHandle)
+    additional_ops.append("SamrCloseHandle")
+
+    return results, additional_ops
 
 
 def list_domain_group_members(dce, serverHandle, domainHandle, groupName, debug, opnums_called):
@@ -1004,95 +1111,6 @@ def list_user_domain_memberships(dce, domainHandle, username, domain_sid, debug,
     ]
 
 
-def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug, opnums_called):
-    """Enumerate members of local groups (aliases) with SIDs"""
-    log_debug(debug, f"[debug] Local group lookup: {groupName}")
-    additional_ops = ["SamrLookupNamesInDomain"]
-    results = []
-
-    # First try Builtin domain for local groups
-    builtinHandle, _, _ = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
-    lookupResp = samr.hSamrLookupNamesInDomain(dce, builtinHandle, [groupName])
-    add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
-
-    if debug:
-        print("[debug] SamrLookupNamesInDomain response:")
-        print(lookupResp.dump())
-
-    rids = lookupResp['RelativeIds']['Element']
-    uses = lookupResp['Use']['Element']
-
-    if not rids or extract_ndr_value(uses[0]) != SID_NAME_ALIAS:
-        raise Exception("Not a valid local group")
-
-    groupRid = extract_ndr_value(rids[0])
-
-    # Open local alias
-    additional_ops.append("SamrOpenAlias")
-    aliasHandle = samr.hSamrOpenAlias(
-        dce, builtinHandle, samr.ALIAS_LIST_MEMBERS, groupRid
-    )['AliasHandle']
-    add_opnum_call(opnums_called, "SamrOpenAlias")
-    # Get members
-    additional_ops.append("SamrGetMembersInAlias")
-    membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
-    add_opnum_call(opnums_called, "SamrGetMembersInAlias")
-
-    # Enumerate domains to resolve SIDs
-    additional_ops.append("SamrEnumerateDomainsInSamServer")
-    enumDomainsResp = samr.hSamrEnumerateDomainsInSamServer(dce, serverHandle)
-    domains = []
-    for domain in enumDomainsResp['Buffer']['Buffer']:
-        add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-        domain_name = safe_str(domain['Name'])
-        additional_ops.append("SamrLookupDomainInSamServer")
-        lookup_resp = samr.hSamrLookupDomainInSamServer(dce, serverHandle, domain_name)
-        add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-        domains.append((domain_name, lookup_resp['DomainId']))
-
-    # Process each member SID
-    for sid in membersResp['Members']['Sids']:
-        sid_str = sid['SidPointer'].formatCanonical()
-        parts = sid_str.split('-')
-        rid = parts[-1]
-        domain_sid_part = '-'.join(parts[:-1])
-        resolved = False
-
-        # Find matching domain
-        for domain_name, domain_sid in domains:
-            if domain_sid.formatCanonical() == domain_sid_part:
-                try:
-                    additional_ops.append("SamrOpenDomain")
-                    dom_handle = samr.hSamrOpenDomain(
-                        dce, serverHandle,
-                        samr.DOMAIN_LOOKUP | samr.DOMAIN_LIST_ACCOUNTS,
-                        domain_sid
-                    )['DomainHandle']
-                    add_opnum_call(opnums_called, "SamrOpenDomain")
-                    additional_ops.append("SamrLookupIdsInDomain")
-                    lookup = samr.hSamrLookupIdsInDomain(dce, dom_handle, [int(rid)])
-                    add_opnum_call(opnums_called, "SamrLookupIdsInDomain")
-                    if lookup['Names']['Element']:
-                        username = safe_str(lookup['Names']['Element'][0]['Data'])
-                        results.append((username, rid))
-                        resolved = True
-
-                    additional_ops.append("SamrCloseHandle")
-                    samr.hSamrCloseHandle(dce, dom_handle)
-                    add_opnum_call(opnums_called, "SamrCloseHandle")
-                except Exception as e:
-                    log_debug(debug, f"[debug] SID resolution failed: {str(e)}")
-                break  # Exit domain loop after processing matching domain
-
-        if not resolved:
-            results.append((sid_str, 'SID'))  # Maintain original output format
-
-    samr.hSamrCloseHandle(dce, aliasHandle)
-    additional_ops.append("SamrCloseHandle")
-
-    return results, additional_ops
-
-
 def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
     """Retrieve detailed user information from SAMR using direct dictionary indexing."""
     # First, perform the lookup for the user (by RID or username)
@@ -1224,18 +1242,19 @@ def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
 
 def get_group_details(dce, domainHandle, group_name, debug, opnums_called):
     """
-    Retrieve detailed information about a domain group.
+    Retrieve detailed information about a domain group and resolve member usernames.
 
     This function looks up the group by its name in the given domain,
     opens the group with GROUP_LIST_MEMBERS access, retrieves the member list,
-    and returns a dictionary with the group name, RID, and member count.
+    resolves the member RIDs to usernames with an additional SAMR call,
+    and returns a dictionary with the group name, RID, member count, and members list.
 
     :param dce: DCE/RPC connection object
     :param domainHandle: Handle to the domain obtained via SamrOpenDomain
     :param group_name: The name of the group to look up
     :param debug: Boolean for debug output
     :param opnums_called: List tracking SAMR operations performed
-    :return: Dictionary with keys 'group_name', 'rid', and 'member_count'
+    :return: Dictionary with keys 'group_name', 'rid', 'member_count', and 'members'
     """
     # Lookup the group by name
     lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [group_name])
@@ -1254,6 +1273,23 @@ def get_group_details(dce, domainHandle, group_name, debug, opnums_called):
     add_opnum_call(opnums_called, "SamrGetMembersInGroup")
     member_count = len(membersResp['Members']['Members'])
 
+    # Resolve member RIDs to usernames
+    rids_list = []
+    for ridEntry in membersResp['Members']['Members']:
+        if isinstance(ridEntry, int):
+            rids_list.append(ridEntry)
+        elif hasattr(ridEntry, 'fields'):
+            rids_list.append(extract_ndr_value(ridEntry))
+        else:
+            rids_list.append(extract_ndr_value(ridEntry['RelativeId']))
+
+    members = []
+    if rids_list:
+        add_opnum_call(opnums_called, "SamrLookupIdsInDomain")
+        lookupResp2 = samr.hSamrLookupIdsInDomain(dce, domainHandle, rids_list)
+        names = [safe_str(name['Data']) for name in lookupResp2['Names']['Element']]
+        members = list(zip(rids_list, names))
+
     # Close the group handle
     samr.hSamrCloseHandle(dce, groupHandle)
     add_opnum_call(opnums_called, "SamrCloseHandle")
@@ -1262,6 +1298,7 @@ def get_group_details(dce, domainHandle, group_name, debug, opnums_called):
         'group_name': group_name,
         'rid': group_rid,
         'member_count': member_count,
+        'members': members,
     }
 
 
@@ -1579,7 +1616,7 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
     elif info_type == 'domain-groups':
         # Get primary domain handle and enumerate domain groups
         domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
-        groups, did_aliases = enumerate_groups_in_domain(dce, domainHandle, debug)
+        groups, did_aliases = enumerate_domain_groups(dce, domainHandle, debug)
         for group_name, group_rid in groups:
             try:
                 details = get_domain_group_details(dce, domainHandle, group_name, group_rid, debug, opnums_called)
@@ -1716,7 +1753,7 @@ def get_summary(dce, serverHandle, debug, opnums_called):
         summary['total_computers'] = len(computers)
 
         # Enumerate domain groups
-        domain_groups, _ = enumerate_groups_in_domain(dce, domainHandle, debug)
+        domain_groups, _ = enumerate_domain_groups(dce, domainHandle, debug)
         summary['total_domain_groups'] = len(domain_groups)
 
         # Get password policy
@@ -1835,7 +1872,7 @@ def main():
             domainHandle, domainName, domainSidString = get_domain_handle(dce,
                                                                           serverHandle,
                                                                           debug, opnums_called)
-            groups_result, did_aliases = enumerate_groups_in_domain(dce,
+            groups_result, did_aliases = enumerate_domain_groups(dce,
                                                                     domainHandle,
                                                                     debug)
             add_opnum_call(opnums_called, "SamrEnumerateGroupsInDomain")
@@ -2012,7 +2049,6 @@ def main():
             print(f"  Delegation Allowed:   {yes_no(details.get('delegated', False))}")
             print(f"  Smartcard Required:   {yes_no(details.get('smartcard_required', False))}\n")
 
-
             print(f"  Primary Group ID:     {details.get('primary_gid', 'N/A')}")
             print(f"  Home Directory:       {details.get('home_directory', 'N/A')}")
             print(f"  Home Drive:           {details.get('home_drive', 'N/A')}")
@@ -2024,8 +2060,15 @@ def main():
             print("\nGroup Details")
             print("-------------")
             details = enumerated_objects[0]
-            for key, value in details.items():
-                print(f"{key}: {value}")
+            print(f"group_name: {details.get('group_name', 'N/A')}")
+            print(f"rid: {details.get('rid', 'N/A')}")
+            print(f"member_count: {details.get('member_count', 'N/A')}")
+            members = details.get('members')
+            if members:
+                print("RID\tUsername")
+                print("----------------")
+                for rid, username in members:
+                    print(f"{str(rid):<7} {username}")
             print()
 
         elif enumeration == 'alias-details':
