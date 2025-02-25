@@ -64,18 +64,20 @@ ENUMERATION PARAMETERS:
     account-details user=<USERNAME/RID>
          Display account details for a specific user (by username or RID). (Parameter option: user)
 
+    local-group-details group=<GROUP>
+         Display local/builtin group details. (Parameter option: group)
+
     domain-group-details group=<GROUP>
          Display domain group details. (Parameter option: group)
+
+
+
 
     display-info
          List all objects with additional descriptive fields. (Parameter option: 'type' with values 'users', 'domain-groups', 'local-groups', 'computers')
 
     account-details user=<USERNAME/RID>
          Display account details for a specific user (by username or RID). (Parameter option: user)
-
-
-    alias-details group=<GROUP>
-         Display local/builtin group details. (Parameter option: group)
 
     password-policy
          Display the password policy.
@@ -103,6 +105,7 @@ Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-localgroups user=Administrator
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=Administrator
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-details group="Administrators"
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-details group="Domain Admins"
 
 
@@ -334,7 +337,7 @@ def print_help():
         domain-group-details group=<GROUP>
             Display domain group details. (Parameter option: group)
 
-        alias-details group=<GROUP>
+        local-group-details group=<GROUP>
             Display local/builtin group details. (Parameter option: group)
 
         password-policy
@@ -518,16 +521,19 @@ def export_data(filename, fmt, data):
                 import json
                 json_data = []
                 for item in data:
-                    if isinstance(item, tuple) and len(item) >= 2:
+                    # Special handling for local-group-details output
+                    if isinstance(item, dict) and 'alias_name' in item:
+                        # For local-group-details, output only the members list
+                        for member in item.get('members', []):
+                            json_data.append({"RID": member[0], "Username": member[1]})
+                    elif isinstance(item, tuple) and len(item) >= 2:
                         first_field = item[0]
                         rid_value = item[1]
-                        # Use "Name" if the field ends with '$', otherwise "Username"
                         if isinstance(first_field, str) and first_field.endswith('$'):
                             json_data.append({'Name': first_field.rstrip('$'), 'RID': rid_value})
                         else:
                             json_data.append({'Username': first_field, 'RID': rid_value})
                     elif isinstance(item, dict):
-                        # For computer dictionaries, use key "computer_name"
                         if 'computer_name' in item:
                             json_data.append({'Name': item['computer_name'].rstrip('$'), 'RID': item.get('rid')})
                         elif 'username' in item:
@@ -1240,7 +1246,65 @@ def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
     }
 
 
-def get_group_details(dce, domainHandle, group_name, debug, opnums_called):
+def get_local_group_details(dce, builtinHandle, alias_name, debug, opnums_called, primaryDomainHandle, primaryDomainSid):
+    """
+    Retrieve detailed information about a local alias (group) from the Builtin domain.
+    This function looks up the alias by its name using the Builtin domain handle,
+    opens the alias with ALIAS_LIST_MEMBERS access, retrieves its member list,
+    resolves the member SIDs to usernames using the primary domain handle,
+    and returns a dictionary with keys 'alias_name', 'rid', 'member_count', 'members',
+    and 'primary_domain_sid'.
+    """
+    # Lookup the alias by name using the Builtin domain handle
+    lookupResp = samr.hSamrLookupNamesInDomain(dce, builtinHandle, [alias_name])
+    add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
+    rids = lookupResp['RelativeIds']['Element']
+    uses = lookupResp['Use']['Element']
+    if not rids or extract_ndr_value(uses[0]) != SID_NAME_ALIAS:
+        raise Exception(f"Alias '{alias_name}' not found or not a valid alias.")
+    alias_rid = extract_ndr_value(rids[0])
+
+    # Open the alias with ALIAS_LIST_MEMBERS access
+    aliasHandle = samr.hSamrOpenAlias(dce, builtinHandle, samr.ALIAS_LIST_MEMBERS, alias_rid)['AliasHandle']
+    add_opnum_call(opnums_called, "SamrOpenAlias")
+
+    # Retrieve the members
+    membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
+    add_opnum_call(opnums_called, "SamrGetMembersInAlias")
+    member_count = len(membersResp['Members']['Sids'])
+
+    # Resolve each member SID using the primary domain handle
+    members = []
+    for sid in membersResp['Members']['Sids']:
+        sid_str = sid['SidPointer'].formatCanonical()
+        parts = sid_str.split('-')
+        # The last part is the RID
+        rid = parts[-1]
+        try:
+            add_opnum_call(opnums_called, "SamrLookupIdsInDomain")
+            lookupResp2 = samr.hSamrLookupIdsInDomain(dce, primaryDomainHandle, [int(rid)])
+            if lookupResp2['Names']['Element']:
+                username = safe_str(lookupResp2['Names']['Element'][0]['Data'])
+                members.append((int(rid), username))
+            else:
+                members.append((int(rid), 'N/A'))
+        except Exception as e:
+            log_debug(debug, f"[debug] SID resolution failed for {sid_str}: {str(e)}")
+            members.append((int(rid), 'N/A'))
+
+    samr.hSamrCloseHandle(dce, aliasHandle)
+    add_opnum_call(opnums_called, "SamrCloseHandle")
+
+    return {
+        'alias_name': alias_name,
+        'rid': alias_rid,
+        'member_count': member_count,
+        'members': members,
+        'primary_domain_sid': primaryDomainSid
+    }
+
+
+def get_domain_group_details(dce, domainHandle, group_name, debug, opnums_called):
     """
     Retrieve detailed information about a domain group and resolve member usernames.
 
@@ -1299,50 +1363,6 @@ def get_group_details(dce, domainHandle, group_name, debug, opnums_called):
         'rid': group_rid,
         'member_count': member_count,
         'members': members,
-    }
-
-
-def get_alias_details(dce, domainHandle, alias_name, debug, opnums_called):
-    """
-    Retrieve detailed information about a local alias (group) from the Builtin domain.
-
-    This function looks up the alias by its name in the provided Builtin domain,
-    opens the alias with ALIAS_LIST_MEMBERS access, retrieves the member list,
-    and returns a dictionary with the alias name, its RID, and member count.
-
-    :param dce: DCE/RPC connection object
-    :param domainHandle: Handle to the Builtin domain (obtained via get_builtin_domain_handle)
-    :param alias_name: The alias name to look up (passed with group=<alias name>)
-    :param debug: Boolean indicating whether to output debug information
-    :param opnums_called: List to record SAMR operations performed
-    :return: Dictionary with keys 'alias_name', 'rid', and 'member_count'
-    """
-    # Lookup the alias by name
-    lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [alias_name])
-    add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
-    rids = lookupResp['RelativeIds']['Element']
-    uses = lookupResp['Use']['Element']
-    if not rids or extract_ndr_value(uses[0]) != SID_NAME_ALIAS:
-        raise Exception(f"Alias '{alias_name}' not found or not a valid alias.")
-    alias_rid = extract_ndr_value(rids[0])
-
-    # Open the alias with ALIAS_LIST_MEMBERS access
-    aliasHandle = samr.hSamrOpenAlias(dce, domainHandle, samr.ALIAS_LIST_MEMBERS, alias_rid)['AliasHandle']
-    add_opnum_call(opnums_called, "SamrOpenAlias")
-
-    # Retrieve the members
-    membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
-    add_opnum_call(opnums_called, "SamrGetMembersInAlias")
-    member_count = len(membersResp['Members']['Sids'])
-
-    # Close the alias handle
-    samr.hSamrCloseHandle(dce, aliasHandle)
-    add_opnum_call(opnums_called, "SamrCloseHandle")
-
-    return {
-        'alias_name': alias_name,
-        'rid': alias_rid,
-        'member_count': member_count,
     }
 
 
@@ -1559,7 +1579,7 @@ def get_domain_info(dce, serverHandle, debug, opnums_called):
         add_opnum_call(opnums_called, "SamrCloseHandle")
 
 
-def get_domain_group_details(dce, domainHandle, group_name, group_rid, debug, opnums_called):
+def list_domain_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called):
     """
     Retrieve additional details for a domain group.
     For example, count the number of members in the group.
@@ -1574,7 +1594,7 @@ def get_domain_group_details(dce, domainHandle, group_name, group_rid, debug, op
     return {'group_name': group_name, 'rid': group_rid, 'member_count': member_count}
 
 
-def get_local_group_details(dce, domainHandle, group_name, group_rid, debug, opnums_called):
+def list_local_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called):
     """
     Retrieve additional details for a local group (alias) from the Builtin domain.
     For example, count the number of members in the alias.
@@ -1619,7 +1639,7 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
         groups, did_aliases = enumerate_domain_groups(dce, domainHandle, debug)
         for group_name, group_rid in groups:
             try:
-                details = get_domain_group_details(dce, domainHandle, group_name, group_rid, debug, opnums_called)
+                details = list_domain_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called)
                 results.append(details)
             except Exception as e:
                 results.append({'group_name': group_name, 'rid': group_rid, 'error': str(e)})
@@ -1639,7 +1659,7 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
         group_tuples = [(safe_str(alias['Name']), alias['RelativeId']) for alias in aliases]
         for group_name, group_rid in group_tuples:
             try:
-                details = get_local_group_details(dce, domainHandle, group_name, group_rid, debug, opnums_called)
+                details = list_local_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called)
                 results.append(details)
             except Exception as e:
                 results.append({'group_name': group_name, 'rid': group_rid, 'error': str(e)})
@@ -1842,6 +1862,8 @@ def main():
     domainSidString = ""
     enumerated_objects = []
     execution_status = "success"
+    username = args.get('username', '')
+    input_username = username
 
     try:
         dce, serverHandle = samr_connect(target, username, password, domain, debug, auth_mode)
@@ -1916,23 +1938,29 @@ def main():
             user_details = get_user_details(dce, domainHandle, user, debug, opnums_called)
             enumerated_objects = [user_details]
 
-        elif enumeration == 'group-details':
+        elif enumeration == 'local-group-details':
+
+            aliasName = args.get('group', '')
+
+            if not aliasName:
+                raise Exception("Missing 'group=' argument for local-group-details")
+            # Use the Builtin domain to look up the alias
+            builtinHandle, builtin_domain, _ = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
+            # Get primary domain handle (and its SID) for resolving member SIDs
+            primaryHandle, primaryDomainName, primaryDomainSid = get_domain_handle(dce, serverHandle, debug,
+                                                                                   opnums_called)
+            alias_details = get_local_group_details(dce, builtinHandle, aliasName, debug, opnums_called, primaryHandle,
+                                                    primaryDomainSid)
+            enumerated_objects = [alias_details]
+            domainSidString = alias_details.get('primary_domain_sid', '')
+
+        elif enumeration == 'domain-group-details':
             groupName = args.get('group', '')
             if not groupName:
-                raise Exception("Missing 'group=' argument for group-details")
+                raise Exception("Missing 'group=' argument for domain-group-details")
             domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug, opnums_called)
-            group_details = get_group_details(dce, domainHandle, groupName, debug, opnums_called)
+            group_details = get_domain_group_details(dce, domainHandle, groupName, debug, opnums_called)
             enumerated_objects = [group_details]
-
-        elif enumeration == 'alias-details':
-            aliasName = args.get('group', '')
-            if not aliasName:
-                raise Exception("Missing 'group=' argument for alias-details")
-            # Use the Builtin domain to look up the alias
-            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug,
-                                                                                  opnums_called)
-            alias_details = get_alias_details(dce, domainHandle, aliasName, debug, opnums_called)
-            enumerated_objects = [alias_details]
 
         elif enumeration == 'password-policy':  # New enumeration type
             domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug, opnums_called)
@@ -2056,7 +2084,23 @@ def main():
             print(f"  Script Path:          {details.get('script_path', 'N/A')}")
             print(f"  Workstations:         {details.get('workstations', 'N/A')}")
 
-        elif enumeration == 'group-details':
+        elif enumeration == 'local-group-details':
+            details = enumerated_objects[0]
+            print(f"{'-'*65}")
+            print(f"{'Local Group Name:':<20}\t{details.get('alias_name', 'N/A')}")
+            print(f"{'RID:':<20}\t{details.get('rid', 'N/A')}")
+            print(f"{'Member Count:':<20}\t{details.get('member_count', 'N/A')}")
+            print(f"{'Domain SID:':<20}\t{details.get('primary_domain_sid', 'N/A')}")
+            members = details.get('members')
+            if members:
+                print(f"{'-'*65}")
+                print(f"{'RID':<20}\t{'Username':<20}")
+                print(f"{'-'*32}")
+                for rid, username in members:
+                    print(f"{rid:<20}\t{username:<20}")
+            print()
+
+        elif enumeration == 'domain-group-details':
             print("\nGroup Details")
             print("-------------")
             details = enumerated_objects[0]
@@ -2069,14 +2113,6 @@ def main():
                 print("----------------")
                 for rid, username in members:
                     print(f"{str(rid):<7} {username}")
-            print()
-
-        elif enumeration == 'alias-details':
-            print("\nAlias Group Details")
-            print("-------------------")
-            details = enumerated_objects[0]
-            for key, value in details.items():
-                print(f"{key}: {value}")
             print()
 
         elif enumeration == 'password-policy':  # Handle password policy output
@@ -2239,7 +2275,7 @@ def main():
     print(f"{'Execution time:':<20}\t{duration:.2f} seconds")
     print(f"{'Destination target:':<20}\t{target}")
     print(f"{'Domain SID:':<20}\t{domainSidString}")
-    print(f"{'Account:':<20}\t{username}")
+    print(f"{'Account:':<20}\t{input_username}")
     print(f"{'Enumerate:':<20}\t{enumeration}")
     print(f"{'Authentication:':<20}\t{auth_mode.upper()}")
     print(f"{'Execution status:':<20}\t{execution_status}")
