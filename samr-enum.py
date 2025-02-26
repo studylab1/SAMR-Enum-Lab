@@ -70,9 +70,6 @@ ENUMERATION PARAMETERS:
     domain-group-details group=<GROUP>
          Display domain group details. (Parameter option: group)
 
-
-
-
     display-info
          List all objects with additional descriptive fields. (Parameter option: 'type' with values 'users', 'domain-groups', 'local-groups', 'computers')
 
@@ -95,6 +92,20 @@ ENUMERATION PARAMETERS:
            - Password policy details
            - Lockout policy details
 
+Column Abbreviations for "display-info type=users" output:
+  - RID:          Relative Identifier.
+  - Last Logon:   Date of last logon (YYYY.MM.DD).
+  - PwdSet:       Date when the password was set.
+  - PwdNE:        "Password Never Expires" flag (Yes/No).
+  - PwdExp:       "Password Expired" flag (Yes/No).
+  - ForceChg:     Date when a password force-change is scheduled.
+  - AccDis:       "Account Disabled" flag (Yes/No).
+  - PreAuth:      "Pre-Authentication required" flag (Yes/No).
+  - Delg:         "Delegation required" flag (Yes/No).
+  - BadCnt:       Count of bad password attempts.
+  - Username:     The user’s login name.
+  - Full Name:    The user’s full display name.
+
 Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=computers
@@ -107,7 +118,7 @@ Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=Administrator
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-details group="Administrators"
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-details group="Domain Admins"
-
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
 
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
   python samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
@@ -216,6 +227,19 @@ def format_time(filetime_64):
         return dt.strftime('%Y-%m-%d %H:%M:%S')
     except Exception:
         return 'Invalid timestamp'
+
+
+def format_date(time_str):
+    """
+    Convert a time string in 'YYYY-MM-DD HH:MM:SS' format to 'YYYY.MM.DD'.
+    If the input is 'Never' or invalid, return it as is.
+    """
+    if time_str == 'Never' or not time_str:
+        return 'Never'
+    try:
+        return time_str.split(" ")[0].replace('-', '.')
+    except Exception:
+        return time_str
 
 
 def to_int_uac(uac_value):
@@ -464,11 +488,17 @@ def decode_group_attributes(attr):
 
 def export_data(filename, fmt, data):
     """
-    Export enumerated data (list of (username, rid) tuples) into a file.
+    Export enumerated data into a file.
+
+    For display-info type=users objects (i.e. dictionaries that contain a 'last_logon' key),
+    export the following columns:
+      RID, Last Logon, PwdSet, PwdNE, PwdExp, ForceChg, AccDis, PreAuth, Delg, BadCnt, Username, Full Name
+
+    For other data types, the export behavior remains unchanged.
 
     :param filename: The output filename
     :param fmt: One of 'txt', 'csv', or 'json'
-    :param data: The list of (username, rid) pairs to write
+    :param data: The enumerated data (list of dictionaries or tuples) to write
     """
     if not filename or not data:
         return
@@ -477,111 +507,214 @@ def export_data(filename, fmt, data):
         print(f"Error: Unsupported format '{fmt}'. Supported: {supported_formats}")
         return
 
+    # Helper to convert a time string from format_time() to a short date "YYYY.MM.DD"
+    def format_date_export(time_str):
+        if time_str == 'Never' or not time_str:
+            return 'Never'
+        try:
+            return time_str.split(" ")[0].replace('-', '.')
+        except Exception:
+            return time_str
+
     try:
         with open(filename, 'w') as f:
-            if fmt == 'csv':
-                import csv
-                try:
-                    with open(filename, 'w', newline='') as f:
-                        writer = csv.writer(f, delimiter=';')
+            # Special handling for display-info type=users
+            if isinstance(data[0], dict) and 'last_logon' in data[0]:
+                # Define header columns using our abbreviations:
+                # RID, Last Logon, PwdSet, PwdNE, PwdExp, ForceChg, AccDis, PreAuth, Delg, BadCnt, Username, Full Name
+                header = ["RID", "Last Logon", "PwdSet", "PwdNE", "PwdExp", "ForceChg", "AccDis", "PreAuth", "Delg",
+                          "BadCnt", "Username", "Full Name"]
 
-                        if not data:
-                            writer.writerow(["No data"])
-                            return
-
-                        # 1) If first item is a dict with "computer_name"
-                        if isinstance(data[0], dict) and 'computer_name' in data[0]:
-                            writer.writerow(['Name', 'RID'])
-                            for item in data:
-                                name_val = item.get('computer_name', '').rstrip('$')
-                                rid_val = item.get('rid', 'N/A')
-                                writer.writerow([name_val, rid_val])
-                        # 2) If first item is a dict with "username"
-                        elif isinstance(data[0], dict) and 'username' in data[0]:
-                            writer.writerow(['Username', 'RID'])
-                            for item in data:
-                                writer.writerow([item.get('username', 'N/A'), item.get('rid', 'N/A')])
-                        # 3) If first item is a dict with 'members' key (for group-details)
-                        elif isinstance(data[0], dict) and 'members' in data[0]:
+                if fmt == 'txt':
+                    # Calculate max width for each column based on header lengths (or fixed widths)
+                    # Here we set fixed widths (feel free to adjust as needed)
+                    col_widths = {
+                        "RID": 8,
+                        "Last Logon": 12,
+                        "PwdSet": 10,
+                        "PwdNE": 10,
+                        "PwdExp": 10,
+                        "ForceChg": 10,
+                        "AccDis": 10,
+                        "PreAuth": 10,
+                        "Delg": 8,
+                        "BadCnt": 10,
+                        "Username": 15,
+                        "Full Name": 20
+                    }
+                    # Write header
+                    header_line = ""
+                    for col in header:
+                        header_line += f"{col:<{col_widths[col]}} "
+                    f.write(header_line.strip() + "\n")
+                    f.write("-" * (sum(col_widths.values()) + len(header)) + "\n")
+                    # Write each row
+                    for obj in data:
+                        rid = str(obj.get('rid', 'N/A'))
+                        last_logon = format_date_export(format_time(obj.get('last_logon', 0)))
+                        pwd_set = format_date_export(format_time(obj.get('password_last_set', 0)))
+                        pwd_ne = "Yes" if obj.get('password_never_expires', False) else "No"
+                        pwd_exp = "Yes" if obj.get('password_expired', False) else "No"
+                        force_chg = format_date_export(format_time(obj.get('password_force_change', 0)))
+                        acc_dis = "Yes" if obj.get('account_disabled', False) else "No"
+                        pre_auth = "Yes" if obj.get('pre_auth', False) else "No"
+                        delegated = "Yes" if obj.get('delegated', False) else "No"
+                        bad_cnt = str(obj.get('password_bad_count', 'N/A'))
+                        username_val = obj.get('username', 'N/A')
+                        full_name = obj.get('full_name', 'N/A')
+                        row = (f"{rid:<{col_widths['RID']}} "
+                               f"{last_logon:<{col_widths['Last Logon']}} "
+                               f"{pwd_set:<{col_widths['PwdSet']}} "
+                               f"{pwd_ne:<{col_widths['PwdNE']}} "
+                               f"{pwd_exp:<{col_widths['PwdExp']}} "
+                               f"{force_chg:<{col_widths['ForceChg']}} "
+                               f"{acc_dis:<{col_widths['AccDis']}} "
+                               f"{pre_auth:<{col_widths['PreAuth']}} "
+                               f"{delegated:<{col_widths['Delg']}} "
+                               f"{bad_cnt:<{col_widths['BadCnt']}} "
+                               f"{username_val:<{col_widths['Username']}} "
+                               f"{full_name:<{col_widths['Full Name']}}")
+                        f.write(row + "\n")
+                elif fmt == 'csv':
+                    import csv
+                    writer = csv.writer(f, delimiter=';')
+                    writer.writerow(header)
+                    for obj in data:
+                        rid = str(obj.get('rid', 'N/A'))
+                        last_logon = format_date_export(format_time(obj.get('last_logon', 0)))
+                        pwd_set = format_date_export(format_time(obj.get('password_last_set', 0)))
+                        pwd_ne = "Yes" if obj.get('password_never_expires', False) else "No"
+                        pwd_exp = "Yes" if obj.get('password_expired', False) else "No"
+                        force_chg = format_date_export(format_time(obj.get('password_force_change', 0)))
+                        acc_dis = "Yes" if obj.get('account_disabled', False) else "No"
+                        pre_auth = "Yes" if obj.get('pre_auth', False) else "No"
+                        delegated = "Yes" if obj.get('delegated', False) else "No"
+                        bad_cnt = str(obj.get('password_bad_count', 'N/A'))
+                        username_val = obj.get('username', 'N/A')
+                        full_name = obj.get('full_name', 'N/A')
+                        writer.writerow([rid, last_logon, pwd_set, pwd_ne, pwd_exp, force_chg,
+                                         acc_dis, pre_auth, delegated, bad_cnt, username_val, full_name])
+                elif fmt == 'json':
+                    import json
+                    json_data = []
+                    for obj in data:
+                        rid = str(obj.get('rid', 'N/A'))
+                        last_logon = format_date_export(format_time(obj.get('last_logon', 0)))
+                        pwd_set = format_date_export(format_time(obj.get('password_last_set', 0)))
+                        pwd_ne = "Yes" if obj.get('password_never_expires', False) else "No"
+                        pwd_exp = "Yes" if obj.get('password_expired', False) else "No"
+                        force_chg = format_date_export(format_time(obj.get('password_force_change', 0)))
+                        acc_dis = "Yes" if obj.get('account_disabled', False) else "No"
+                        pre_auth = "Yes" if obj.get('pre_auth', False) else "No"
+                        delegated = "Yes" if obj.get('delegated', False) else "No"
+                        bad_cnt = str(obj.get('password_bad_count', 'N/A'))
+                        username_val = obj.get('username', 'N/A')
+                        full_name = obj.get('full_name', 'N/A')
+                        json_data.append({
+                            "RID": rid,
+                            "Last Logon": last_logon,
+                            "PwdSet": pwd_set,
+                            "PwdNE": pwd_ne,
+                            "PwdExp": pwd_exp,
+                            "ForceChg": force_chg,
+                            "AccDis": acc_dis,
+                            "PreAuth": pre_auth,
+                            "Delg": delegated,
+                            "BadCnt": bad_cnt,
+                            "Username": username_val,
+                            "Full Name": full_name
+                        })
+                    json.dump(json_data, f, indent=2)
+            else:
+                # Fallback for other types of data (unchanged)
+                if fmt == 'csv':
+                    import csv
+                    try:
+                        with open(filename, 'w', newline='') as f:
+                            writer = csv.writer(f, delimiter=';')
+                            if not data:
+                                writer.writerow(["No data"])
+                                return
+                            if isinstance(data[0], dict) and 'computer_name' in data[0]:
+                                writer.writerow(['Name', 'RID'])
+                                for item in data:
+                                    name_val = item.get('computer_name', '').rstrip('$')
+                                    rid_val = item.get('rid', 'N/A')
+                                    writer.writerow([name_val, rid_val])
+                            elif isinstance(data[0], dict) and 'username' in data[0]:
+                                writer.writerow(['Username', 'RID'])
+                                for item in data:
+                                    writer.writerow([item.get('username', 'N/A'), item.get('rid', 'N/A')])
+                            elif isinstance(data[0], dict) and 'members' in data[0]:
+                                members = data[0].get('members', [])
+                                writer.writerow(['RID', 'Username'])
+                                for member in members:
+                                    writer.writerow([member[0], member[1]])
+                            elif isinstance(data[0], tuple) and len(data[0]) >= 2:
+                                writer.writerow(['Username', 'RID'])
+                                for item in data:
+                                    writer.writerow([item[0], item[1]])
+                            else:
+                                writer.writerow(['Unknown', 'N/A'])
+                    except Exception as e:
+                        print(f"Export failed: {str(e)}")
+                elif fmt == 'json':
+                    import json
+                    json_data = []
+                    for item in data:
+                        if isinstance(item, tuple) and len(item) >= 2:
+                            first_field = item[0]
+                            rid_value = item[1]
+                            if isinstance(first_field, str) and first_field.endswith('$'):
+                                json_data.append({'Name': first_field.rstrip('$'), 'RID': rid_value})
+                            else:
+                                json_data.append({'Username': first_field, 'RID': rid_value})
+                        elif isinstance(item, dict):
+                            if 'computer_name' in item:
+                                json_data.append({'Name': item['computer_name'].rstrip('$'), 'RID': item.get('rid')})
+                            elif 'username' in item:
+                                json_data.append({'Username': item['username'], 'RID': item.get('rid')})
+                            else:
+                                json_data.append(item)
+                    json.dump(json_data, f, indent=2)
+                elif fmt == 'txt':
+                    if isinstance(data[0], dict):
+                        if 'computer_name' in data[0]:
+                            col_header = "Name"
+                            max_length = max(
+                                len(str(item.get('computer_name', '')).rstrip('$')) for item in data) if data else 20
+                        elif 'username' in data[0]:
+                            col_header = "Username"
+                            max_length = max(len(str(item.get('username', ''))) for item in data) if data else 20
+                        elif 'members' in data[0]:
                             members = data[0].get('members', [])
-                            writer.writerow(['RID', 'Username'])
-                            for member in members:
-                                writer.writerow([member[0], member[1]])
-                        # 4) If first item is a tuple => treat it as (username, rid)
-                        elif isinstance(data[0], tuple) and len(data[0]) >= 2:
-                            writer.writerow(['Username', 'RID'])
-                            for item in data:
-                                writer.writerow([item[0], item[1]])
+                            if members:
+                                max_length = max(len(str(item[0])) for item in members) if members else 20
+                                header = f"{'RID':<{max_length}} Username"
+                                f.write(header + "\n")
+                                f.write("-" * (max_length + 9) + "\n")
+                                for item in members:
+                                    f.write(f"{str(item[0]):<{max_length}} {item[1]}\n")
+                            else:
+                                f.write("No members\n")
+                            return
                         else:
-                            writer.writerow(['Unknown', 'N/A'])
-                except Exception as e:
-                    print(f"Export failed: {str(e)}")
-
-            elif fmt == 'json':
-                import json
-                json_data = []
-                for item in data:
-                    # Special handling for local-group-details output
-                    if isinstance(item, dict) and 'alias_name' in item:
-                        # For local-group-details, output only the members list
-                        for member in item.get('members', []):
-                            json_data.append({"RID": member[0], "Username": member[1]})
-                    elif isinstance(item, tuple) and len(item) >= 2:
-                        first_field = item[0]
-                        rid_value = item[1]
-                        if isinstance(first_field, str) and first_field.endswith('$'):
-                            json_data.append({'Name': first_field.rstrip('$'), 'RID': rid_value})
-                        else:
-                            json_data.append({'Username': first_field, 'RID': rid_value})
-                    elif isinstance(item, dict):
-                        if 'computer_name' in item:
-                            json_data.append({'Name': item['computer_name'].rstrip('$'), 'RID': item.get('rid')})
-                        elif 'username' in item:
-                            json_data.append({'Username': item['username'], 'RID': item.get('rid')})
-                        else:
-                            json_data.append(item)
-                json.dump(json_data, f, indent=2)
-
-            elif fmt == 'txt':
-                # For TXT export, do not include dashed lines.
-                if isinstance(data[0], dict):
-                    if 'computer_name' in data[0]:
-                        col_header = "Name"
-                        max_length = max(
-                            len(str(item.get('computer_name', '')).rstrip('$')) for item in data) if data else 20
-                    elif 'username' in data[0]:
-                        col_header = "Username"
-                        max_length = max(len(str(item.get('username', ''))) for item in data) if data else 20
-                    elif 'members' in data[0]:
-                        # For group-details export, export the members table only
-                        members = data[0].get('members', [])
-                        if members:
-                            max_length = max(len(str(item[0])) for item in members) if members else 20
-                            header = f"{'RID':<{max_length}} Username"
-                            f.write(header + "\n")
-                            f.write("-" * (max_length + 9) + "\n")
-                            for item in members:
-                                f.write(f"{str(item[0]):<{max_length}} {item[1]}\n")
-                        else:
-                            f.write("No members\n")
-                        return
-                    else:
-                        col_header = "Unknown"
-                        max_length = 20
-                    header = f"{col_header:<{max_length}} RID"
-                    f.write(header + "\n")
-                    for item in data:
-                        if 'computer_name' in item:
-                            name = str(item['computer_name']).rstrip('$')
-                            f.write(f"{name:<{max_length}} {item.get('rid', 'N/A')}\n")
-                        elif 'username' in item:
-                            f.write(f"{item['username']:<{max_length}} {item.get('rid', 'N/A')}\n")
-                elif isinstance(data[0], tuple) and len(data[0]) >= 2:
-                    max_length = max(len(str(item[0])) for item in data) if data else 20
-                    header = f"{'Username':<{max_length}} RID"
-                    f.write(header + "\n")
-                    for item in data:
-                        f.write(f"{item[0]:<{max_length}} {item[1]}\n")
+                            col_header = "Unknown"
+                            max_length = 20
+                        header = f"{col_header:<{max_length}} RID"
+                        f.write(header + "\n")
+                        for item in data:
+                            if 'computer_name' in item:
+                                name = str(item['computer_name']).rstrip('$')
+                                f.write(f"{name:<{max_length}} {item.get('rid', 'N/A')}\n")
+                            elif 'username' in item:
+                                f.write(f"{item['username']:<{max_length}} {item.get('rid', 'N/A')}\n")
+                    elif isinstance(data[0], tuple) and len(data[0]) >= 2:
+                        max_length = max(len(str(item[0])) for item in data) if data else 20
+                        header = f"{'Username':<{max_length}} RID"
+                        f.write(header + "\n")
+                        for item in data:
+                            f.write(f"{item[0]:<{max_length}} {item[1]}\n")
 
         print(f"Data exported to {filename} ({fmt.upper()})")
     except Exception as e:
@@ -1192,7 +1325,6 @@ def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
         delegated = True
 
     if uac_int & 0x00010000:
-        print("ACB_DONT_REQUIRE_PREAUTH is set")
         pre_auth = False
     else:
         pre_auth = True
@@ -1962,6 +2094,15 @@ def main():
             group_details = get_domain_group_details(dce, domainHandle, groupName, debug, opnums_called)
             enumerated_objects = [group_details]
 
+        elif enumeration == 'display-info':
+            info_type = args.get('type', '').lower()
+            if not info_type:
+                raise Exception("Missing 'type=' argument for display-info")
+            if info_type not in ['users', 'domain-groups', 'local-groups', 'computers']:
+                raise Exception(
+                    "Invalid 'type' for display-info. Must be one of: 'users', 'domain-groups', 'local-groups', 'computers'")
+            enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
+
         elif enumeration == 'password-policy':  # New enumeration type
             domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug, opnums_called)
             add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
@@ -1982,15 +2123,6 @@ def main():
             domain_info = get_domain_info(dce, serverHandle, debug, opnums_called)
             enumerated_objects = [domain_info]
             domainSidString = domain_info.get('domain_sid', '')
-
-        elif enumeration == 'display-info':
-            info_type = args.get('type', '').lower()
-            if not info_type:
-                raise Exception("Missing 'type=' argument for display-info")
-            if info_type not in ['users', 'domain-groups', 'local-groups', 'computers']:
-                raise Exception(
-                    "Invalid 'type' for display-info. Must be one of: 'users', 'domain-groups', 'local-groups', 'computers'")
-            enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
 
         elif enumeration == 'summary':
             # Call get_summary() to get the aggregated domain summary info
@@ -2115,6 +2247,16 @@ def main():
                     print(f"{str(rid):<7} {username}")
             print()
 
+        elif enumeration == 'display-info' and args.get('type', '').lower() == 'domain-groups':
+            print("\nDomain Group Details")
+            print("--------------------")
+            for obj in enumerated_objects:
+                if 'error' in obj:
+                    print(f"Group: {obj.get('group_name', 'N/A')} (RID: {obj.get('rid', 'N/A')}) ERROR: {obj['error']}")
+                else:
+                    print(f"Group: {obj.get('group_name', 'N/A')} (RID: {obj.get('rid', 'N/A')}) "
+                          f"Members: {obj.get('member_count', 'N/A')}")
+
         elif enumeration == 'password-policy':  # Handle password policy output
             policy = enumerated_objects[0]
             print("\nDomain Password Policy:")
@@ -2161,38 +2303,72 @@ def main():
             print(f"  Global Groups:           {info['num_global_groups']}")
             print(f"  Aliases:                 {info['num_aliases']}")
 
-        elif enumeration == 'display-info' and args.get('type', '').lower() == 'domain-groups':
-            print("\nDomain Group Details")
-            print("--------------------")
-            for obj in enumerated_objects:
-                if 'error' in obj:
-                    print(f"Group: {obj.get('group_name', 'N/A')} (RID: {obj.get('rid', 'N/A')}) ERROR: {obj['error']}")
-                else:
-                    print(f"Group: {obj.get('group_name', 'N/A')} (RID: {obj.get('rid', 'N/A')}) "
-                          f"Members: {obj.get('member_count', 'N/A')}")
-
         elif enumeration == 'display-info' and args.get('type', '').lower() == 'users':
-            print("\nUsername Details")
-            print("---------------")
+            # Helper to convert a timestamp to a short date string
+            def format_date(time_str):
+                if time_str == 'Never' or not time_str:
+                    return 'Never'
+                try:
+                    return time_str.split(" ")[0].replace('-', '.')
+                except Exception:
+                    return time_str
+
+            # Define column order and widths (with Username and Full Name moved to the end)
+            col_order = ["RID", "Last Logon", "PwdSet", "PwdNE", "PwdExp", "ForceChg", "AccDis",
+                         "PreAuth", "Delg", "BadCnt", "Username", "Full Name"]
+            col_widths = {
+                "RID": 8,
+                "Last Logon": 12,
+                "PwdSet": 10,
+                "PwdNE": 10,
+                "PwdExp": 10,
+                "ForceChg": 10,
+                "AccDis": 10,
+                "PreAuth": 10,
+                "Delg": 8,
+                "BadCnt": 10,
+                "Username": 15,
+                "Full Name": 20
+            }
+            # Build header string
+            header = ""
+            for col in col_order:
+                header += f"{col:<{col_widths[col]}} "
+            print()
+            print(header)
+            print("-" * (sum(col_widths.values()) + len(col_order)))
             for obj in enumerated_objects:
                 if 'error' in obj:
                     print(f"{obj.get('username', 'N/A')} - ERROR: {obj['error']}")
                 else:
-                    print(f"Username:             {obj.get('username', 'N/A')}")
-                    print(f"Full Name:            {obj.get('full_name', 'N/A')}")
-                    print(f"Home Directory:       {obj.get('home_directory', 'N/A')}")
-                    print(f"Home Drive:           {obj.get('home_drive', 'N/A')}")
-                    print(f"Profile Path:         {obj.get('profile_path', 'N/A')}")
-                    print(f"Script Path:          {obj.get('script_path', 'N/A')}")
-                    print(f"Last Logon:           {format_time(obj.get('last_logon', 0))}")
-                    print(f"Last Logoff:          {format_time(obj.get('last_logoff', 0))}")
-                    print(f"Password Last Set:    {format_time(obj.get('password_last_set', 0))}")
-                    print(f"Account Expires:      {format_time(obj.get('account_expires', 0))}")
-                    print(f"Account Disabled:     {obj.get('account_disabled', False)}")
-                    print(f"Password Never Expires: {obj.get('password_never_expires', False)}")
-                    print(f"Smartcard Required:   {obj.get('smartcard_required', False)}")
-                    print(f"RID:                  {obj.get('rid', 'N/A')}")
-                    print()
+                    rid = str(obj.get('rid', 'N/A'))
+                    last_logon = format_date(format_time(obj.get('last_logon', 0)))
+                    pwd_set = format_date(format_time(obj.get('password_last_set', 0)))
+                    pwd_nexp = "Yes" if obj.get('password_never_expires', False) else "No"
+                    pwd_exp = "Yes" if obj.get('password_expired', False) else "No"
+                    pwd_fchg = format_date(format_time(obj.get('password_force_change', 0)))
+                    acc_dis = "Yes" if obj.get('account_disabled', False) else "No"
+                    pre_auth = "Yes" if obj.get('pre_auth', False) else "No"
+                    delegated = "Yes" if obj.get('delegated', False) else "No"
+                    pwd_bad = str(obj.get('password_bad_count', 'N/A'))
+                    username_val = obj.get('username', 'N/A')
+                    full_name = obj.get('full_name', 'N/A')
+                    row = (f"{rid:<{col_widths['RID']}} "
+                           f"{last_logon:<{col_widths['Last Logon']}} "
+                           f"{pwd_set:<{col_widths['PwdSet']}} "
+                           f"{pwd_nexp:<{col_widths['PwdNE']}} "
+                           f"{pwd_exp:<{col_widths['PwdExp']}} "
+                           f"{pwd_fchg:<{col_widths['ForceChg']}} "
+                           f"{acc_dis:<{col_widths['AccDis']}} "
+                           f"{pre_auth:<{col_widths['PreAuth']}} "
+                           f"{delegated:<{col_widths['Delg']}} "
+                           f"{pwd_bad:<{col_widths['BadCnt']}} "
+                           f"{username_val:<{col_widths['Username']}} "
+                           f"{full_name:<{col_widths['Full Name']}}")
+                    print(row)
+            print("-" * (sum(col_widths.values()) + len(col_order)))
+            print(header)
+            print()
 
         elif enumeration == 'display-info' and args.get('type', '').lower() == 'local-groups':
             print("\nLocal Group Details")
