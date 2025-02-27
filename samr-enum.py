@@ -103,8 +103,8 @@ Column Abbreviations for "display-info type=users" output:
   - PreAuth:      "Pre-Authentication required" flag (Yes/No).
   - Delg:         "Delegation required" flag (Yes/No).
   - BadCnt:       Count of bad password attempts.
-  - Username:     The user’s login name.
-  - Full Name:    The user’s full display name.
+  - Username:     The users login name.
+  - Full Name:    The users full display name.
 
 Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
@@ -1741,6 +1741,78 @@ def list_local_groups_details(dce, domainHandle, group_name, group_rid, debug, o
     return {'group_name': group_name, 'rid': group_rid, 'member_count': member_count}
 
 
+def get_computer_details(dce, domainHandle, computer_rid, debug, opnums_called):
+    """
+    Retrieve detailed computer information from SAMR using the computer's RID.
+    Returns a dictionary with keys matching the display-info columns for computers.
+    """
+    # SamrOpenUser for the computer account
+    compHandle = None
+    try:
+        compHandleResp = samr.hSamrOpenUser(dce, domainHandle, 0x0002011B, computer_rid)
+        compHandle = compHandleResp['UserHandle']
+        add_opnum_call(opnums_called, "SamrOpenUser")
+
+        # QueryInformationUser2 with UserAllInformation if possible
+        try:
+            add_opnum_call(opnums_called, "SamrQueryInformationUser2")
+            response = samr.hSamrQueryInformationUser2(
+                dce,
+                compHandle,
+                samr.USER_INFORMATION_CLASS.UserAllInformation
+            )
+            info = response['Buffer']['All']
+        except Exception:
+            # Fallback to UserGeneralInformation
+            add_opnum_call(opnums_called, "SamrQueryInformationUser2")
+            response = samr.hSamrQueryInformationUser2(
+                dce,
+                compHandle,
+                samr.USER_INFORMATION_CLASS.UserGeneralInformation
+            )
+            info = response['Buffer']['General']
+
+        info = response['Buffer']['All']
+        uac_int = int(info['UserAccountControl'])
+        acct_status = "Disabled" if (uac_int & samr.USER_ACCOUNT_DISABLED) else "Normal"
+        trust_type = ("Workstation" if (uac_int & samr.USER_WORKSTATION_TRUST_ACCOUNT)
+                      else "Server" if (uac_int & samr.USER_SERVER_TRUST_ACCOUNT)
+        else "N/A")
+        delegated = "Yes" if not (uac_int & 0x00004000) else "No"
+
+        # Safely retrieve 'AdminComment' or 'Comment'
+        try:
+            desc_val = info['AdminComment']
+        except KeyError:
+            try:
+                desc_val = info['Comment']
+            except KeyError:
+                desc_val = ''
+
+        details = {
+            'rid': computer_rid,
+            'computer_name': safe_str(info['UserName']),
+            'acct_status': acct_status,
+            'last_logon': decode_filetime(info['LastLogon']),
+            'password_last_set': decode_filetime(info['PasswordLastSet']),
+            'primary_group_id': safe_str(info['PrimaryGroupId']),
+            'bad_password_count': safe_str(info['BadPasswordCount']),
+            'logon_count': safe_str(info['LogonCount']),
+            'trust_type': trust_type,
+            'enabled': not bool(uac_int & samr.USER_ACCOUNT_DISABLED),
+            'password_not_required': bool(uac_int & samr.USER_PASSWORD_NOT_REQUIRED),
+            'password_never_expires': bool(uac_int & samr.USER_DONT_EXPIRE_PASSWORD),
+            'delegation_status': delegated,
+            'description': safe_str(desc_val),
+        }
+        return details
+
+    finally:
+        if compHandle is not None:
+            samr.hSamrCloseHandle(dce, compHandle)
+            add_opnum_call(opnums_called, "SamrCloseHandle")
+
+
 def display_info(dce, serverHandle, info_type, debug, opnums_called):
     """
     Enumerate objects of a given type and display additional descriptive fields.
@@ -1799,13 +1871,28 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
         add_opnum_call(opnums_called, "SamrCloseHandle")
 
 
+
     elif info_type == 'computers':
-        # Enumerate computers in the primary domain using enumerate_computers
+        # Open primary domain handle (same as for users)
         domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
-        # enumerate_computers returns a list of dictionaries with detailed fields
-        results = enumerate_computers(dce, domainHandle, debug)
+        # Enumerate basic computer entries (each is a dict with at least 'rid' and 'computer_name')
+        basic_computers = enumerate_computers(dce, domainHandle, debug)
+        detailed_computers = []
+        for comp in basic_computers:
+            rid = comp.get('rid')
+            try:
+                # This helper should mimic get_user_details but for computer objects
+                details = get_computer_details(dce, domainHandle, rid, debug, opnums_called)
+                detailed_computers.append(details)
+            except Exception as e:
+                detailed_computers.append({
+                    'rid': rid,
+                    'computer_name': comp.get('computer_name', 'N/A'),
+                    'error': str(e)
+                })
         samr.hSamrCloseHandle(dce, domainHandle)
         add_opnum_call(opnums_called, "SamrCloseHandle")
+        results = detailed_computers
     else:
         raise Exception(f"Invalid type parameter for display-info: {info_type}")
     return results
@@ -2383,16 +2470,86 @@ def main():
                     print()
 
         elif enumeration == 'display-info' and args.get('type', '').lower() == 'computers':
-            print("\nComputer Details")
-            print("----------------")
+            def format_date(time_str):
+                """
+                Convert a time string in 'YYYY-MM-DD HH:MM:SS' format to 'YYYY.MM.DD'.
+                If the input is 'Never' or invalid, return it as is.
+                """
+                if time_str == 'Never' or not time_str:
+                    return 'Never'
+                try:
+                    return time_str.split(" ")[0].replace('-', '.')
+                except Exception:
+                    return time_str
+
+            # Define the table columns and widths
+            col_order = [
+                "RID", "CompName", "AcctStatus", "LastLogon", "PwdLastSet",
+                "PrimGrpID", "BadPwdCount", "LogonCount", "TrustType",
+                "Enabled", "PwdNotReq", "PwdNeverExp", "DelegStatus", "Desc"
+            ]
+            col_widths = {
+                "RID": 8,
+                "CompName": 18,
+                "AcctStatus": 12,
+                "LastLogon": 12,
+                "PwdLastSet": 10,
+                "PrimGrpID": 10,
+                "BadPwdCount": 10,
+                "LogonCount": 10,
+                "TrustType": 10,
+                "Enabled": 8,
+                "PwdNotReq": 10,
+                "PwdNeverExp": 12,
+                "DelegStatus": 12,
+                "Desc": 20
+            }
+            # Print header row
+            header = ""
+            for col in col_order:
+                header += f"{col:<{col_widths[col]}} "
+            print("\n" + header)
+            print("-" * (sum(col_widths.values()) + len(col_order)))
+            # Print each computer record
             for obj in enumerated_objects:
                 if 'error' in obj:
-                    print(
-                        f"Computer: {obj.get('computer_name', 'N/A')} (RID: {obj.get('rid', 'N/A')}) ERROR: {obj['error']}")
+                    print(f"{obj.get('computer_name', 'N/A'):<{col_widths['CompName']}} - ERROR: {obj['error']}")
                 else:
-                    for key, value in obj.items():
-                        print(f"{key}: {value}")
-                    print()
+                    rid = str(obj.get('rid', 'N/A'))
+                    comp_name = obj.get('computer_name', 'N/A')
+                    acct_status = obj.get('acct_status', 'N/A')
+                    # Assume you have a format_time() function similar to the user branch,
+                    # and a helper format_date() to shorten the timestamp.
+                    last_logon = format_date(format_time(obj.get('last_logon', 0)))
+                    pwd_last_set = format_date(format_time(obj.get('password_last_set', 0)))
+                    prim_grp_id = str(obj.get('primary_group_id', 'N/A'))
+                    bad_pwd_count = str(obj.get('bad_password_count', 'N/A'))
+                    logon_count = str(obj.get('logon_count', 'N/A'))
+                    trust_type = obj.get('trust_type', 'N/A')
+                    enabled = "Yes" if obj.get('enabled', False) else "No"
+                    pwd_not_req = "Yes" if obj.get('password_not_required', False) else "No"
+                    pwd_never_exp = "Yes" if obj.get('password_never_expires', False) else "No"
+                    deleg_status = obj.get('delegation_status', 'N/A')
+                    desc = obj.get('description', 'N/A')
+                    row = (
+                        f"{rid:<{col_widths['RID']}} "
+                        f"{comp_name:<{col_widths['CompName']}} "
+                        f"{acct_status:<{col_widths['AcctStatus']}} "
+                        f"{last_logon:<{col_widths['LastLogon']}} "
+                        f"{pwd_last_set:<{col_widths['PwdLastSet']}} "
+                        f"{prim_grp_id:<{col_widths['PrimGrpID']}} "
+                        f"{bad_pwd_count:<{col_widths['BadPwdCount']}} "
+                        f"{logon_count:<{col_widths['LogonCount']}} "
+                        f"{trust_type:<{col_widths['TrustType']}} "
+                        f"{enabled:<{col_widths['Enabled']}} "
+                        f"{pwd_not_req:<{col_widths['PwdNotReq']}} "
+                        f"{pwd_never_exp:<{col_widths['PwdNeverExp']}} "
+                        f"{deleg_status:<{col_widths['DelegStatus']}} "
+                        f"{desc:<{col_widths['Desc']}}"
+                    )
+                    print(row)
+            print("-" * (sum(col_widths.values()) + len(col_order)))
+            print(header)
 
         elif enumeration == 'display-info':
             info_type = args.get('type', '').lower()
