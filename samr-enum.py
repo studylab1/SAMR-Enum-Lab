@@ -49,12 +49,6 @@ ENUMERATION PARAMETERS:
     domain-groups
          List all domain groups.
 
-    local-group-members group=<GROUP>
-         List all members of a local group. (Parameter option: group)
-
-    domain-group-members group=<GROUP>
-         List all members of a domain group. (Parameter option: group)
-
     user-memberships-localgroups
          List all local groups that a user is a member of. (Parameter option: user)
 
@@ -111,8 +105,6 @@ Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=computers
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=local-groups export=export.csv format=csv
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=domain-groups opnums=true
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-members group="Administrators"
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-localgroups user=Administrator
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=Administrator
@@ -340,12 +332,6 @@ def print_help():
         domain-groups
              List all domain groups.
 
-        local-group-members group=<GROUP>
-             List all members of the local group. PARAMETER OPTION = 'group'
-
-        domain-group-members group=<GROUP>
-             List all members of the domain group. PARAMETER OPTION = 'group'
-
         user-memberships-domaingroups
              List all domain groups that a user is a member of. PARAMETER OPTION = 'user'
 
@@ -383,8 +369,6 @@ def print_help():
     Usage Examples:
       samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
       samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=domain-groups
-      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=domain-group-members group="Domain Admins"
-      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=local-group-members group="Administrators"
       samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
       samr-enum.py target=dc1.domain-a.com username=micky password= domain=domain-y.local auth=kerberos enumerate=password-policy
       samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=users export=export.txt format=txt opnums=true
@@ -883,6 +867,119 @@ def get_builtin_domain_handle(dce, serverHandle, debug, opnums_called):
     domainHandle = openDomResp['DomainHandle']
     log_debug(debug, "[debug] Builtin Domain opened successfully.")
     return domainHandle, builtin_domain, sidString
+
+
+def enumerate_users(dce, domainHandle, debug):
+    """
+    Enumerate all domain users by repeatedly calling SamrEnumerateUsersInDomain
+    until the server no longer returns STATUS_MORE_ENTRIES.
+
+    :param dce: The DCE/RPC connection
+    :param domainHandle: The opened domain handle
+    :param debug: Boolean for debug prints
+    :return: A list of (username, rid) tuples
+    """
+    log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating users...")
+    users = []
+    resumeHandle = 0
+    max_retries = 3
+    retry_count = 0
+
+    while True:
+        try:
+            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
+                dce,
+                domainHandle,
+                enumerationContext=resumeHandle,
+                userAccountControl=samr.USER_NORMAL_ACCOUNT
+            )
+            retry_count = 0
+
+        except samr.DCERPCSessionError as e:
+            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
+                enumUsersResp = e.get_packet()
+                retry_count = 0
+            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
+                log_debug(debug, "[debug] Server busy, retrying after delay...")
+                time.sleep(2)
+                retry_count += 1
+                if retry_count > max_retries:
+                    raise Exception("Server resource limit reached after retries")
+                continue
+            else:
+                raise
+
+        chunk = enumUsersResp['Buffer']['Buffer'] or []
+        for userEntry in chunk:
+            username = safe_str(userEntry['Name'])
+            rid = userEntry['RelativeId']
+            users.append((username, rid))
+
+        resumeHandle = enumUsersResp['EnumerationContext']
+        if enumUsersResp['ErrorCode'] != 0x00000105:
+            break
+        time.sleep(0.1)
+
+    return users
+
+
+def enumerate_computers(dce, domainHandle, debug):
+    """
+    Enumerate all domain computers (workstations AND domain controllers) by
+    using both USER_WORKSTATION_TRUST_ACCOUNT and USER_SERVER_TRUST_ACCOUNT flags.
+    Returns a list of dictionaries with all fields returned by the server.
+    """
+    log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating computers...")
+    computers = []
+    resumeHandle = 0
+    max_retries = 3
+    retry_count = 0
+
+    # Combined flags for both workstation and server trust accounts
+    ACCOUNT_FILTER = samr.USER_WORKSTATION_TRUST_ACCOUNT | samr.USER_SERVER_TRUST_ACCOUNT
+
+    while True:
+        try:
+            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
+                dce,
+                domainHandle,
+                enumerationContext=resumeHandle,
+                userAccountControl=ACCOUNT_FILTER
+            )
+            retry_count = 0
+        except samr.DCERPCSessionError as e:
+            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
+                enumUsersResp = e.get_packet()
+                retry_count = 0
+            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
+                log_debug(debug, "[debug] Server busy, retrying after delay...")
+                time.sleep(2)
+                retry_count += 1
+                if retry_count > max_retries:
+                    raise Exception("Server resource limit reached after retries")
+                continue
+            else:
+                raise
+
+        chunk = enumUsersResp['Buffer']['Buffer'] or []
+        for accountEntry in chunk:
+            computername = safe_str(accountEntry['Name'])
+            rid = accountEntry['RelativeId']
+            # Build a dictionary with basic details...
+            computer_dict = {'computer_name': computername, 'rid': rid}
+            # If additional fields exist, add them (skipping Name and RelativeId)
+            if hasattr(accountEntry, 'fields'):
+                for field, value in accountEntry.fields.items():
+                    if field not in ['Name', 'RelativeId']:
+                        computer_dict[field] = safe_str(value)
+            computers.append(computer_dict)
+
+        resumeHandle = enumUsersResp['EnumerationContext']
+        if enumUsersResp['ErrorCode'] != 0x00000105:
+            break
+        time.sleep(0.1)
+
+    return computers
 
 
 def enumerate_domain_groups(dce, domainHandle, debug):
@@ -1503,119 +1600,6 @@ def get_computer_details(dce, domainHandle, computer_rid, debug, opnums_called):
             add_opnum_call(opnums_called, "SamrCloseHandle")
 
 
-def enumerate_users(dce, domainHandle, debug):
-    """
-    Enumerate all domain users by repeatedly calling SamrEnumerateUsersInDomain
-    until the server no longer returns STATUS_MORE_ENTRIES.
-
-    :param dce: The DCE/RPC connection
-    :param domainHandle: The opened domain handle
-    :param debug: Boolean for debug prints
-    :return: A list of (username, rid) tuples
-    """
-    log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating users...")
-    users = []
-    resumeHandle = 0
-    max_retries = 3
-    retry_count = 0
-
-    while True:
-        try:
-            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
-                dce,
-                domainHandle,
-                enumerationContext=resumeHandle,
-                userAccountControl=samr.USER_NORMAL_ACCOUNT
-            )
-            retry_count = 0
-
-        except samr.DCERPCSessionError as e:
-            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
-                enumUsersResp = e.get_packet()
-                retry_count = 0
-            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
-                log_debug(debug, "[debug] Server busy, retrying after delay...")
-                time.sleep(2)
-                retry_count += 1
-                if retry_count > max_retries:
-                    raise Exception("Server resource limit reached after retries")
-                continue
-            else:
-                raise
-
-        chunk = enumUsersResp['Buffer']['Buffer'] or []
-        for userEntry in chunk:
-            username = safe_str(userEntry['Name'])
-            rid = userEntry['RelativeId']
-            users.append((username, rid))
-
-        resumeHandle = enumUsersResp['EnumerationContext']
-        if enumUsersResp['ErrorCode'] != 0x00000105:
-            break
-        time.sleep(0.1)
-
-    return users
-
-
-def enumerate_computers(dce, domainHandle, debug):
-    """
-    Enumerate all domain computers (workstations AND domain controllers) by
-    using both USER_WORKSTATION_TRUST_ACCOUNT and USER_SERVER_TRUST_ACCOUNT flags.
-    Returns a list of dictionaries with all fields returned by the server.
-    """
-    log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating computers...")
-    computers = []
-    resumeHandle = 0
-    max_retries = 3
-    retry_count = 0
-
-    # Combined flags for both workstation and server trust accounts
-    ACCOUNT_FILTER = samr.USER_WORKSTATION_TRUST_ACCOUNT | samr.USER_SERVER_TRUST_ACCOUNT
-
-    while True:
-        try:
-            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
-                dce,
-                domainHandle,
-                enumerationContext=resumeHandle,
-                userAccountControl=ACCOUNT_FILTER
-            )
-            retry_count = 0
-        except samr.DCERPCSessionError as e:
-            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
-                enumUsersResp = e.get_packet()
-                retry_count = 0
-            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
-                log_debug(debug, "[debug] Server busy, retrying after delay...")
-                time.sleep(2)
-                retry_count += 1
-                if retry_count > max_retries:
-                    raise Exception("Server resource limit reached after retries")
-                continue
-            else:
-                raise
-
-        chunk = enumUsersResp['Buffer']['Buffer'] or []
-        for accountEntry in chunk:
-            computername = safe_str(accountEntry['Name'])
-            rid = accountEntry['RelativeId']
-            # Build a dictionary with basic details...
-            computer_dict = {'computer_name': computername, 'rid': rid}
-            # If additional fields exist, add them (skipping Name and RelativeId)
-            if hasattr(accountEntry, 'fields'):
-                for field, value in accountEntry.fields.items():
-                    if field not in ['Name', 'RelativeId']:
-                        computer_dict[field] = safe_str(value)
-            computers.append(computer_dict)
-
-        resumeHandle = enumUsersResp['EnumerationContext']
-        if enumUsersResp['ErrorCode'] != 0x00000105:
-            break
-        time.sleep(0.1)
-
-    return computers
-
-
 def display_info(dce, serverHandle, info_type, debug, opnums_called):
     """
     Enumerate objects of a given type and display additional descriptive fields.
@@ -2077,17 +2061,6 @@ def main():
                 add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
             enumerated_objects = groups_result
 
-        elif enumeration == 'local-group-members':
-            # Use Builtin domain by default
-            domainHandle, _, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
-            enumerated_objects, additional_ops = list_local_group_members(dce, serverHandle, domainHandle, groupName,
-                                                                          debug, opnums_called)
-
-        elif enumeration == 'domain-group-members':
-            domainHandle, _, domainSidString = get_domain_handle(dce, serverHandle, debug, opnums_called)
-            enumerated_objects, additional_ops = list_domain_group_members(
-                dce, serverHandle, domainHandle, groupName, debug, opnums_called)
-
         elif enumeration == 'user-memberships-localgroups':
             user = args.get('user', '')
             if not user:
@@ -2261,7 +2234,7 @@ def main():
 
         elif enumeration == 'local-group-details':
             details = enumerated_objects[0]
-            print(f"{'-'*65}")
+            print(f"\n{'-'*65}")
             print(f"{'Local Group Name:':<20}\t{details.get('alias_name', 'N/A')}")
             print(f"{'RID:':<20}\t{details.get('rid', 'N/A')}")
             print(f"{'Member Count:':<20}\t{details.get('member_count', 'N/A')}")
@@ -2276,18 +2249,18 @@ def main():
             print()
 
         elif enumeration == 'domain-group-details':
-            print("\nGroup Details")
-            print("-------------")
+            print(f"\n{'-'*65}")
             details = enumerated_objects[0]
-            print(f"group_name: {details.get('group_name', 'N/A')}")
-            print(f"rid: {details.get('rid', 'N/A')}")
-            print(f"member_count: {details.get('member_count', 'N/A')}")
+            print(f"{'Domain Group Name:':<20}\t{details.get('group_name', 'N/A')}")
+            print(f"{'RID:':<20}\t{details.get('rid', 'N/A')}")
+            print(f"{'Member Count:':<20}\t{details.get('member_count', 'N/A')}")
             members = details.get('members')
             if members:
-                print("RID\tUsername")
-                print("----------------")
+                print(f"{'-' * 65}")
+                print(f"{'RID':<20}\t{'Username':<20}")
+                print(f"{'-' * 32}")
                 for rid, username in members:
-                    print(f"{str(rid):<7} {username}")
+                    print(f"{rid:<20}\t{username:<20}")
             print()
 
         elif enumeration == 'display-info' and args.get('type', '').lower() == 'domain-groups':
