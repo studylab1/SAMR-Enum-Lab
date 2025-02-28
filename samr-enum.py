@@ -885,112 +885,6 @@ def get_builtin_domain_handle(dce, serverHandle, debug, opnums_called):
     return domainHandle, builtin_domain, sidString
 
 
-def enumerate_users(dce, domainHandle, debug):
-    """
-    Enumerate all domain users by repeatedly calling SamrEnumerateUsersInDomain
-    until the server no longer returns STATUS_MORE_ENTRIES.
-
-    :param dce: The DCE/RPC connection
-    :param domainHandle: The opened domain handle
-    :param debug: Boolean for debug prints
-    :return: A list of (username, rid) tuples
-    """
-    log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating users...")
-    users = []
-    resumeHandle = 0
-    max_retries = 3
-    retry_count = 0
-
-    while True:
-        try:
-            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
-                dce,
-                domainHandle,
-                enumerationContext=resumeHandle,
-                userAccountControl=samr.USER_NORMAL_ACCOUNT
-            )
-            retry_count = 0
-
-        except samr.DCERPCSessionError as e:
-            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
-                enumUsersResp = e.get_packet()
-                retry_count = 0
-            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
-                log_debug(debug, "[debug] Server busy, retrying after delay...")
-                time.sleep(2)
-                retry_count += 1
-                if retry_count > max_retries:
-                    raise Exception("Server resource limit reached after retries")
-                continue
-            else:
-                raise
-
-        chunk = enumUsersResp['Buffer']['Buffer'] or []
-        for userEntry in chunk:
-            username = safe_str(userEntry['Name'])
-            rid = userEntry['RelativeId']
-            users.append((username, rid))
-
-        resumeHandle = enumUsersResp['EnumerationContext']
-        if enumUsersResp['ErrorCode'] != 0x00000105:
-            break
-        time.sleep(0.1)
-
-    return users
-
-
-def enumerate_computers(dce, domainHandle, debug):
-    """
-    Enumerate all domain computers (workstations AND domain controllers) by
-    using both USER_WORKSTATION_TRUST_ACCOUNT and USER_SERVER_TRUST_ACCOUNT flags.
-    """
-    log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating computers...")
-    computers = []
-    resumeHandle = 0
-    max_retries = 3
-    retry_count = 0
-
-    # Combined flags for both workstation and server trust accounts
-    ACCOUNT_FILTER = samr.USER_WORKSTATION_TRUST_ACCOUNT | samr.USER_SERVER_TRUST_ACCOUNT
-
-    while True:
-        try:
-            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
-                dce,
-                domainHandle,
-                enumerationContext=resumeHandle,
-                userAccountControl=ACCOUNT_FILTER
-            )
-            retry_count = 0
-
-        except samr.DCERPCSessionError as e:
-            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
-                enumUsersResp = e.get_packet()
-                retry_count = 0
-            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
-                log_debug(debug, "[debug] Server busy, retrying after delay...")
-                time.sleep(2)
-                retry_count += 1
-                if retry_count > max_retries:
-                    raise Exception("Server resource limit reached after retries")
-                continue
-            else:
-                raise
-
-        chunk = enumUsersResp['Buffer']['Buffer'] or []
-        for accountEntry in chunk:  # Changed variable name for clarity
-            computername = safe_str(accountEntry['Name'])
-            rid = accountEntry['RelativeId']
-            computers.append((computername, rid))
-
-        resumeHandle = enumUsersResp['EnumerationContext']
-        if enumUsersResp['ErrorCode'] != 0x00000105:
-            break
-        time.sleep(0.1)
-
-    return computers
-
-
 def enumerate_domain_groups(dce, domainHandle, debug):
     """
     Enumerate domain groups.
@@ -1498,6 +1392,314 @@ def get_domain_group_details(dce, domainHandle, group_name, debug, opnums_called
     }
 
 
+def list_local_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called):
+    """
+    Retrieve additional details for a local group (alias) from the Builtin domain.
+    For example, count the number of members in the alias.
+    """
+    aliasHandle = samr.hSamrOpenAlias(dce, domainHandle, samr.ALIAS_LIST_MEMBERS, group_rid)['AliasHandle']
+    add_opnum_call(opnums_called, "SamrOpenAlias")
+    membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
+    add_opnum_call(opnums_called, "SamrGetMembersInAlias")
+    member_count = len(membersResp['Members']['Sids'])
+    samr.hSamrCloseHandle(dce, aliasHandle)
+    add_opnum_call(opnums_called, "SamrCloseHandle")
+    return {'group_name': group_name, 'rid': group_rid, 'member_count': member_count}
+
+
+def list_domain_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called):
+    """
+    Retrieve additional details for a domain group.
+    For example, count the number of members in the group.
+    """
+    groupHandle = samr.hSamrOpenGroup(dce, domainHandle, samr.GROUP_LIST_MEMBERS, group_rid)['GroupHandle']
+    add_opnum_call(opnums_called, "SamrOpenGroup")
+    membersResp = samr.hSamrGetMembersInGroup(dce, groupHandle)
+    add_opnum_call(opnums_called, "SamrGetMembersInGroup")
+    member_count = len(membersResp['Members']['Members'])
+    samr.hSamrCloseHandle(dce, groupHandle)
+    add_opnum_call(opnums_called, "SamrCloseHandle")
+    return {'group_name': group_name, 'rid': group_rid, 'member_count': member_count}
+
+
+def get_computer_details(dce, domainHandle, computer_rid, debug, opnums_called):
+    """
+    Retrieve detailed computer information from SAMR using the computer's RID.
+    Returns a dictionary with keys matching the display-info columns for computers.
+    """
+    # SamrOpenUser for the computer account
+    compHandle = None
+    try:
+        compHandleResp = samr.hSamrOpenUser(dce, domainHandle, 0x0002011B, computer_rid)
+        compHandle = compHandleResp['UserHandle']
+        add_opnum_call(opnums_called, "SamrOpenUser")
+
+        # QueryInformationUser2 with UserAllInformation if possible
+        try:
+            add_opnum_call(opnums_called, "SamrQueryInformationUser2")
+            response = samr.hSamrQueryInformationUser2(
+                dce,
+                compHandle,
+                samr.USER_INFORMATION_CLASS.UserAllInformation
+            )
+            info = response['Buffer']['All']
+        except Exception:
+            # Fallback to UserGeneralInformation
+            add_opnum_call(opnums_called, "SamrQueryInformationUser2")
+            response = samr.hSamrQueryInformationUser2(
+                dce,
+                compHandle,
+                samr.USER_INFORMATION_CLASS.UserGeneralInformation
+            )
+            info = response['Buffer']['General']
+
+
+        info = response['Buffer']['All']
+        uac_int = int(info['UserAccountControl'])
+
+        if uac_int & 0x00004000:
+            delegated = "Not Delegated"
+        elif uac_int & 0x00040000:
+            delegated = "Yes"
+        elif uac_int & 0x00002000:
+            delegated = "Yes"
+        else:
+            delegated = "No"
+
+        acct_status = "Disabled" if (uac_int & samr.USER_ACCOUNT_DISABLED) else "Enabled"
+        trust_type = ("Workstation" if (uac_int & samr.USER_WORKSTATION_TRUST_ACCOUNT)
+                      else "Server" if (uac_int & samr.USER_SERVER_TRUST_ACCOUNT)
+        else "N/A")
+
+        # Safely retrieve 'AdminComment' or 'Comment'
+        try:
+            desc_val = info['AdminComment']
+        except KeyError:
+            try:
+                desc_val = info['Comment']
+            except KeyError:
+                desc_val = ''
+
+        details = {
+            'rid': computer_rid,
+            'computer_name': safe_str(info['UserName']),
+            'last_logon': decode_filetime(info['LastLogon']),
+            'password_last_set': decode_filetime(info['PasswordLastSet']),
+            'primary_group_id': safe_str(info['PrimaryGroupId']),
+            'bad_password_count': safe_str(info['BadPasswordCount']),
+            'logon_count': safe_str(info['LogonCount']),
+            'trust_type': trust_type,
+            'enabled': not bool(uac_int & samr.USER_ACCOUNT_DISABLED),
+            'password_not_required': bool(uac_int & samr.USER_PASSWORD_NOT_REQUIRED),
+            'password_never_expires': bool(uac_int & samr.USER_DONT_EXPIRE_PASSWORD),
+            'delegation_status': delegated,
+            'description': safe_str(desc_val),
+        }
+        return details
+
+    finally:
+        if compHandle is not None:
+            samr.hSamrCloseHandle(dce, compHandle)
+            add_opnum_call(opnums_called, "SamrCloseHandle")
+
+
+def enumerate_users(dce, domainHandle, debug):
+    """
+    Enumerate all domain users by repeatedly calling SamrEnumerateUsersInDomain
+    until the server no longer returns STATUS_MORE_ENTRIES.
+
+    :param dce: The DCE/RPC connection
+    :param domainHandle: The opened domain handle
+    :param debug: Boolean for debug prints
+    :return: A list of (username, rid) tuples
+    """
+    log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating users...")
+    users = []
+    resumeHandle = 0
+    max_retries = 3
+    retry_count = 0
+
+    while True:
+        try:
+            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
+                dce,
+                domainHandle,
+                enumerationContext=resumeHandle,
+                userAccountControl=samr.USER_NORMAL_ACCOUNT
+            )
+            retry_count = 0
+
+        except samr.DCERPCSessionError as e:
+            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
+                enumUsersResp = e.get_packet()
+                retry_count = 0
+            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
+                log_debug(debug, "[debug] Server busy, retrying after delay...")
+                time.sleep(2)
+                retry_count += 1
+                if retry_count > max_retries:
+                    raise Exception("Server resource limit reached after retries")
+                continue
+            else:
+                raise
+
+        chunk = enumUsersResp['Buffer']['Buffer'] or []
+        for userEntry in chunk:
+            username = safe_str(userEntry['Name'])
+            rid = userEntry['RelativeId']
+            users.append((username, rid))
+
+        resumeHandle = enumUsersResp['EnumerationContext']
+        if enumUsersResp['ErrorCode'] != 0x00000105:
+            break
+        time.sleep(0.1)
+
+    return users
+
+
+def enumerate_computers(dce, domainHandle, debug):
+    """
+    Enumerate all domain computers (workstations AND domain controllers) by
+    using both USER_WORKSTATION_TRUST_ACCOUNT and USER_SERVER_TRUST_ACCOUNT flags.
+    Returns a list of dictionaries with all fields returned by the server.
+    """
+    log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating computers...")
+    computers = []
+    resumeHandle = 0
+    max_retries = 3
+    retry_count = 0
+
+    # Combined flags for both workstation and server trust accounts
+    ACCOUNT_FILTER = samr.USER_WORKSTATION_TRUST_ACCOUNT | samr.USER_SERVER_TRUST_ACCOUNT
+
+    while True:
+        try:
+            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
+                dce,
+                domainHandle,
+                enumerationContext=resumeHandle,
+                userAccountControl=ACCOUNT_FILTER
+            )
+            retry_count = 0
+        except samr.DCERPCSessionError as e:
+            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
+                enumUsersResp = e.get_packet()
+                retry_count = 0
+            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
+                log_debug(debug, "[debug] Server busy, retrying after delay...")
+                time.sleep(2)
+                retry_count += 1
+                if retry_count > max_retries:
+                    raise Exception("Server resource limit reached after retries")
+                continue
+            else:
+                raise
+
+        chunk = enumUsersResp['Buffer']['Buffer'] or []
+        for accountEntry in chunk:
+            computername = safe_str(accountEntry['Name'])
+            rid = accountEntry['RelativeId']
+            # Build a dictionary with basic details...
+            computer_dict = {'computer_name': computername, 'rid': rid}
+            # If additional fields exist, add them (skipping Name and RelativeId)
+            if hasattr(accountEntry, 'fields'):
+                for field, value in accountEntry.fields.items():
+                    if field not in ['Name', 'RelativeId']:
+                        computer_dict[field] = safe_str(value)
+            computers.append(computer_dict)
+
+        resumeHandle = enumUsersResp['EnumerationContext']
+        if enumUsersResp['ErrorCode'] != 0x00000105:
+            break
+        time.sleep(0.1)
+
+    return computers
+
+
+def display_info(dce, serverHandle, info_type, debug, opnums_called):
+    """
+    Enumerate objects of a given type and display additional descriptive fields.
+
+    Parameters:
+      - info_type: one of 'users', 'computers', 'local-groups', or 'domain-groups'.
+
+    Returns a list of dictionaries with detailed information.
+    """
+    results = []
+    if info_type == 'users':
+        # Get primary domain handle and enumerate users
+        domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
+        users = enumerate_users(dce, domainHandle, debug)
+        for username, rid in users:
+            try:
+                details = get_user_details(dce, domainHandle, username, debug, opnums_called)
+                results.append(details)
+            except Exception as e:
+                results.append({'username': username, 'rid': rid, 'error': str(e)})
+        # Close the domain handle after use
+        samr.hSamrCloseHandle(dce, domainHandle)
+        add_opnum_call(opnums_called, "SamrCloseHandle")
+
+    elif info_type == 'computers':
+        # Open primary domain handle (same as for users)
+        domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
+        # Enumerate basic computer entries (each is a dict with at least 'rid' and 'computer_name')
+        basic_computers = enumerate_computers(dce, domainHandle, debug)
+        detailed_computers = []
+        for comp in basic_computers:
+            rid = comp.get('rid')
+            try:
+                # This helper should mimic get_user_details but for computer objects
+                details = get_computer_details(dce, domainHandle, rid, debug, opnums_called)
+                detailed_computers.append(details)
+            except Exception as e:
+                detailed_computers.append({
+                    'rid': rid,
+                    'computer_name': comp.get('computer_name', 'N/A'),
+                    'error': str(e)
+                })
+        samr.hSamrCloseHandle(dce, domainHandle)
+        add_opnum_call(opnums_called, "SamrCloseHandle")
+        results = detailed_computers
+
+    elif info_type == 'domain-groups':
+        # Get primary domain handle and enumerate domain groups
+        domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
+        groups, did_aliases = enumerate_domain_groups(dce, domainHandle, debug)
+        for group_name, group_rid in groups:
+            try:
+                details = list_domain_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called)
+                results.append(details)
+            except Exception as e:
+                results.append({'group_name': group_name, 'rid': group_rid, 'error': str(e)})
+        samr.hSamrCloseHandle(dce, domainHandle)
+        add_opnum_call(opnums_called, "SamrCloseHandle")
+
+    elif info_type == 'local-groups':
+        # Use the Builtin domain to enumerate local groups (aliases)
+        domainHandle, domainName, domainSid = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
+        try:
+            aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
+            aliases = aliasResp['Buffer']['Buffer'] or []
+        except Exception as e:
+            aliases = []
+        results = []
+        group_tuples = [(safe_str(alias['Name']), alias['RelativeId']) for alias in aliases]
+        for group_name, group_rid in group_tuples:
+            try:
+                details = list_local_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called)
+                results.append(details)
+            except Exception as e:
+                results.append({'group_name': group_name, 'rid': group_rid, 'error': str(e)})
+        samr.hSamrCloseHandle(dce, domainHandle)
+        add_opnum_call(opnums_called, "SamrCloseHandle")
+
+
+    else:
+        raise Exception(f"Invalid type parameter for display-info: {info_type}")
+    return results
+
+
 def get_password_policy(dce, domainHandle, debug, opnums_called):
     log_debug(debug, "[debug] Querying domain password policy...")
     add_opnum_call(opnums_called, "SamrQueryInformationDomain2")
@@ -1709,252 +1911,6 @@ def get_domain_info(dce, serverHandle, debug, opnums_called):
     finally:
         samr.hSamrCloseHandle(dce, domainHandle)
         add_opnum_call(opnums_called, "SamrCloseHandle")
-
-
-def list_domain_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called):
-    """
-    Retrieve additional details for a domain group.
-    For example, count the number of members in the group.
-    """
-    groupHandle = samr.hSamrOpenGroup(dce, domainHandle, samr.GROUP_LIST_MEMBERS, group_rid)['GroupHandle']
-    add_opnum_call(opnums_called, "SamrOpenGroup")
-    membersResp = samr.hSamrGetMembersInGroup(dce, groupHandle)
-    add_opnum_call(opnums_called, "SamrGetMembersInGroup")
-    member_count = len(membersResp['Members']['Members'])
-    samr.hSamrCloseHandle(dce, groupHandle)
-    add_opnum_call(opnums_called, "SamrCloseHandle")
-    return {'group_name': group_name, 'rid': group_rid, 'member_count': member_count}
-
-
-def list_local_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called):
-    """
-    Retrieve additional details for a local group (alias) from the Builtin domain.
-    For example, count the number of members in the alias.
-    """
-    aliasHandle = samr.hSamrOpenAlias(dce, domainHandle, samr.ALIAS_LIST_MEMBERS, group_rid)['AliasHandle']
-    add_opnum_call(opnums_called, "SamrOpenAlias")
-    membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
-    add_opnum_call(opnums_called, "SamrGetMembersInAlias")
-    member_count = len(membersResp['Members']['Sids'])
-    samr.hSamrCloseHandle(dce, aliasHandle)
-    add_opnum_call(opnums_called, "SamrCloseHandle")
-    return {'group_name': group_name, 'rid': group_rid, 'member_count': member_count}
-
-
-def get_computer_details(dce, domainHandle, computer_rid, debug, opnums_called):
-    """
-    Retrieve detailed computer information from SAMR using the computer's RID.
-    Returns a dictionary with keys matching the display-info columns for computers.
-    """
-    # SamrOpenUser for the computer account
-    compHandle = None
-    try:
-        compHandleResp = samr.hSamrOpenUser(dce, domainHandle, 0x0002011B, computer_rid)
-        compHandle = compHandleResp['UserHandle']
-        add_opnum_call(opnums_called, "SamrOpenUser")
-
-        # QueryInformationUser2 with UserAllInformation if possible
-        try:
-            add_opnum_call(opnums_called, "SamrQueryInformationUser2")
-            response = samr.hSamrQueryInformationUser2(
-                dce,
-                compHandle,
-                samr.USER_INFORMATION_CLASS.UserAllInformation
-            )
-            info = response['Buffer']['All']
-        except Exception:
-            # Fallback to UserGeneralInformation
-            add_opnum_call(opnums_called, "SamrQueryInformationUser2")
-            response = samr.hSamrQueryInformationUser2(
-                dce,
-                compHandle,
-                samr.USER_INFORMATION_CLASS.UserGeneralInformation
-            )
-            info = response['Buffer']['General']
-
-        info = response['Buffer']['All']
-        uac_int = int(info['UserAccountControl'])
-        acct_status = "Disabled" if (uac_int & samr.USER_ACCOUNT_DISABLED) else "Normal"
-        trust_type = ("Workstation" if (uac_int & samr.USER_WORKSTATION_TRUST_ACCOUNT)
-                      else "Server" if (uac_int & samr.USER_SERVER_TRUST_ACCOUNT)
-        else "N/A")
-        delegated = "Yes" if not (uac_int & 0x00004000) else "No"
-
-        # Safely retrieve 'AdminComment' or 'Comment'
-        try:
-            desc_val = info['AdminComment']
-        except KeyError:
-            try:
-                desc_val = info['Comment']
-            except KeyError:
-                desc_val = ''
-
-        details = {
-            'rid': computer_rid,
-            'computer_name': safe_str(info['UserName']),
-            'acct_status': acct_status,
-            'last_logon': decode_filetime(info['LastLogon']),
-            'password_last_set': decode_filetime(info['PasswordLastSet']),
-            'primary_group_id': safe_str(info['PrimaryGroupId']),
-            'bad_password_count': safe_str(info['BadPasswordCount']),
-            'logon_count': safe_str(info['LogonCount']),
-            'trust_type': trust_type,
-            'enabled': not bool(uac_int & samr.USER_ACCOUNT_DISABLED),
-            'password_not_required': bool(uac_int & samr.USER_PASSWORD_NOT_REQUIRED),
-            'password_never_expires': bool(uac_int & samr.USER_DONT_EXPIRE_PASSWORD),
-            'delegation_status': delegated,
-            'description': safe_str(desc_val),
-        }
-        return details
-
-    finally:
-        if compHandle is not None:
-            samr.hSamrCloseHandle(dce, compHandle)
-            add_opnum_call(opnums_called, "SamrCloseHandle")
-
-
-def display_info(dce, serverHandle, info_type, debug, opnums_called):
-    """
-    Enumerate objects of a given type and display additional descriptive fields.
-
-    Parameters:
-      - info_type: one of 'users', 'computers', 'local-groups', or 'domain-groups'.
-
-    Returns a list of dictionaries with detailed information.
-    """
-    results = []
-    if info_type == 'users':
-        # Get primary domain handle and enumerate users
-        domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
-        users = enumerate_users(dce, domainHandle, debug)
-        for username, rid in users:
-            try:
-                details = get_user_details(dce, domainHandle, username, debug, opnums_called)
-                results.append(details)
-            except Exception as e:
-                results.append({'username': username, 'rid': rid, 'error': str(e)})
-        # Close the domain handle after use
-        samr.hSamrCloseHandle(dce, domainHandle)
-        add_opnum_call(opnums_called, "SamrCloseHandle")
-
-    elif info_type == 'domain-groups':
-        # Get primary domain handle and enumerate domain groups
-        domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
-        groups, did_aliases = enumerate_domain_groups(dce, domainHandle, debug)
-        for group_name, group_rid in groups:
-            try:
-                details = list_domain_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called)
-                results.append(details)
-            except Exception as e:
-                results.append({'group_name': group_name, 'rid': group_rid, 'error': str(e)})
-        samr.hSamrCloseHandle(dce, domainHandle)
-        add_opnum_call(opnums_called, "SamrCloseHandle")
-
-
-    elif info_type == 'local-groups':
-        # Use the Builtin domain to enumerate local groups (aliases)
-        domainHandle, domainName, domainSid = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
-        try:
-            aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
-            aliases = aliasResp['Buffer']['Buffer'] or []
-        except Exception as e:
-            aliases = []
-        results = []
-        group_tuples = [(safe_str(alias['Name']), alias['RelativeId']) for alias in aliases]
-        for group_name, group_rid in group_tuples:
-            try:
-                details = list_local_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called)
-                results.append(details)
-            except Exception as e:
-                results.append({'group_name': group_name, 'rid': group_rid, 'error': str(e)})
-        samr.hSamrCloseHandle(dce, domainHandle)
-        add_opnum_call(opnums_called, "SamrCloseHandle")
-
-
-
-    elif info_type == 'computers':
-        # Open primary domain handle (same as for users)
-        domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
-        # Enumerate basic computer entries (each is a dict with at least 'rid' and 'computer_name')
-        basic_computers = enumerate_computers(dce, domainHandle, debug)
-        detailed_computers = []
-        for comp in basic_computers:
-            rid = comp.get('rid')
-            try:
-                # This helper should mimic get_user_details but for computer objects
-                details = get_computer_details(dce, domainHandle, rid, debug, opnums_called)
-                detailed_computers.append(details)
-            except Exception as e:
-                detailed_computers.append({
-                    'rid': rid,
-                    'computer_name': comp.get('computer_name', 'N/A'),
-                    'error': str(e)
-                })
-        samr.hSamrCloseHandle(dce, domainHandle)
-        add_opnum_call(opnums_called, "SamrCloseHandle")
-        results = detailed_computers
-    else:
-        raise Exception(f"Invalid type parameter for display-info: {info_type}")
-    return results
-
-
-def enumerate_computers(dce, domainHandle, debug):
-    """
-    Enumerate all domain computers (workstations AND domain controllers) by
-    using both USER_WORKSTATION_TRUST_ACCOUNT and USER_SERVER_TRUST_ACCOUNT flags.
-    Returns a list of dictionaries with all fields returned by the server.
-    """
-    log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating computers...")
-    computers = []
-    resumeHandle = 0
-    max_retries = 3
-    retry_count = 0
-
-    # Combined flags for both workstation and server trust accounts
-    ACCOUNT_FILTER = samr.USER_WORKSTATION_TRUST_ACCOUNT | samr.USER_SERVER_TRUST_ACCOUNT
-
-    while True:
-        try:
-            enumUsersResp = samr.hSamrEnumerateUsersInDomain(
-                dce,
-                domainHandle,
-                enumerationContext=resumeHandle,
-                userAccountControl=ACCOUNT_FILTER
-            )
-            retry_count = 0
-        except samr.DCERPCSessionError as e:
-            if e.get_error_code() == 0x00000105:  # STATUS_MORE_ENTRIES
-                enumUsersResp = e.get_packet()
-                retry_count = 0
-            elif e.get_error_code() == 0xC000009A:  # STATUS_INSUFFICIENT_RESOURCES
-                log_debug(debug, "[debug] Server busy, retrying after delay...")
-                time.sleep(2)
-                retry_count += 1
-                if retry_count > max_retries:
-                    raise Exception("Server resource limit reached after retries")
-                continue
-            else:
-                raise
-
-        chunk = enumUsersResp['Buffer']['Buffer'] or []
-        for accountEntry in chunk:
-            computername = safe_str(accountEntry['Name'])
-            rid = accountEntry['RelativeId']
-            # Build a dictionary with basic details...
-            computer_dict = {'computer_name': computername, 'rid': rid}
-            # If additional fields exist, add them (skipping Name and RelativeId)
-            if hasattr(accountEntry, 'fields'):
-                for field, value in accountEntry.fields.items():
-                    if field not in ['Name', 'RelativeId']:
-                        computer_dict[field] = safe_str(value)
-            computers.append(computer_dict)
-
-        resumeHandle = enumUsersResp['EnumerationContext']
-        if enumUsersResp['ErrorCode'] != 0x00000105:
-            break
-        time.sleep(0.1)
-
-    return computers
 
 
 def get_summary(dce, serverHandle, debug, opnums_called):
@@ -2484,25 +2440,24 @@ def main():
 
             # Define the table columns and widths
             col_order = [
-                "RID", "CompName", "AcctStatus", "LastLogon", "PwdLastSet",
-                "PrimGrpID", "BadPwdCount", "LogonCount", "TrustType",
-                "Enabled", "PwdNotReq", "PwdNeverExp", "DelegStatus", "Desc"
+                "RID", "Name", "Logons", "LastLogon", "PwdLastSet",
+                "BadPwdCnt", "PID", "Type",
+                "Enabled", "PwdNReq", "PwdNExp", "Deleg", "Description"
             ]
             col_widths = {
-                "RID": 8,
-                "CompName": 18,
-                "AcctStatus": 12,
-                "LastLogon": 12,
-                "PwdLastSet": 10,
-                "PrimGrpID": 10,
-                "BadPwdCount": 10,
-                "LogonCount": 10,
-                "TrustType": 10,
+                "RID": 6,
+                "Name": 18,
+                "Logons": 6,
+                "LastLogon": 11,
+                "PwdLastSet": 11,
+                "BadPwdCnt": 9,
+                "PID": 4,
+                "Type": 14,
                 "Enabled": 8,
-                "PwdNotReq": 10,
-                "PwdNeverExp": 12,
-                "DelegStatus": 12,
-                "Desc": 20
+                "PwdNReq": 9,
+                "PwdNExp": 8,
+                "Deleg": 6,
+                "Description": 14
             }
             # Print header row
             header = ""
@@ -2513,11 +2468,10 @@ def main():
             # Print each computer record
             for obj in enumerated_objects:
                 if 'error' in obj:
-                    print(f"{obj.get('computer_name', 'N/A'):<{col_widths['CompName']}} - ERROR: {obj['error']}")
+                    print(f"{obj.get('computer_name', 'N/A'):<{col_widths['Name']}} - ERROR: {obj['error']}")
                 else:
                     rid = str(obj.get('rid', 'N/A'))
-                    comp_name = obj.get('computer_name', 'N/A')
-                    acct_status = obj.get('acct_status', 'N/A')
+                    comp_name = str(obj.get('computer_name', 'N/A')).rstrip('$')
                     # Assume you have a format_time() function similar to the user branch,
                     # and a helper format_date() to shorten the timestamp.
                     last_logon = format_date(format_time(obj.get('last_logon', 0)))
@@ -2533,23 +2487,23 @@ def main():
                     desc = obj.get('description', 'N/A')
                     row = (
                         f"{rid:<{col_widths['RID']}} "
-                        f"{comp_name:<{col_widths['CompName']}} "
-                        f"{acct_status:<{col_widths['AcctStatus']}} "
+                        f"{comp_name:<{col_widths['Name']}} "
+                        f"{logon_count:<{col_widths['Logons']}} "
                         f"{last_logon:<{col_widths['LastLogon']}} "
                         f"{pwd_last_set:<{col_widths['PwdLastSet']}} "
-                        f"{prim_grp_id:<{col_widths['PrimGrpID']}} "
-                        f"{bad_pwd_count:<{col_widths['BadPwdCount']}} "
-                        f"{logon_count:<{col_widths['LogonCount']}} "
-                        f"{trust_type:<{col_widths['TrustType']}} "
+                        f"{bad_pwd_count:<{col_widths['BadPwdCnt']}} "
+                        f"{prim_grp_id:<{col_widths['PID']}} "
+                        f"{trust_type:<{col_widths['Type']}} "
                         f"{enabled:<{col_widths['Enabled']}} "
-                        f"{pwd_not_req:<{col_widths['PwdNotReq']}} "
-                        f"{pwd_never_exp:<{col_widths['PwdNeverExp']}} "
-                        f"{deleg_status:<{col_widths['DelegStatus']}} "
-                        f"{desc:<{col_widths['Desc']}}"
+                        f"{pwd_not_req:<{col_widths['PwdNReq']}} "
+                        f"{pwd_never_exp:<{col_widths['PwdNExp']}} "
+                        f"{deleg_status:<{col_widths['Deleg']}} "
+                        f"{desc:<{col_widths['Description']}}"
                     )
                     print(row)
             print("-" * (sum(col_widths.values()) + len(col_order)))
             print(header)
+            print()
 
         elif enumeration == 'display-info':
             info_type = args.get('type', '').lower()
