@@ -98,6 +98,7 @@ Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-details group="Domain Admins"
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=computers
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=local-groups
 
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
   python samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
@@ -179,6 +180,7 @@ SAMR_FUNCTION_OPNUMS = {
     'SamrOpenGroup': 19,
     'SamrGetMembersInGroup': 25,
     'SamrOpenAlias': 27,
+    'SamrQueryInformationAlias': 28,
     'SamrGetMembersInAlias': 33,
     'SamrQueryInformationUser': 36,
     'SamrQueryInformationDomain2': 46,
@@ -195,7 +197,7 @@ SAMR_FUNCTION_ACCESS = {
     'SamrConnect': 0x00000031,  # desiredAccess=0x31
     'SamrOpenDomain': 0x00000300,  # DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS
     'SamrOpenGroup': 0x00000010,  # GROUP_LIST_MEMBERS
-    'SamrOpenAlias': 0x00000004,  # ALIAS_LIST_MEMBERS
+    'SamrOpenAlias': 0x0000000C,  # ALIAS_LIST_MEMBERS
 }
 
 
@@ -495,16 +497,24 @@ def export_data(filename, fmt, data):
       RID, Last Logon, PwdSet, PwdNE, PwdExp, ForceChg, AccDis, PreAuth, Delg, BadCnt, Username, Full Name
     For display-info type=computers objects, export the following columns in this order:
       RID, Name, Logons, LastLogon, PwdLastSet, BadPwdCnt, PID, Type, Enabled, PwdNReq, PwdNExp, Deleg, Description
+    For display-info type=local-groups objects, export the following columns:
+      RID, MemCnt, Name, Domain SID, Description
     For other data types, the export behavior remains unchanged.
     """
     if not filename or not data:
         return
+
+    # If data is a tuple, assume it's for local-groups: (list_of_groups, domain_sid)
+    domain_sid = ""
+    if isinstance(data, tuple):
+        data, domain_sid = data
+
     supported_formats = ['txt', 'csv', 'json']
     if fmt not in supported_formats:
         print(f"Error: Unsupported format '{fmt}'. Supported: {supported_formats}")
         return
 
-    # Helper to convert a time string from format_time() to a short date "YYYY.MM.DD"
+    # Helper to convert a time string to a short date "YYYY.MM.DD"
     def format_date_export(time_str):
         if time_str == 'Never' or not time_str:
             return 'Never'
@@ -515,7 +525,7 @@ def export_data(filename, fmt, data):
 
     try:
         with open(filename, 'w') as f:
-            # NEW: Handle export for display-info type=computers
+            # Branch for computers
             if isinstance(data[0], dict) and 'computer_name' in data[0]:
                 # Define header columns for computers
                 header = ["RID", "Name", "Logons", "LastLogon", "PwdLastSet", "BadPwdCnt",
@@ -625,7 +635,60 @@ def export_data(filename, fmt, data):
                             "Description": desc
                         })
                     json.dump(json_data, f, indent=2)
-            # Existing branch for display-info type=users
+            # Branch for local-groups
+            elif isinstance(data[0], dict) and 'group_name' in data[0]:
+                # Remove "Domain SID" from the header for TXT and JSON exports
+                header = ["RID", "MemCnt", "Name", "Description"]
+                if fmt == 'txt':
+                    col_widths = {
+                        "RID": 6,
+                        "MemCnt": 7,
+                        "Name": 30,
+                        "Description": 40,
+                    }
+                    header_line = (f"{header[0]:<{col_widths['RID']}} "
+                                   f"{header[1]:<{col_widths['MemCnt']}} "
+                                   f"{header[2]:<{col_widths['Name']}} "
+                                   f"{header[3]:<{col_widths['Description']}}")
+                    f.write(header_line + "\n")
+                    f.write("-" * (sum(col_widths.values()) + 4) + "\n")
+                    for obj in data:
+                        rid = str(obj.get('rid', 'N/A'))
+                        memcnt = str(obj.get('member_count', 'N/A'))
+                        name = safe_str(obj.get('group_name', 'N/A'))
+                        desc = safe_str(obj.get('description', ''))
+                        row = (f"{rid:<{col_widths['RID']}} "
+                               f"{memcnt:<{col_widths['MemCnt']}} "
+                               f"{name:<{col_widths['Name']}} "
+                               f"{desc:<{col_widths['Description']}}")
+                        f.write(row + "\n")
+                elif fmt == 'csv':
+                    import csv
+                    writer = csv.writer(f, delimiter=';')
+                    # Export CSV without the Domain SID column
+                    writer.writerow(header)
+                    for obj in data:
+                        rid = str(obj.get('rid', 'N/A'))
+                        memcnt = str(obj.get('member_count', 'N/A'))
+                        name = safe_str(obj.get('group_name', 'N/A'))
+                        desc = safe_str(obj.get('description', ''))
+                        writer.writerow([rid, memcnt, name, desc])
+                elif fmt == 'json':
+                    import json
+                    json_data = []
+                    for obj in data:
+                        rid = str(obj.get('rid', 'N/A'))
+                        memcnt = str(obj.get('member_count', 'N/A'))
+                        name = safe_str(obj.get('group_name', 'N/A'))
+                        desc = safe_str(obj.get('description', ''))
+                        json_data.append({
+                            "RID": rid,
+                            "MemCnt": memcnt,
+                            "Name": name,
+                            "Description": desc
+                        })
+                    json.dump(json_data, f, indent=2)
+            # Existing branch for users
             elif isinstance(data[0], dict) and 'last_logon' in data[0]:
                 header = ["RID", "Last Logon", "PwdSet", "PwdNE", "PwdExp", "ForceChg",
                           "AccDis", "PreAuth", "Delg", "BadCnt", "Username", "Full Name"]
@@ -728,9 +791,7 @@ def export_data(filename, fmt, data):
                     json.dump(json_data, f, indent=2)
             else:
                 # Fallback for other data types remains unchanged.
-                # [Existing code omitted for brevity...]
-                pass
-
+                f.write("Unknown data format for export.\n")
         print(f"Data exported to {filename} ({fmt.upper()})")
     except Exception as e:
         print(f"Export failed: {str(e)}")
@@ -1033,7 +1094,7 @@ def enumerate_domain_groups(dce, domainHandle, debug):
     return group_tuples, False
 
 
-def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug, opnums_called):
+#def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug, opnums_called):
     """Enumerate members of local groups (aliases) with SIDs"""
     log_debug(debug, f"[debug] Local group lookup: {groupName}")
     additional_ops = ["SamrLookupNamesInDomain"]
@@ -1419,7 +1480,9 @@ def get_local_group_details(dce, builtinHandle, alias_name, debug, opnums_called
     alias_rid = extract_ndr_value(rids[0])
 
     # Open the alias with ALIAS_LIST_MEMBERS access
-    aliasHandle = samr.hSamrOpenAlias(dce, builtinHandle, samr.ALIAS_LIST_MEMBERS, alias_rid)['AliasHandle']
+    #aliasHandle = samr.hSamrOpenAlias(dce, builtinHandle, samr.ALIAS_LIST_MEMBERS, alias_rid)['AliasHandle']
+    desired_access = 0x00020004  # MAXIMUM_ALLOWED
+    aliasHandle = samr.hSamrOpenAlias(dce, builtinHandle, desired_access, alias_rid)['AliasHandle']
     add_opnum_call(opnums_called, "SamrOpenAlias")
 
     # Retrieve the members
@@ -1520,19 +1583,53 @@ def get_domain_group_details(dce, domainHandle, group_name, debug, opnums_called
     }
 
 
-def list_local_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called):
+def enumerate_display_info_local_groups(dce, builtinHandle, group_name, group_rid, debug, opnums_called):
     """
     Retrieve additional details for a local group (alias) from the Builtin domain.
-    For example, count the number of members in the alias.
+    This function looks up the alias by its name using the Builtin domain handle,
+    opens the alias with ALIAS_LIST_MEMBERS access, retrieves its member list,
+    queries additional information via SamrQueryInformationAlias (e.g. description),
+    and returns a dictionary with keys:
+      'group_name', 'rid', 'member_count', and 'description'.
     """
-    aliasHandle = samr.hSamrOpenAlias(dce, domainHandle, samr.ALIAS_LIST_MEMBERS, group_rid)['AliasHandle']
-    add_opnum_call(opnums_called, "SamrOpenAlias")
+    # Open the alias with ALIAS_LIST_MEMBERS access
+    #aliasHandle = samr.hSamrOpenAlias(dce, domainHandle, samr.ALIAS_LIST_MEMBERS, group_rid)['AliasHandle']
+    #add_opnum_call(opnums_called, "SamrOpenAlias")
+    desired_access = 0x0000000C  # MAXIMUM_ALLOWED
+    aliasHandle = samr.hSamrOpenAlias(
+        dce,
+        builtinHandle,
+        desired_access,
+        group_rid
+    )['AliasHandle']
+    add_opnum_call(opnums_called, "SamrOpenAlias", desired_access)
+
+    # Query additional alias information (e.g. AdminComment)
+    try:
+        add_opnum_call(opnums_called, "SamrQueryInformationAlias")
+        aliasInfoResp = samr.hSamrQueryInformationAlias(dce, aliasHandle, 1)
+        info = aliasInfoResp['Buffer']['General']
+        try:
+            desc_val = safe_str(info['AdminComment'])
+        except Exception:
+            desc_val = ""
+    except Exception:
+        desc_val = ""
+
+    # Get members count
     membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
     add_opnum_call(opnums_called, "SamrGetMembersInAlias")
     member_count = len(membersResp['Members']['Sids'])
+
     samr.hSamrCloseHandle(dce, aliasHandle)
     add_opnum_call(opnums_called, "SamrCloseHandle")
-    return {'group_name': group_name, 'rid': group_rid, 'member_count': member_count}
+
+    return {
+        'group_name': group_name,
+        'rid': group_rid,
+        'member_count': member_count,
+        'description': desc_val
+    }
 
 
 def list_domain_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called):
@@ -1660,6 +1757,7 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
         domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
         # Enumerate basic computer entries (each is a dict with at least 'rid' and 'computer_name')
         basic_computers = enumerate_computers(dce, domainHandle, debug)
+        add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
         detailed_computers = []
         for comp in basic_computers:
             rid = comp.get('rid')
@@ -1692,9 +1790,10 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
 
     elif info_type == 'local-groups':
         # Use the Builtin domain to enumerate local groups (aliases)
-        domainHandle, domainName, domainSid = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
+        builtinHandle, builtinDomainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
         try:
-            aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
+            aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, builtinHandle)
+            add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
             aliases = aliasResp['Buffer']['Buffer'] or []
         except Exception as e:
             aliases = []
@@ -1702,13 +1801,13 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
         group_tuples = [(safe_str(alias['Name']), alias['RelativeId']) for alias in aliases]
         for group_name, group_rid in group_tuples:
             try:
-                details = list_local_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called)
+                details = enumerate_display_info_local_groups(dce, builtinHandle, group_name, group_rid, debug, opnums_called)
                 results.append(details)
             except Exception as e:
                 results.append({'group_name': group_name, 'rid': group_rid, 'error': str(e)})
-        samr.hSamrCloseHandle(dce, domainHandle)
+        samr.hSamrCloseHandle(dce, builtinHandle)
         add_opnum_call(opnums_called, "SamrCloseHandle")
-
+        return results, domainSidString
 
     else:
         raise Exception(f"Invalid type parameter for display-info: {info_type}")
@@ -2069,16 +2168,33 @@ def main():
             enumerated_objects = enumerate_computers(dce, domainHandle, debug)
             add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
 
+
         elif enumeration == 'local-groups':
-            # Builtin domain
-            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug,
-                                                                                  opnums_called)
-            # Enumerate local groups (aliases) via SamrEnumerateAliasesInDomain:
-            aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
-            add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
-            groups_result = [(safe_str(alias['Name']), alias['RelativeId']) for alias in
-                             aliasResp['Buffer']['Buffer'] or []]
-            enumerated_objects = groups_result
+            # Get the primary domain SID (as used in users/computers)
+            primaryDomainHandle, primaryDomainName, primaryDomainSid = get_domain_handle(dce, serverHandle, debug,
+                                                                                         opnums_called)
+            # Now get the builtin domain handle for enumerating local groups
+            builtinHandle, builtinName, _ = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
+            # For display, use the primary domain SID
+            domainSidString = primaryDomainSid
+
+            try:
+                aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, builtinHandle)
+                aliases = aliasResp['Buffer']['Buffer'] or []
+            except Exception as e:
+                aliases = []
+            results = []
+            group_tuples = [(safe_str(alias['Name']), alias['RelativeId']) for alias in aliases]
+            for group_name, group_rid in group_tuples:
+                try:
+                    # Pass the primary domain handle and SID to get the details
+                    details = get_local_group_details(dce, builtinHandle, group_name, group_rid, debug, opnums_called,
+                                                      primaryDomainHandle, primaryDomainSid)
+                    results.append(details)
+                except Exception as e:
+                    results.append({'group_name': group_name, 'rid': group_rid, 'error': str(e)})
+            samr.hSamrCloseHandle(dce, builtinHandle)
+            add_opnum_call(opnums_called, "SamrCloseHandle")
 
         elif enumeration == 'domain-groups':
             domainHandle, domainName, domainSidString = get_domain_handle(dce,
@@ -2145,10 +2261,13 @@ def main():
             info_type = args.get('type', '').lower()
             if not info_type:
                 raise Exception("Missing 'type=' argument for display-info")
-            if info_type not in ['users', 'domain-groups', 'local-groups', 'computers']:
-                raise Exception(
-                    "Invalid 'type' for display-info. Must be one of: 'users', 'domain-groups', 'local-groups', 'computers'")
-            enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
+            if info_type in ['users', 'computers']:
+                domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug, opnums_called)
+                enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
+            elif info_type == 'local-groups':
+                enumerated_objects, domainSidString = display_info(dce, serverHandle, info_type, debug, opnums_called)
+            else:
+                enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
 
         elif enumeration == 'password-policy':  # New enumeration type
             domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug, opnums_called)
@@ -2417,19 +2536,6 @@ def main():
             print(header)
             print()
 
-
-        elif enumeration == 'display-info' and args.get('type', '').lower() == 'local-groups':
-            print("\nLocal Group Details")
-            print("-------------------")
-            for obj in enumerated_objects:
-                if 'error' in obj:
-                    print(
-                        f"Local Group: {obj.get('group_name', 'N/A')} (RID: {obj.get('rid', 'N/A')}) ERROR: {obj['error']}")
-                else:
-                    for key, value in obj.items():
-                        print(f"{key}: {value}")
-                    print()
-
         elif enumeration == 'display-info' and args.get('type', '').lower() == 'computers':
             def format_date(time_str):
                 """
@@ -2510,6 +2616,39 @@ def main():
             print(header)
             print()
 
+        elif enumeration == 'display-info' and args.get('type', '').lower() == 'local-groups':
+            # Define the column order and fixed widths for local groups
+            col_order = ["RID", "MemCnt", "Name", "Description"]
+            col_widths = {
+                "RID": 4,
+                "MemCnt": 6,
+                "Name": 40,
+                "Description": 40
+            }
+            # Build and print the header row
+            header = ""
+            for col in col_order:
+                header += f"{col:<{col_widths[col]}} "
+            print("\n" + header)
+            print("-" * (sum(col_widths.values()) + len(col_order)))
+            # Print each local group record
+            for obj in enumerated_objects:
+                if 'error' in obj:
+                    print(f"{obj.get('group_name', 'N/A'):<{col_widths['Name']}} - ERROR: {obj['error']}")
+                else:
+                    rid = str(obj.get('rid', 'N/A'))
+                    name = obj.get('group_name', 'N/A')
+                    members = str(obj.get('member_count', 'N/A'))
+                    description = obj.get('description', 'N/A')
+                    row = (f"{rid:<{col_widths['RID']}} "
+                           f"{members:<{col_widths['MemCnt']}} "
+                           f"{name:<{col_widths['Name']}} "
+                           f"{description:<{col_widths['Description']}}")
+                    print(row)
+            print("-" * (sum(col_widths.values()) + len(col_order)))
+            print(header)
+            print()
+
         elif enumeration == 'display-info':
             info_type = args.get('type', '').lower()
             if not info_type:
@@ -2517,7 +2656,7 @@ def main():
             if info_type not in ['users', 'domain-groups', 'local-groups', 'computers']:
                 raise Exception(
                     "Invalid 'type' for display-info. Must be one of: 'users', 'domain-groups', 'local-groups', 'computers'")
-            enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
+            enumerated_objects, domainSidString = display_info(dce, serverHandle, info_type, debug, opnums_called)
 
         elif enumeration == 'summary':
             print("\nDomain Summary")
