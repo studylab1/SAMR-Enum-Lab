@@ -65,7 +65,7 @@ ENUMERATION PARAMETERS:
          Display domain group details. (Parameter option: group)
 
     display-info
-         List all objects with additional descriptive fields. (Parameter option: 'type' with values 'users', 'computers', 'domain-groups', 'local-groups')
+         List all objects with additional descriptive fields. (Parameter option: 'type' with values 'users', 'computers', 'local-groups', 'domain-groups')
 
     account-details user=<USERNAME/RID>
          Display account details for a specific user (by username or RID). (Parameter option: user)
@@ -99,6 +99,7 @@ Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=computers
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=local-groups
+  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=domain-groups
 
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
   python samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
@@ -167,10 +168,8 @@ SID_NAME_WKN_GRP = 5
 SAMR_FUNCTION_OPNUMS = {
     'SamrConnect': 0,
     'SamrCloseHandle': 1,
-    'SamrOpenUser': 34,
-    'SamrGetGroupsForUser': 39,
-    'SamrEnumerateDomainsInSamServer': 6,
     'SamrLookupDomainInSamServer': 5,
+    'SamrEnumerateDomainsInSamServer': 6,
     'SamrOpenDomain': 7,
     'SamrEnumerateGroupsInDomain': 11,
     'SamrEnumerateUsersInDomain': 13,
@@ -178,11 +177,14 @@ SAMR_FUNCTION_OPNUMS = {
     'SamrLookupNamesInDomain': 17,
     'SamrLookupIdsInDomain': 18,
     'SamrOpenGroup': 19,
+    'SamrQueryInformationGroup': 20,
     'SamrGetMembersInGroup': 25,
     'SamrOpenAlias': 27,
     'SamrQueryInformationAlias': 28,
     'SamrGetMembersInAlias': 33,
+    'SamrOpenUser': 34,
     'SamrQueryInformationUser': 36,
+    'SamrGetGroupsForUser': 39,
     'SamrQueryInformationDomain2': 46,
     'SamrQueryInformationUser2': 47,
 }
@@ -1547,8 +1549,9 @@ def get_domain_group_details(dce, domainHandle, group_name, debug, opnums_called
     group_rid = extract_ndr_value(rids[0])
 
     # Open the group to retrieve members
-    groupHandle = samr.hSamrOpenGroup(dce, domainHandle, samr.GROUP_LIST_MEMBERS, group_rid)['GroupHandle']
-    add_opnum_call(opnums_called, "SamrOpenGroup")
+    desired_access = 0x00000011
+    groupHandle = samr.hSamrOpenGroup(dce, domainHandle, desired_access, group_rid)['GroupHandle']
+    add_opnum_call(opnums_called, "SamrOpenGroup", desired_access)
 
     membersResp = samr.hSamrGetMembersInGroup(dce, groupHandle)
     add_opnum_call(opnums_called, "SamrGetMembersInGroup")
@@ -1632,19 +1635,67 @@ def enumerate_display_info_local_groups(dce, builtinHandle, group_name, group_ri
     }
 
 
-def list_domain_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called):
+def enumerate_display_info_domain_groups(dce, domainHandle, group_name, group_rid, debug, opnums_called):
     """
     Retrieve additional details for a domain group.
-    For example, count the number of members in the group.
+    For example, count the number of members in the group and get its description.
     """
-    groupHandle = samr.hSamrOpenGroup(dce, domainHandle, samr.GROUP_LIST_MEMBERS, group_rid)['GroupHandle']
-    add_opnum_call(opnums_called, "SamrOpenGroup")
+    # Open the group to retrieve members
+    actual_access = 0x00000011
+    groupHandle = samr.hSamrOpenGroup(dce, domainHandle, actual_access, group_rid)['GroupHandle']
+    add_opnum_call(opnums_called, "SamrOpenGroup", actual_access)
     membersResp = samr.hSamrGetMembersInGroup(dce, groupHandle)
     add_opnum_call(opnums_called, "SamrGetMembersInGroup")
     member_count = len(membersResp['Members']['Members'])
+    # Resolve member RIDs to names…
+    rids_list = []
+    for ridEntry in membersResp['Members']['Members']:
+        if isinstance(ridEntry, int):
+            rids_list.append(ridEntry)
+        elif hasattr(ridEntry, 'fields'):
+            rids_list.append(extract_ndr_value(ridEntry))
+        else:
+            rids_list.append(extract_ndr_value(ridEntry['RelativeId']))
+    members = []
+    if rids_list:
+        add_opnum_call(opnums_called, "SamrLookupIdsInDomain")
+        lookupResp2 = samr.hSamrLookupIdsInDomain(dce, domainHandle, rids_list)
+        names = [safe_str(name['Data']) for name in lookupResp2['Names']['Element']]
+        members = list(zip(rids_list, names))
+
+    # Now query the group information to get the description.
+    description = ""
+    try:
+        add_opnum_call(opnums_called, "SamrQueryInformationGroup")
+        groupInfoResp = samr.hSamrQueryInformationGroup(
+            dce,
+            groupHandle,
+            samr.GROUP_INFORMATION_CLASS.GroupGeneralInformation
+        )
+        info = groupInfoResp['Buffer']['General']
+
+        # Retrieve the description from AdminComment
+        admin_comment = safe_str(info['AdminComment'])
+        if not admin_comment:
+            admin_comment = safe_str(info['Comment'])
+
+        description = admin_comment
+
+    except Exception as e:
+        if debug:
+            print(f"[debug] Could not query group information for {group_name}: {str(e)}")
+        description = ""
+
     samr.hSamrCloseHandle(dce, groupHandle)
     add_opnum_call(opnums_called, "SamrCloseHandle")
-    return {'group_name': group_name, 'rid': group_rid, 'member_count': member_count}
+
+    return {
+        'group_name': group_name,
+        'rid': group_rid,
+        'member_count': member_count,
+        'members': members,
+        'description': description
+    }
 
 
 def get_computer_details(dce, domainHandle, computer_rid, debug, opnums_called):
@@ -1775,19 +1826,6 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
         add_opnum_call(opnums_called, "SamrCloseHandle")
         results = detailed_computers
 
-    elif info_type == 'domain-groups':
-        # Get primary domain handle and enumerate domain groups
-        domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
-        groups, did_aliases = enumerate_domain_groups(dce, domainHandle, debug)
-        for group_name, group_rid in groups:
-            try:
-                details = list_domain_groups_details(dce, domainHandle, group_name, group_rid, debug, opnums_called)
-                results.append(details)
-            except Exception as e:
-                results.append({'group_name': group_name, 'rid': group_rid, 'error': str(e)})
-        samr.hSamrCloseHandle(dce, domainHandle)
-        add_opnum_call(opnums_called, "SamrCloseHandle")
-
     elif info_type == 'local-groups':
         # Use the Builtin domain to enumerate local groups (aliases)
         builtinHandle, builtinDomainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
@@ -1808,6 +1846,25 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
         samr.hSamrCloseHandle(dce, builtinHandle)
         add_opnum_call(opnums_called, "SamrCloseHandle")
         return results, domainSidString
+
+    elif info_type == 'domain-groups':
+        # Get domain handle and SID
+        domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
+        # Get basic list of domain groups (each as (group_name, rid))
+        basic_groups, did_aliases = enumerate_domain_groups(dce, domainHandle, debug)
+        add_opnum_call(opnums_called, "SamrEnumerateGroupsInDomain")
+        if did_aliases:
+            add_opnum_call(opnums_called, "SamrEnumerateAliasesInSamServer")
+        # For each group, get detailed info (including description)
+        results = []
+        for group_name, group_rid in basic_groups:
+            detailed = enumerate_display_info_domain_groups(dce, domainHandle, group_name, group_rid, debug,
+                                                            opnums_called)
+            results.append(detailed)
+        samr.hSamrCloseHandle(dce, domainHandle)
+        add_opnum_call(opnums_called, "SamrCloseHandle")
+        # Return both results and domain SID
+        return results, domainSid
 
     else:
         raise Exception(f"Invalid type parameter for display-info: {info_type}")
@@ -2257,14 +2314,15 @@ def main():
             group_details = get_domain_group_details(dce, domainHandle, groupName, debug, opnums_called)
             enumerated_objects = [group_details]
 
+
+
         elif enumeration == 'display-info':
             info_type = args.get('type', '').lower()
             if not info_type:
                 raise Exception("Missing 'type=' argument for display-info")
-            if info_type in ['users', 'computers']:
-                domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug, opnums_called)
-                enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
-            elif info_type == 'local-groups':
+            if info_type not in ['users', 'domain-groups', 'local-groups', 'computers']:
+                raise Exception("Invalid 'type' for display-info.")
+            if info_type in ['domain-groups', 'local-groups']:
                 enumerated_objects, domainSidString = display_info(dce, serverHandle, info_type, debug, opnums_called)
             else:
                 enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
@@ -2414,14 +2472,31 @@ def main():
             print()
 
         elif enumeration == 'display-info' and args.get('type', '').lower() == 'domain-groups':
-            print("\nDomain Group Details")
-            print("--------------------")
+            # Define columns: RID, MemCnt, Name, Description
+            col_order = ["RID", "MemCnt", "Name", "Description"]
+            col_widths = {"RID": 6, "MemCnt": 7, "Name": 30, "Description": 40}
+            header_line = (f"{'RID':<{col_widths['RID']}} "
+                           f"{'MemCnt':<{col_widths['MemCnt']}} "
+                           f"{'Name':<{col_widths['Name']}} "
+                           f"{'Description':<{col_widths['Description']}}")
+            print("\n" + header_line)
+            print("-" * (sum(col_widths.values()) + len(col_order)))
             for obj in enumerated_objects:
-                if 'error' in obj:
-                    print(f"Group: {obj.get('group_name', 'N/A')} (RID: {obj.get('rid', 'N/A')}) ERROR: {obj['error']}")
-                else:
-                    print(f"Group: {obj.get('group_name', 'N/A')} (RID: {obj.get('rid', 'N/A')}) "
-                          f"Members: {obj.get('member_count', 'N/A')}")
+                # Use safe_str for string fields and truncate the description if too long.
+                rid = str(obj.get('rid', 'N/A'))
+                memcnt = str(obj.get('member_count', 'N/A'))
+                name = safe_str(obj.get('group_name', 'N/A'))
+                desc = safe_str(obj.get('description', ''))
+                if len(desc) > 40:
+                    desc = desc[:37] + "..."
+                row = (f"{rid:<{col_widths['RID']}} "
+                       f"{memcnt:<{col_widths['MemCnt']}} "
+                       f"{name:<{col_widths['Name']}} "
+                       f"{desc:<{col_widths['Description']}}")
+                print(row)
+            print("-" * (sum(col_widths.values()) + len(col_order)))
+            print(header_line)
+            print()
 
         elif enumeration == 'password-policy':  # Handle password policy output
             policy = enumerated_objects[0]
@@ -2622,7 +2697,7 @@ def main():
             col_widths = {
                 "RID": 4,
                 "MemCnt": 6,
-                "Name": 40,
+                "Name": 50,
                 "Description": 40
             }
             # Build and print the header row
@@ -2654,9 +2729,11 @@ def main():
             if not info_type:
                 raise Exception("Missing 'type=' argument for display-info")
             if info_type not in ['users', 'domain-groups', 'local-groups', 'computers']:
-                raise Exception(
-                    "Invalid 'type' for display-info. Must be one of: 'users', 'domain-groups', 'local-groups', 'computers'")
-            enumerated_objects, domainSidString = display_info(dce, serverHandle, info_type, debug, opnums_called)
+                raise Exception("Invalid 'type' for display-info.")
+            if info_type in ['domain-groups', 'local-groups']:
+                enumerated_objects, domainSidString = display_info(dce, serverHandle, info_type, debug, opnums_called)
+            else:
+                enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
 
         elif enumeration == 'summary':
             print("\nDomain Summary")
