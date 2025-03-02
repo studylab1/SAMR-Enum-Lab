@@ -70,12 +70,6 @@ ENUMERATION PARAMETERS:
     account-details user=<USERNAME/RID>
          Display account details for a specific user (by username or RID). (Parameter option: user)
 
-    password-policy
-         Display the password policy.
-
-    lockout-policy
-         Display the account lockout policy.
-
     summary
         Display a summary report for the domain. The summary includes:
            - Domain Information (name, SID, etc.)
@@ -88,26 +82,20 @@ ENUMERATION PARAMETERS:
 
 Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=computers
+  python samr-enum.py target=192.168.1.1 username=micky password=  enumerate=computers debug=true
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=local-groups export=export.csv format=csv
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=domain-groups opnums=true
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-localgroups user=Administrator
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=Administrator
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=local-group-details group="Administrators"
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=domain-group-details group="Domain Admins"
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=computers
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=local-groups
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=domain-groups
-
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
-  python samr-enum.py target=dc1.domain-a.com username=micky password= auth=kerberos domain=domain-y.local enumerate=password-policy
-  python samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=lockout-policy
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=users
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=display-info type=domain-groups
-  python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=summary
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=user-memberships-localgroups user=Administrator
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=account-details user=Administrator
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=local-group-details group="Administrators"
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=domain-group-details group="Domain Admins"
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=display-info type=users
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=display-info type=computers
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=display-info type=local-groups
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=display-info type=domain-groups
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=summary auth=kerberos domain=domain-y.local
+  python samr-enum.py help
 
 For help, run:
     samr-enum.py help
@@ -141,6 +129,31 @@ Column Abbreviations for "display-info type=computers" output:
   - Deleg:        Delegation status flag (Yes/No).
   - AcctStatus:   Account status/type (e.g. “Enabled” or “Disabled”).
   - Description:  Description field containing additional information or notes.
+
+Summary Output Fields (when using enumerate=summary):
+  Domain SID:                The security identifier (SID) of the domain.
+  Domain Name:               The NetBIOS or DNS name of the domain.
+  UAS Compatible:            Indicates whether User Account System (UAS) compatibility is required.
+  Lockout Threshold:         The number of failed logon attempts before account lockout.
+  Lockout Duration:          The duration (in days) that an account remains locked out.
+  Lockout Observation Window:The time window (in days) during which failed logon attempts are counted.
+  Force Logoff:              The maximum logoff time (in days) enforced by the domain.
+  Minimum Password Length:   The minimum number of characters required for passwords.
+  Minimum Password Age:      The minimum number of days a password must be used before it can be changed.
+  Maximum Password Age:      The maximum number of days a password remains valid.
+  Password History Length:   The number of previous passwords stored to prevent reuse.
+  Password Properties:       A list of password requirements (e.g., complexity, no anonymous changes).
+  Total Users:               The total number of user accounts in the domain.
+  Total Domain Groups:       The total number of domain groups.
+  Total Local Groups:        The total number of local (builtin) groups.
+
+A list of flags representing password policy requirements (when using enumerate=summary):
+  PwdComplex:                Password must meet complexity requirements.
+  NoAnon:                    No anonymous password changes allowed.
+  NoClrChg:                  Clear-text password changes are disallowed.
+  LockAdmins:                Lockout applies to administrators.
+  StoreClr:                  Store passwords using reversible (cleartext) encryption.
+  RefuseChg:                 Refuse password changes under specific conditions.
 
 Additional Notes:
   - This tool requires the Impacket libraries.
@@ -1871,81 +1884,6 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
     return results
 
 
-def get_password_policy(dce, domainHandle, debug, opnums_called):
-    log_debug(debug, "[debug] Querying domain password policy...")
-    add_opnum_call(opnums_called, "SamrQueryInformationDomain2")
-
-    try:
-        resp = samr.hSamrQueryInformationDomain2(
-            dce,
-            domainHandle,
-            samr.DOMAIN_INFORMATION_CLASS.DomainPasswordInformation
-        )
-        password_info = resp['Buffer']['Password']
-
-        resp_lockout = samr.hSamrQueryInformationDomain2(
-            dce,
-            domainHandle,
-            samr.DOMAIN_INFORMATION_CLASS.DomainLockoutInformation
-        )
-        lockout_info = resp_lockout['Buffer']['Lockout']
-
-        # Convert time intervals with special handling
-        def ticks_to_days(ticks_obj):
-            """Convert OLD_LARGE_INTEGER to days with Windows special value handling"""
-            if not isinstance(ticks_obj, samr.OLD_LARGE_INTEGER):
-                return 0
-
-            # Handle "Never expire" special case (HighPart = 0x80000000)
-            if ticks_obj['HighPart'] == -2147483648:  # 0x80000000 in signed int32
-                return 0
-
-            # Combine HighPart and LowPart into 64-bit integer
-            ticks = (ticks_obj['HighPart'] << 32) | (ticks_obj['LowPart'] & 0xFFFFFFFF)
-
-            # Handle negative values (two's complement)
-            if ticks_obj['HighPart'] < 0:
-                ticks = -((~ticks + 1) & 0xFFFFFFFFFFFFFFFF)
-
-            seconds = abs(ticks) // 10000000  # 100ns -> seconds
-            return seconds // 86400  # seconds -> days
-
-        max_age_days = ticks_to_days(password_info['MaxPasswordAge'])
-        min_age_days = ticks_to_days(password_info['MinPasswordAge'])
-
-        lockout_threshold = lockout_info['LockoutThreshold']
-        lockout_duration = ticks_to_days(lockout_info['LockoutDuration'])
-        lockout_window = ticks_to_days(lockout_info['LockoutObservationWindow'])
-
-        # Decode password properties flags
-        properties = []
-        props = password_info['PasswordProperties']
-        if props & samr.DOMAIN_PASSWORD_COMPLEX:
-            properties.append("Complexity required")
-        if props & samr.DOMAIN_PASSWORD_NO_ANON_CHANGE:
-            properties.append("No anonymous changes")
-        if props & samr.DOMAIN_PASSWORD_NO_CLEAR_CHANGE:
-            properties.append("No clear text password")
-        if props & samr.DOMAIN_PASSWORD_STORE_CLEARTEXT:
-            properties.append("Store cleartext")
-
-        return {
-            'min_length': password_info['MinPasswordLength'],
-            'history_length': password_info['PasswordHistoryLength'],
-            'max_age_days': max_age_days,
-            'min_age_days': min_age_days,
-            'properties': properties,
-            'lockout_threshold': lockout_threshold,
-            'lockout_duration': lockout_duration,
-            'lockout_window': lockout_window
-        }
-
-    except Exception as e:
-        if debug:
-            print(f"[debug] Full error: {str(e)}")
-        raise
-
-
 def get_lockout_policy(dce, domainHandle, debug, opnums_called):
     """
     Retrieve the domain lockout policy using SamrQueryInformationDomain2.
@@ -1997,6 +1935,77 @@ def get_lockout_policy(dce, domainHandle, debug, opnums_called):
             'lockout_window': lockout_window
         }
 
+    except Exception as e:
+        if debug:
+            print(f"[debug] Full error: {str(e)}")
+        raise
+
+
+def get_password_policy(dce, domainHandle, debug, opnums_called):
+    log_debug(debug, "[debug] Querying domain password policy...")
+    add_opnum_call(opnums_called, "SamrQueryInformationDomain2")
+    try:
+        resp = samr.hSamrQueryInformationDomain2(
+            dce,
+            domainHandle,
+            samr.DOMAIN_INFORMATION_CLASS.DomainPasswordInformation
+        )
+        password_info = resp['Buffer']['Password']
+
+        resp_lockout = samr.hSamrQueryInformationDomain2(
+            dce,
+            domainHandle,
+            samr.DOMAIN_INFORMATION_CLASS.DomainLockoutInformation
+        )
+        lockout_info = resp_lockout['Buffer']['Lockout']
+
+        def ticks_to_days(ticks_obj):
+            if not isinstance(ticks_obj, samr.OLD_LARGE_INTEGER):
+                return 0
+            if ticks_obj['HighPart'] == -2147483648:
+                return 0
+            ticks = (ticks_obj['HighPart'] << 32) | (ticks_obj['LowPart'] & 0xFFFFFFFF)
+            if ticks_obj['HighPart'] < 0:
+                ticks = -((~ticks + 1) & 0xFFFFFFFFFFFFFFFF)
+            seconds = abs(ticks) // 10000000
+            return seconds // 86400
+
+        max_age_days = ticks_to_days(password_info['MaxPasswordAge'])
+        min_age_days = ticks_to_days(password_info['MinPasswordAge'])
+
+        lockout_threshold = lockout_info['LockoutThreshold']
+        lockout_duration = ticks_to_days(lockout_info['LockoutDuration'])
+        lockout_window = ticks_to_days(lockout_info['LockoutObservationWindow'])
+
+        # Retrieve the password properties flags from the PasswordProperties field.
+        props = password_info['PasswordProperties']
+        # (Assuming these constants exist in samr; if not, define them as needed.)
+        pwd_complex = bool(props & samr.DOMAIN_PASSWORD_COMPLEX)
+        no_anon     = bool(props & samr.DOMAIN_PASSWORD_NO_ANON_CHANGE)
+        no_clrchg   = bool(props & samr.DOMAIN_PASSWORD_NO_CLEAR_CHANGE)
+        lock_admins = bool(props & samr.DOMAIN_LOCKOUT_ADMINS)
+        store_clr   = bool(props & samr.DOMAIN_PASSWORD_STORE_CLEARTEXT)
+        refuse_chg  = bool(props & samr.DOMAIN_REFUSE_PASSWORD_CHANGE)
+
+        pwd_props_flags = {
+            'PwdComplex': yes_no(pwd_complex),
+            'NoAnon':     yes_no(no_anon),
+            'NoClrChg':   yes_no(no_clrchg),
+            'LockAdmins': yes_no(lock_admins),
+            'StoreClr':   yes_no(store_clr),
+            'RefuseChg':  yes_no(refuse_chg),
+        }
+
+        return {
+            'min_length': password_info['MinPasswordLength'],
+            'history_length': password_info['PasswordHistoryLength'],
+            'max_age_days': max_age_days,
+            'min_age_days': min_age_days,
+            'lockout_threshold': lockout_threshold,
+            'lockout_duration': lockout_duration,
+            'lockout_window': lockout_window,
+            'pwd_properties_flags': pwd_props_flags
+        }
     except Exception as e:
         if debug:
             print(f"[debug] Full error: {str(e)}")
@@ -2085,55 +2094,28 @@ def get_domain_info(dce, serverHandle, debug, opnums_called):
 
 
 def get_summary(dce, serverHandle, debug, opnums_called):
-    """
-    Retrieve summary information about the domain:
-      - Domain info
-      - Total number of users
-      - Total number of computers
-      - Total number of domain groups
-      - Total number of local groups (aliases)
-      - Password policy summary
-      - Lockout policy summary
-
-    :param dce: DCE/RPC connection object
-    :param serverHandle: Handle to the SAMR server
-    :param debug: Boolean indicating debug output
-    :param opnums_called: List tracking SAMR operations performed
-    :return: A dictionary with the summary information
-    """
     summary = {}
 
-    # Get domain info (opens/closes its own handle)
+    # Get domain info
     domain_info = get_domain_info(dce, serverHandle, debug, opnums_called)
     summary['domain_info'] = domain_info
 
-    # Open primary domain handle for users, computers, domain groups, and policies
     domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
     try:
-        # Enumerate users
         users = enumerate_users(dce, domainHandle, debug)
         summary['total_users'] = len(users)
-
-        # Enumerate computers using the renamed function (enumerate_computers returns a list of dicts)
         computers = enumerate_computers(dce, domainHandle, debug)
-        summary['total_computers'] = len(computers)
-
-        # Enumerate domain groups
+        summary['total_computers'] = len(computers)  # Will be 0 if none found
         domain_groups, _ = enumerate_domain_groups(dce, domainHandle, debug)
         summary['total_domain_groups'] = len(domain_groups)
-
-        # Get password policy
         password_policy = get_password_policy(dce, domainHandle, debug, opnums_called)
         summary['password_policy'] = password_policy
-
-        # Get lockout policy
         lockout_policy = get_lockout_policy(dce, domainHandle, debug, opnums_called)
         summary['lockout_policy'] = lockout_policy
     finally:
         samr.hSamrCloseHandle(dce, domainHandle)
         add_opnum_call(opnums_called, "SamrCloseHandle")
 
-    # Open Builtin domain handle for local groups (aliases)
     builtinHandle, builtinName, builtinSid = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
     try:
         try:
@@ -2314,8 +2296,6 @@ def main():
             group_details = get_domain_group_details(dce, domainHandle, groupName, debug, opnums_called)
             enumerated_objects = [group_details]
 
-
-
         elif enumeration == 'display-info':
             info_type = args.get('type', '').lower()
             if not info_type:
@@ -2326,27 +2306,6 @@ def main():
                 enumerated_objects, domainSidString = display_info(dce, serverHandle, info_type, debug, opnums_called)
             else:
                 enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
-
-        elif enumeration == 'password-policy':  # New enumeration type
-            domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug, opnums_called)
-            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-            add_opnum_call(opnums_called, "SamrOpenDomain")
-            password_policy = get_password_policy(dce, domainHandle, debug, opnums_called)
-            enumerated_objects = [password_policy]
-
-        elif enumeration == 'lockout-policy':
-            domainHandle, domainName, domainSidString = get_domain_handle(dce, serverHandle, debug, opnums_called)
-            add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-            add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-            add_opnum_call(opnums_called, "SamrOpenDomain")
-            lockout_policy = get_lockout_policy(dce, domainHandle, debug, opnums_called)
-            enumerated_objects = [lockout_policy]
-
-        elif enumeration == 'domain-info':
-            domain_info = get_domain_info(dce, serverHandle, debug, opnums_called)
-            enumerated_objects = [domain_info]
-            domainSidString = domain_info.get('domain_sid', '')
 
         elif enumeration == 'summary':
             # Call get_summary() to get the aggregated domain summary info
@@ -2497,52 +2456,6 @@ def main():
             print("-" * (sum(col_widths.values()) + len(col_order)))
             print(header_line)
             print()
-
-        elif enumeration == 'password-policy':  # Handle password policy output
-            policy = enumerated_objects[0]
-            print("\nDomain Password Policy:")
-            print(f"  Minimum password length:       {policy['min_length']}")
-            print(f"  Password history length:       {policy['history_length']}")
-            print(
-                f"  Maximum password age (days):   {policy['max_age_days'] if policy['max_age_days'] > 0 else 'Never expire'}")
-            print(f"  Minimum password age (days):   {policy['min_age_days']}")
-            print(f"  Account lockout threshold:     {policy['lockout_threshold']}")
-            print(f"  Lockout duration (days):       {policy['lockout_duration']}")
-            print(f"  Lockout observation window:    {policy['lockout_window']}")
-            print("  Password properties:")
-            for prop in policy['properties']:
-                print(f"    - {prop}")
-
-        elif enumeration == 'lockout-policy':
-            policy = enumerated_objects[0]
-            print("\nDomain Lockout Policy:")
-            print(f"  Account lockout threshold:     {policy['lockout_threshold']}")
-            print(
-                f"  Lockout duration (days):       {policy['lockout_duration'] if policy['lockout_duration'] > 0 else 'Indefinite'}")
-            print(f"  Lockout observation window:    {policy['lockout_window']} days")
-
-        elif enumeration == 'domain-info':
-            info = enumerated_objects[0]
-            # In main() function where domain-info is printed:
-            print("\nDomain Information:")
-            print(f"  Domain Name:             {info['domain_name']}")
-            print(f"  OEM Information:         {info['oem_information']}")
-            print(f"  Modified Count:          {info['modified_count']}")
-            print(
-                f"  Max Password Age (days): {info['max_password_age_days'] if info['max_password_age_days'] > 0 else 'Never'}")
-            print(f"  Min Password Age (days): {info['min_password_age_days']}")
-            print(
-                f"  Force Logoff (days):     {info['force_logoff_days'] if info['force_logoff_days'] > 0 else 'Never'}")
-            print(f"  Lockout Threshold:       {info['lockout_threshold']}")
-            print(
-                f"  Lockout Duration (days): {info['lockout_duration_days'] if info['lockout_duration_days'] > 0 else 'Never'}")
-            print(f"  Lockout Window (days):   {info['lockout_window_days']}")
-            print(f"  Server State:            0x{info['server_state']:08X}")
-            print(f"  Server Role:             {info['server_role']}")
-            print(f"  UAS Compatible:          {info['uas_compatible']}")
-            print(f"  Total Users:             {info['num_users_total']}")
-            print(f"  Global Groups:           {info['num_global_groups']}")
-            print(f"  Aliases:                 {info['num_aliases']}")
 
         elif enumeration == 'display-info' and args.get('type', '').lower() == 'users':
             # Helper to convert a timestamp to a short date string
@@ -2736,27 +2649,35 @@ def main():
                 enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
 
         elif enumeration == 'summary':
-            print("\nDomain Summary")
-            print("--------------")
+            # We assume enumerated_objects[0] is the summary dictionary
             summary = enumerated_objects[0]
-            # Print Domain Info summary
             domain_info = summary.get('domain_info', {})
-            print("Domain Information:")
-            for key, value in domain_info.items():
-                print(f"  {key}: {value}")
+            print("\nDomain Information:")
+            print(f"  Domain SID:                  {domain_info.get('domain_sid', 'N/A')}")
+            print(f"  Domain Name:                 {domain_info.get('domain_name', 'N/A')}")
+            print(f"  UAS Compatible:              {yes_no(domain_info.get('uas_compatible', False))}")
             print()
-            print(f"Total Users:           {summary.get('total_users', 'N/A')}")
-            print(f"Total Computers:       {summary.get('total_computers', 'N/A')}")
-            print(f"Total Domain Groups:   {summary.get('total_domain_groups', 'N/A')}")
-            print(f"Total Local Groups:    {summary.get('total_local_groups', 'N/A')}")
+            print("Account Lockout Settings:")
+            print(f"  Lockout Threshold:           {domain_info.get('lockout_threshold', 'N/A')}")
+            print(f"  Lockout Duration (days):     {domain_info.get('lockout_duration_days', 'N/A')}")
+            print(f"  Lockout Window (days):       {domain_info.get('lockout_window_days', 'N/A')}")
+            print(f"  Force Logoff (days):         {domain_info.get('force_logoff_days', 'N/A')}")
             print()
             print("Password Policy:")
-            for key, value in summary.get('password_policy', {}).items():
-                print(f"  {key}: {value}")
+            print(f"  Minimum Password Length:     {domain_info.get('min_password_length', 'N/A')}")
+            print(f"  Minimum Password Age (days): {domain_info.get('min_password_age_days', 'N/A')}")
+            print(f"  Maximum Password Age (days): {domain_info.get('max_password_age_days', 'N/A')}")
+            print(f"  Password History Length:     {domain_info.get('password_history_length', 'N/A')}")
+            print(f"  Password Properties:")
+            pp = summary.get('password_policy', {})
+            flags = pp.get('pwd_properties_flags', {})
+            for flag, val in flags.items():
+                print(f"    {flag:<26} {val}")
             print()
-            print("Lockout Policy:")
-            for key, value in summary.get('lockout_policy', {}).items():
-                print(f"  {key}: {value}")
+            print(f"Total Users:                   {summary.get('total_users', 'N/A')}")
+            print(f"Total Computers:               {summary.get('total_computers', 'N/A')}")
+            print(f"Total Domain Groups:           {summary.get('total_domain_groups', 'N/A')}")
+            print(f"Total Local Groups:            {summary.get('total_local_groups', 'N/A')}")
             print()
 
         else:
