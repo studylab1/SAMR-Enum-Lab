@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-samr-enum.py - A SAMR Enumeration Tool using Impacket
+samr-enum.py - A SAMR Enumeration Script using Impacket.
 Copyright (c) 2025. Licensed under the MIT License.
 
 This Python tool leverages the Microsoft SAMR protocol to enumerate domain
@@ -14,6 +14,11 @@ Features:
   - Securely prompt for a password if none is provided.
   - Export enumeration results in multiple formats.
   - Supports NTLM (default) and Kerberos authentication.
+"""
+
+# Global help text constant
+HELP_TEXT = r"""
+SAMR Enumeration Script - Help
 
 Usage:
     samr-enum.py <OPTIONS> <ENUMERATION PARAMETER> [ENUMERATION PARAMETER OPTIONS]
@@ -103,23 +108,23 @@ For help, run:
 Column Abbreviations for "display-info type=users" output:
   - RID:          Relative Identifier.
   - Last Logon:   Date of last logon (YYYY.MM.DD).
-  - PwdSet:       Date when the password was set.
+  - PwdSet:       Date when the password was set (YYYY.MM.DD).
   - PwdNE:        "Password Never Expires" flag (Yes/No).
   - PwdExp:       "Password Expired" flag (Yes/No).
-  - ForceChg:     Date when a password force-change is scheduled.
+  - ForceChg:     Date when a password force-change is scheduled (YYYY.MM.DD).
   - AccDis:       "Account Disabled" flag (Yes/No).
   - PreAuth:      "Pre-Authentication required" flag (Yes/No).
   - Delg:         "Delegation required" flag (Yes/No).
   - BadCnt:       Count of bad password attempts.
-  - Username:     The users login name.
-  - Full Name:    The users full display name.
+  - Username:     The user's login name.
+  - Full Name:    The user's full display name.
 
 Column Abbreviations for "display-info type=computers" output:
   - RID:          Relative Identifier.
   - Name:         Computer name (the network name of the machine, shown without its trailing ‘$’ sign).
   - Logons:       Count of successful logons.
-  - LastLogon:    Date of last logon (formatted as YYYY.MM.DD).
-  - PwdLastSet:   Date when the computer’s password was last set.
+  - LastLogon:    Date of last logon (YYYY.MM.DD).
+  - PwdLastSet:   Date when the computer’s password was last set (YYYY.MM.DD).
   - BadPwdCnt:    Count of bad password attempts.
   - PID:          Primary Group ID associated with the computer account.
   - Type:         Trust relationship type (indicates whether the computer is registered as a workstation or server).
@@ -204,8 +209,8 @@ SAMR_FUNCTION_OPNUMS = {
 
 ###########################################################
 # SAMR FUNCTION -> ACCESS MASK
-# We only track calls that actually specify a desiredAccess
-# in your code. Others show no Access Mask.
+# Only track calls that actually specify a desiredAccess.
+# Others show no Access Mask.
 ###########################################################
 SAMR_FUNCTION_ACCESS = {
     'SamrOpenUser': 0x0002011b,  # USER_LIST_GROUPS
@@ -220,6 +225,11 @@ def add_opnum_call(opnums_list, func_name, actual_access=None):
     """
     Append the given SAMR function name, its OpNum, and (if relevant) the Access Mask
     to the tracking list, with the Access Mask inside the parentheses.
+
+    :param opnums_list: List where the SAMR operation details will be appended.
+    :param func_name: The name of the SAMR function (e.g., "SamrConnect").
+    :param actual_access: (Optional) The actual Access Mask value (int) used, if available.
+    :return: None
     """
     opnum = SAMR_FUNCTION_OPNUMS.get(func_name)
     if opnum is not None:
@@ -242,6 +252,9 @@ def format_time(filetime_64):
     """
     Convert a 64-bit Windows FILETIME (100-ns intervals since 1601-01-01)
     into a human-readable string. Returns 'Never' if 0 or 0x7FFFFFFFFFFFFFFF.
+
+    :param filetime_64: 64-bit integer representing Windows FILETIME.
+    :return: A formatted date-time string in 'YYYY-MM-DD HH:MM:SS' format, or 'Never'.
     """
     if filetime_64 == 0 or filetime_64 == 0x7FFFFFFFFFFFFFFF:
         return 'Never'
@@ -259,6 +272,9 @@ def format_date(time_str):
     """
     Convert a time string in 'YYYY-MM-DD HH:MM:SS' format to 'YYYY.MM.DD'.
     If the input is 'Never' or invalid, return it as is.
+
+    :param time_str: A string representing a date and time.
+    :return: A date string in 'YYYY.MM.DD' format or the original string if conversion fails.
     """
     if time_str == 'Never' or not time_str:
         return 'Never'
@@ -271,6 +287,9 @@ def format_date(time_str):
 def to_int_uac(uac_value):
     """
     Safely convert a UserAccountControl (NDRULONG or int) into a Python integer.
+
+    :param uac_value: The UserAccountControl value (could be int, NDR object, or bytes).
+    :return: An integer representing the UserAccountControl flags.
     """
     if not uac_value:
         return 0
@@ -288,9 +307,10 @@ def to_int_uac(uac_value):
 
 def decode_filetime(value):
     """
-    Convert an Impacket OLD_LARGE_INTEGER (with HighPart/LowPart) into
-    a 64-bit Windows FILETIME integer.
-    Returns 0 if value is None or missing fields.
+    Convert an Impacket OLD_LARGE_INTEGER (with HighPart/LowPart) into a 64-bit Windows FILETIME integer.
+
+    :param value: An object with a 'fields' dictionary containing 'HighPart' and 'LowPart'.
+    :return: A 64-bit integer representing the FILETIME, or 0 if value is invalid.
     """
     if not value or not hasattr(value, 'fields'):
         return 0
@@ -322,98 +342,13 @@ def parse_named_args(argv):
     return args
 
 
-def print_help():
+def print_help() -> None:
     """
-    Print a short help/description about the script usage, then exit.
+    Print the help text and exit.
+
+    :return: This function does not return; it exits the program.
     """
-
-    help_text = r"""
-    samr-enum.py - A tool for enumerating domain users, groups, computers, password policies, and other information via SAMR protocol.
-
-    Usage: samr-enum.py <OPTIONS> <ENUMERATION PARAMETER> [ENUMERATION PARAMETER OPTIONS]
-
-    This tool performs various enumerations on a target system.
-
-    Required OPTIONS:
-      target            Target system (IP address or hostname).
-      username          Username which will be used to authenticate on remote server.
-      password          if an empty value is provided (i.e., password= with nothing following), the tool will securely prompt the user for a password.
-      enumerate         The enumeration type. Details are in 'Enumeration Parameters' section below.
-
-    Optional OPTIONS:
-      domain            Domain of the user to authenticate. It is required if Kerberos authentication is used.
-      auth              Authentication protocol. Acceptable values are 'ntlm' or 'kerberos', with the default being 'ntlm'.
-      debug             Display debug details of the SAMR calls. Acceptable values are 'true' or 'false', with the default being 'false'.
-      export            Export data to a specified file.
-        format          Acceptable values are 'txt', 'csv' or 'json', with the default being 'txt'.
-      opnums            Set to 'true' to display SAMR OpNums called (default: 'false').
-      help              Print this page.
-
-
-    ENUMERATION PARAMETERS:
-      The following parameters control what to enumerate. Simply supply one of these (omitting the "enumerate=" prefix)
-      along with any required options.
-
-        users
-             List all user accounts.
-
-        local-groups
-             List all local groups.
-
-        computers
-             List all computer accounts.
-
-        domain-groups
-             List all domain groups.
-
-        user-memberships-domaingroups
-             List all domain groups that a user is a member of. PARAMETER OPTION = 'user'
-
-        user-memberships-localgroups
-             List all local groups that a user is a member of. PARAMETER OPTION = 'user'
-
-        display-info
-            List all objects with additional descriptive fields. PARAMETER OPTION = 'type'. The type parameter accepts the following values: users, domain-groups, local-groups, and computers.
-
-        account-details user=<USERNAME/RID>
-             Display account details for a specific user (by username or RID). PARAMETER OPTION = 'user'
-
-        domain-group-details group=<GROUP>
-            Display domain group details. (Parameter option: group)
-
-        local-group-details group=<GROUP>
-            Display local/builtin group details. (Parameter option: group)
-
-        password-policy
-             Display the password policy.
-
-        lockout-policy
-             Display the account lockout policy.
-
-        summary
-            Display a summary report for the domain. The summary includes:
-               - Domain Information (name, SID, etc.)
-               - Total number of user accounts
-               - Total number of computer accounts
-               - Total number of domain groups
-               - Total number of local groups (aliases)
-               - Password policy details
-               - Lockout policy details
-
-    Usage Examples:
-      samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
-      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=domain-groups
-      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=account-details user=john-doe debug=true
-      samr-enum.py target=dc1.domain-a.com username=micky password= domain=domain-y.local auth=kerberos enumerate=password-policy
-      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=users export=export.txt format=txt opnums=true
-      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
-      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=display-info type=users
-      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=display-info type=domain-groups
-      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=domain-group-details group="Domain Admins"
-      samr-enum.py target=dc1.domain-a.com username=micky password=mouse123 enumerate=summary
-
-    """
-    print(help_text)
+    print(HELP_TEXT)
     sys.exit(1)
 
 
@@ -421,6 +356,9 @@ def yes_no(value):
     """
     Convert a boolean value into 'Yes' or 'No'.
     If the value is not strictly True or False, just return str(value).
+
+    :param value: A boolean value or any value to convert.
+    :return: 'Yes' if True, 'No' if False, otherwise str(value).
     """
     if value is True:
         return "Yes"
@@ -442,8 +380,10 @@ def log_debug(debug, message):
 
 def extract_ndr_value(ndr_object):
     """
-    Safely extract an integer from an Impacket NDR object (e.g. NDRULONG).
-    If possible, this returns a plain Python int.
+    Safely extract an integer value from an Impacket NDR object.
+
+    :param ndr_object: The NDR object (could be an int, an object with __int__, or with 'fields').
+    :return: A plain Python integer if conversion is successful, else the original object.
     """
     if isinstance(ndr_object, int):
         return ndr_object
@@ -460,6 +400,9 @@ def safe_str(value):
     """
     Convert a value to a Unicode string safely.
     If the value is an RPC_UNICODE_STRING, extract and decode its Buffer.
+
+    :param value: The value to convert.
+    :return: A safe string representation.
     """
     # If already a Python string, return it directly.
     if isinstance(value, str):
@@ -489,6 +432,9 @@ def safe_str(value):
 def decode_group_attributes(attr):
     """
     Decode a group attributes bitmask into a comma-separated string of attribute names.
+
+    :param attr: The integer bitmask.
+    :return: A string of attribute names separated by commas.
     """
     flags = []
     if attr & 0x00000001:
@@ -515,6 +461,10 @@ def export_data(filename, fmt, data):
     For display-info type=local-groups objects, export the following columns:
       RID, MemCnt, Name, Domain SID, Description
     For other data types, the export behavior remains unchanged.
+
+    :param filename: The name of the file to export to.
+    :param fmt: The format ('txt', 'csv', or 'json').
+    :param data: The data to export.
     """
     if not filename or not data:
         return
@@ -806,7 +756,6 @@ def export_data(filename, fmt, data):
                     json.dump(json_data, f, indent=2)
 
             # Branch for summary export
-            # Branch for summary export
             elif isinstance(data[0], dict) and 'domain_info' in data[0]:
                 # In summary, the exported data is a single dictionary.
                 summary = data[0]
@@ -951,9 +900,10 @@ def get_domain_handle(dce, serverHandle, debug, opnums_called):
     SamrOpenDomain uses desiredAccess=0x00000300
     (DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS).
 
-    :param dce: The DCE/RPC connection object
-    :param serverHandle: The handle to the SAMR server
-    :param debug: Boolean indicating debug output
+    :param dce: The DCE/RPC connection object.
+    :param serverHandle: The handle to the SAMR server.
+    :param debug: Boolean indicating debug output.
+    :param opnums_called: List tracking SAMR operations performed.
     :return: (domainHandle, domainName, sidString)
     """
     log_debug(debug, "[debug] SamrEnumerateDomainsInSamServer -> enumerating domains...")
@@ -1006,10 +956,12 @@ def get_builtin_domain_handle(dce, serverHandle, debug, opnums_called):
     Enumerate the domain list, find the one named "Builtin", then open it.
     (DOMAIN_LOOKUP | DOMAIN_LIST_ACCOUNTS).
 
-    :param dce: The DCE/RPC connection object
-    :param serverHandle: The handle to the SAMR server
-    :param debug: Boolean indicating debug output
+    :param dce: The DCE/RPC connection object.
+    :param serverHandle: The handle to the SAMR server.
+    :param debug: Boolean indicating debug output.
+    :param opnums_called: List tracking SAMR operations performed.
     :return: (domainHandle, domainName, sidString)
+    :raises Exception: If the Builtin domain is not found or opening fails.
     """
     log_debug(debug, "[debug] SamrEnumerateDomainsInSamServer -> looking for Builtin domain...")
     enumDomainsResp = samr.hSamrEnumerateDomainsInSamServer(dce, serverHandle)
@@ -1063,10 +1015,10 @@ def enumerate_users(dce, domainHandle, debug):
     Enumerate all domain users by repeatedly calling SamrEnumerateUsersInDomain
     until the server no longer returns STATUS_MORE_ENTRIES.
 
-    :param dce: The DCE/RPC connection
-    :param domainHandle: The opened domain handle
-    :param debug: Boolean for debug prints
-    :return: A list of (username, rid) tuples
+    :param dce: The DCE/RPC connection.
+    :param domainHandle: The opened domain handle.
+    :param debug: Boolean for debug prints.
+    :return: A list of (username, rid) tuples.
     """
     log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating users...")
     users = []
@@ -1117,6 +1069,11 @@ def enumerate_computers(dce, domainHandle, debug):
     Enumerate all domain computers (workstations AND domain controllers) by
     using both USER_WORKSTATION_TRUST_ACCOUNT and USER_SERVER_TRUST_ACCOUNT flags.
     Returns a list of dictionaries with all fields returned by the server.
+
+    :param dce: The DCE/RPC connection.
+    :param domainHandle: The opened domain handle.
+    :param debug: Boolean to enable debug output.
+    :return: List of dictionaries with computer details.
     """
     log_debug(debug, "[debug] SamrEnumerateUsersInDomain -> enumerating computers...")
     computers = []
@@ -1191,97 +1148,18 @@ def enumerate_domain_groups(dce, domainHandle, debug):
     return group_tuples, False
 
 
-#def list_local_group_members(dce, serverHandle, domainHandle, groupName, debug, opnums_called):
-    """Enumerate members of local groups (aliases) with SIDs"""
-    log_debug(debug, f"[debug] Local group lookup: {groupName}")
-    additional_ops = ["SamrLookupNamesInDomain"]
-    results = []
-
-    # First try Builtin domain for local groups
-    builtinHandle, _, _ = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
-    lookupResp = samr.hSamrLookupNamesInDomain(dce, builtinHandle, [groupName])
-    add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
-
-    if debug:
-        print("[debug] SamrLookupNamesInDomain response:")
-        print(lookupResp.dump())
-
-    rids = lookupResp['RelativeIds']['Element']
-    uses = lookupResp['Use']['Element']
-
-    if not rids or extract_ndr_value(uses[0]) != SID_NAME_ALIAS:
-        raise Exception("Not a valid local group")
-
-    groupRid = extract_ndr_value(rids[0])
-
-    # Open local alias
-    additional_ops.append("SamrOpenAlias")
-    aliasHandle = samr.hSamrOpenAlias(
-        dce, builtinHandle, samr.ALIAS_LIST_MEMBERS, groupRid
-    )['AliasHandle']
-    add_opnum_call(opnums_called, "SamrOpenAlias")
-    # Get members
-    additional_ops.append("SamrGetMembersInAlias")
-    membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
-    add_opnum_call(opnums_called, "SamrGetMembersInAlias")
-
-    # Enumerate domains to resolve SIDs
-    additional_ops.append("SamrEnumerateDomainsInSamServer")
-    enumDomainsResp = samr.hSamrEnumerateDomainsInSamServer(dce, serverHandle)
-    domains = []
-    for domain in enumDomainsResp['Buffer']['Buffer']:
-        add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-        domain_name = safe_str(domain['Name'])
-        additional_ops.append("SamrLookupDomainInSamServer")
-        lookup_resp = samr.hSamrLookupDomainInSamServer(dce, serverHandle, domain_name)
-        add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
-        domains.append((domain_name, lookup_resp['DomainId']))
-
-    # Process each member SID
-    for sid in membersResp['Members']['Sids']:
-        sid_str = sid['SidPointer'].formatCanonical()
-        parts = sid_str.split('-')
-        rid = parts[-1]
-        domain_sid_part = '-'.join(parts[:-1])
-        resolved = False
-
-        # Find matching domain
-        for domain_name, domain_sid in domains:
-            if domain_sid.formatCanonical() == domain_sid_part:
-                try:
-                    additional_ops.append("SamrOpenDomain")
-                    dom_handle = samr.hSamrOpenDomain(
-                        dce, serverHandle,
-                        samr.DOMAIN_LOOKUP | samr.DOMAIN_LIST_ACCOUNTS,
-                        domain_sid
-                    )['DomainHandle']
-                    add_opnum_call(opnums_called, "SamrOpenDomain")
-                    additional_ops.append("SamrLookupIdsInDomain")
-                    lookup = samr.hSamrLookupIdsInDomain(dce, dom_handle, [int(rid)])
-                    add_opnum_call(opnums_called, "SamrLookupIdsInDomain")
-                    if lookup['Names']['Element']:
-                        username = safe_str(lookup['Names']['Element'][0]['Data'])
-                        results.append((username, rid))
-                        resolved = True
-
-                    additional_ops.append("SamrCloseHandle")
-                    samr.hSamrCloseHandle(dce, dom_handle)
-                    add_opnum_call(opnums_called, "SamrCloseHandle")
-                except Exception as e:
-                    log_debug(debug, f"[debug] SID resolution failed: {str(e)}")
-                break  # Exit domain loop after processing matching domain
-
-        if not resolved:
-            results.append((sid_str, 'SID'))  # Maintain original output format
-
-    samr.hSamrCloseHandle(dce, aliasHandle)
-    additional_ops.append("SamrCloseHandle")
-
-    return results, additional_ops
-
-
 def list_domain_group_members(dce, serverHandle, domainHandle, groupName, debug, opnums_called):
-    """Enumerate members of domain groups with name resolution"""
+    """
+    Enumerate members of domain groups with name resolution
+
+    :param dce: The DCE/RPC connection object.
+    :param serverHandle: The handle to the SAMR server.
+    :param domainHandle: The handle to the domain.
+    :param groupName: The name of the domain group whose members are to be enumerated.
+    :param debug: Boolean flag for enabling debug output.
+    :param opnums_called: List that tracks SAMR operations performed.
+    :return: A tuple (results, additional_ops) where results is a list of (member_name, member_rid) pairs.
+    """
     log_debug(debug, f"[debug] Domain group lookup: {groupName}")
     additional_ops = ["SamrLookupNamesInDomain"]
 
@@ -1307,7 +1185,7 @@ def list_domain_group_members(dce, serverHandle, domainHandle, groupName, debug,
         dce, domainHandle, samr.GROUP_LIST_MEMBERS, groupRid
     )['GroupHandle']
 
-    # Get members - CORRECTED SECTION
+    # Get members
     add_opnum_call(opnums_called, "SamrGetMembersInGroup")
     membersResp = samr.hSamrGetMembersInGroup(dce, groupHandle)
 
@@ -1336,7 +1214,17 @@ def list_domain_group_members(dce, serverHandle, domainHandle, groupName, debug,
 
 
 def list_user_local_memberships(dce, serverHandle, username, domain_sid, debug, opnums_called):
-    """Check Builtin domain aliases for user SID membership"""
+    """
+    Check Builtin domain aliases for user SID membership
+
+    :param dce: The DCE/RPC connection object.
+    :param serverHandle: The handle to the SAMR server.
+    :param username: The username for which to check local group memberships.
+    :param domain_sid: The domain SID as a string.
+    :param debug: Boolean indicating whether debug output is enabled.
+    :param opnums_called: List to track SAMR operations invoked.
+    :return: A list of (alias_name, alias_rid) tuples representing local groups the user belongs to.
+    """
     # Get user RID from primary domain
     domainHandle, _, _ = get_domain_handle(dce, serverHandle, debug, opnums_called)
     try:
@@ -1395,7 +1283,17 @@ def list_user_local_memberships(dce, serverHandle, username, domain_sid, debug, 
 
 
 def list_user_domain_memberships(dce, domainHandle, username, domain_sid, debug, opnums_called):
-    """Enumerate domain groups a user belongs to using SamrGetGroupsForUser"""
+    """
+    Enumerate domain groups a user belongs to using SamrGetGroupsForUser
+
+    :param dce: The DCE/RPC connection object.
+    :param domainHandle: The handle to the domain.
+    :param username: The username for which to enumerate domain group memberships.
+    :param domain_sid: The domain SID string.
+    :param debug: Boolean flag for enabling debug messages.
+    :param opnums_called: List tracking SAMR operations performed.
+    :return: A list of tuples (group_name, group_rid, attributes) for each domain group membership.
+    """
     log_debug(debug, f"[debug] Looking up user '{username}' in domain...")
     lookupResp = samr.hSamrLookupNamesInDomain(dce, domainHandle, [username])
     add_opnum_call(opnums_called, "SamrLookupNamesInDomain")
@@ -1414,7 +1312,6 @@ def list_user_domain_memberships(dce, domainHandle, username, domain_sid, debug,
     groupsResp = samr.hSamrGetGroupsForUser(dce, userHandle)
     add_opnum_call(opnums_called, "SamrGetGroupsForUser")
 
-    group_rids = [g['RelativeId'] for g in groupsResp['Groups']['Groups']]
     samr.hSamrCloseHandle(dce, userHandle)
     add_opnum_call(opnums_called, "SamrCloseHandle")
 
@@ -1431,7 +1328,16 @@ def list_user_domain_memberships(dce, domainHandle, username, domain_sid, debug,
 
 
 def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
-    """Retrieve detailed user information from SAMR using direct dictionary indexing."""
+    """
+    Retrieve detailed user information from SAMR using direct dictionary indexing.
+
+    :param dce: The DCE/RPC connection object.
+    :param domainHandle: The handle to the domain where the user resides.
+    :param user_input: A string representing the username or RID of the user.
+    :param debug: Boolean flag to enable debug output.
+    :param opnums_called: List that records SAMR operations performed during lookup.
+    :return: A dictionary containing detailed user information.
+    """
     # First, perform the lookup for the user (by RID or username)
     try:
         if user_input.isdigit():
@@ -1450,7 +1356,6 @@ def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
             rids = lookup_resp['RelativeIds']['Element']
             if not rids:
                 raise Exception(f"User '{username}' not found")
-            rid = extract_ndr_value(rids[0])
     except Exception as e:
         raise Exception(f"User lookup failed: {str(e)}")
 
@@ -1491,10 +1396,6 @@ def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
         return val
 
     # Process UserAccountControl for flag evaluation
-
-    uac_ndr = all_info['UserAccountControl']
-    uac_int = extract_ndr_value(uac_ndr)
-
     uac_value = response['Buffer']['All']['UserAccountControl']
     uac_int = int(uac_value)
 
@@ -1508,7 +1409,6 @@ def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
         pre_auth = False
     else:
         pre_auth = True
-
 
     # Process PasswordExpired field
     pw_exp = all_info['PasswordExpired']
@@ -1566,6 +1466,15 @@ def get_local_group_details(dce, builtinHandle, alias_name, debug, opnums_called
     resolves the member SIDs to usernames using the primary domain handle,
     and returns a dictionary with keys 'alias_name', 'rid', 'member_count', 'members',
     and 'primary_domain_sid'.
+
+    :param dce: DCE/RPC connection object.
+    :param builtinHandle: Handle to the Builtin domain.
+    :param alias_name: The name of the alias (local group) to look up.
+    :param debug: Boolean indicating whether debug messages should be printed.
+    :param opnums_called: List tracking SAMR operations performed.
+    :param primaryDomainHandle: Handle to the primary domain for SID resolution.
+    :param primaryDomainSid: The SID of the primary domain as a string.
+    :return: Dictionary containing alias details (alias name, RID, member count, members, primary domain SID).
     """
     # Lookup the alias by name using the Builtin domain handle
     lookupResp = samr.hSamrLookupNamesInDomain(dce, builtinHandle, [alias_name])
@@ -1577,7 +1486,6 @@ def get_local_group_details(dce, builtinHandle, alias_name, debug, opnums_called
     alias_rid = extract_ndr_value(rids[0])
 
     # Open the alias with ALIAS_LIST_MEMBERS access
-    #aliasHandle = samr.hSamrOpenAlias(dce, builtinHandle, samr.ALIAS_LIST_MEMBERS, alias_rid)['AliasHandle']
     desired_access = 0x00020004  # MAXIMUM_ALLOWED
     aliasHandle = samr.hSamrOpenAlias(dce, builtinHandle, desired_access, alias_rid)['AliasHandle']
     add_opnum_call(opnums_called, "SamrOpenAlias")
@@ -1689,11 +1597,17 @@ def enumerate_display_info_local_groups(dce, builtinHandle, group_name, group_ri
     queries additional information via SamrQueryInformationAlias (e.g. description),
     and returns a dictionary with keys:
       'group_name', 'rid', 'member_count', and 'description'.
+
+    :param dce: DCE/RPC connection object.
+    :param builtinHandle: Handle to the Builtin domain.
+    :param group_name: Name of the local group.
+    :param group_rid: RID of the local group.
+    :param debug: Boolean indicating whether debug output is enabled.
+    :param opnums_called: List tracking SAMR operations performed.
+    :return: Dictionary with local group details: name, RID, member count, and description.
     """
     # Open the alias with ALIAS_LIST_MEMBERS access
-    #aliasHandle = samr.hSamrOpenAlias(dce, domainHandle, samr.ALIAS_LIST_MEMBERS, group_rid)['AliasHandle']
-    #add_opnum_call(opnums_called, "SamrOpenAlias")
-    desired_access = 0x0000000C  # MAXIMUM_ALLOWED
+    desired_access = 0x0000000C
     aliasHandle = samr.hSamrOpenAlias(
         dce,
         builtinHandle,
@@ -1734,6 +1648,14 @@ def enumerate_display_info_domain_groups(dce, domainHandle, group_name, group_ri
     """
     Retrieve additional details for a domain group.
     For example, count the number of members in the group and get its description.
+
+    :param dce: DCE/RPC connection object.
+    :param domainHandle: Handle to the domain.
+    :param group_name: Name of the domain group.
+    :param group_rid: RID of the domain group.
+    :param debug: Boolean for enabling debug messages.
+    :param opnums_called: List tracking SAMR operations performed.
+    :return: Dictionary with domain group details: name, RID, member count, members, and description.
     """
     # Open the group to retrieve members
     actual_access = 0x00000011
@@ -1742,7 +1664,7 @@ def enumerate_display_info_domain_groups(dce, domainHandle, group_name, group_ri
     membersResp = samr.hSamrGetMembersInGroup(dce, groupHandle)
     add_opnum_call(opnums_called, "SamrGetMembersInGroup")
     member_count = len(membersResp['Members']['Members'])
-    # Resolve member RIDs to names…
+    # Resolve member RIDs to names
     rids_list = []
     for ridEntry in membersResp['Members']['Members']:
         if isinstance(ridEntry, int):
@@ -1758,8 +1680,7 @@ def enumerate_display_info_domain_groups(dce, domainHandle, group_name, group_ri
         names = [safe_str(name['Data']) for name in lookupResp2['Names']['Element']]
         members = list(zip(rids_list, names))
 
-    # Now query the group information to get the description.
-    description = ""
+    # Query the group information to get the description.
     try:
         add_opnum_call(opnums_called, "SamrQueryInformationGroup")
         groupInfoResp = samr.hSamrQueryInformationGroup(
@@ -1797,6 +1718,13 @@ def get_computer_details(dce, domainHandle, computer_rid, debug, opnums_called):
     """
     Retrieve detailed computer information from SAMR using the computer's RID.
     Returns a dictionary with keys matching the display-info columns for computers.
+
+    :param dce: DCE/RPC connection object.
+    :param domainHandle: Handle to the domain.
+    :param computer_rid: RID of the computer account.
+    :param debug: Boolean for enabling debug messages.
+    :param opnums_called: List tracking SAMR operations performed.
+    :return: Dictionary containing computer details matching the display-info columns.
     """
     # SamrOpenUser for the computer account
     compHandle = None
@@ -1822,8 +1750,6 @@ def get_computer_details(dce, domainHandle, computer_rid, debug, opnums_called):
                 compHandle,
                 samr.USER_INFORMATION_CLASS.UserGeneralInformation
             )
-            info = response['Buffer']['General']
-
 
         info = response['Buffer']['All']
         uac_int = int(info['UserAccountControl'])
@@ -1837,7 +1763,6 @@ def get_computer_details(dce, domainHandle, computer_rid, debug, opnums_called):
         else:
             delegated = "No"
 
-        acct_status = "Disabled" if (uac_int & samr.USER_ACCOUNT_DISABLED) else "Enabled"
         trust_type = ("Workstation" if (uac_int & samr.USER_WORKSTATION_TRUST_ACCOUNT)
                       else "Server" if (uac_int & samr.USER_SERVER_TRUST_ACCOUNT)
         else "N/A")
@@ -1876,12 +1801,15 @@ def get_computer_details(dce, domainHandle, computer_rid, debug, opnums_called):
 
 def display_info(dce, serverHandle, info_type, debug, opnums_called):
     """
-    Enumerate objects of a given type and display additional descriptive fields.
+    Enumerate objects of a given type and return detailed information.
 
-    Parameters:
-      - info_type: one of 'users', 'computers', 'local-groups', or 'domain-groups'.
-
-    Returns a list of dictionaries with detailed information.
+    :param dce: DCE/RPC connection object.
+    :param serverHandle: Handle to the SAMR server.
+    :param info_type: One of 'users', 'computers', 'local-groups', or 'domain-groups'.
+    :param debug: Boolean for enabling debug messages.
+    :param opnums_called: List tracking SAMR operations performed.
+    :return: List of dictionaries with detailed information. For local and domain groups,
+             a tuple (results, domainSid) may be returned.
     """
     results = []
     if info_type == 'users':
@@ -2024,6 +1952,15 @@ def get_lockout_policy(dce, domainHandle, debug, opnums_called):
 
 
 def get_password_policy(dce, domainHandle, debug, opnums_called):
+    """
+    Retrieve the domain password policy using SamrQueryInformationDomain2.
+
+    :param dce: DCE/RPC connection object.
+    :param domainHandle: Handle to the opened domain.
+    :param debug: Boolean indicating whether debug output is enabled.
+    :param opnums_called: List tracking SAMR operations performed.
+    :return: Dictionary containing password policy details (min length, max age, etc.).
+    """
     log_debug(debug, "[debug] Querying domain password policy...")
     add_opnum_call(opnums_called, "SamrQueryInformationDomain2")
     try:
@@ -2095,6 +2032,15 @@ def get_password_policy(dce, domainHandle, debug, opnums_called):
 
 
 def get_domain_info(dce, serverHandle, debug, opnums_called):
+    """
+    Retrieve basic domain information.
+
+    :param dce: DCE/RPC connection object.
+    :param serverHandle: Handle to the SAMR server.
+    :param debug: Boolean for enabling debug output.
+    :param opnums_called: List tracking SAMR operations performed.
+    :return: Dictionary with domain details (domain SID, domain name, etc.).
+    """
     def ticks_to_days(ticks_obj):
         if not isinstance(ticks_obj, samr.OLD_LARGE_INTEGER):
             return 0
@@ -2172,6 +2118,16 @@ def get_domain_info(dce, serverHandle, debug, opnums_called):
 
 
 def get_summary(dce, serverHandle, debug, opnums_called):
+    """
+    Generate a summary report for the domain including domain info, password policy,
+    lockout policy, and counts of users, groups, and computers.
+
+    :param dce: DCE/RPC connection object.
+    :param serverHandle: Handle to the SAMR server.
+    :param debug: Boolean for enabling debug output.
+    :param opnums_called: List tracking SAMR operations performed.
+    :return: List containing a single dictionary with summary details.
+    """
     summary = {}
 
     # Get domain info (opens/closes its own handle)
@@ -2228,9 +2184,10 @@ def get_summary(dce, serverHandle, debug, opnums_called):
 
 def main():
     """
-    Main entry point for the SAMR enumeration script.
-    Parses arguments, performs the requested enumeration,
-    prints the results, and optionally exports them.
+    Main function to parse command-line arguments, establish connection, perform enumeration,
+    export data if requested, and handle any errors.
+
+    :return: None
     """
     # Basic "help" check
     if len(sys.argv) > 1:
@@ -2239,7 +2196,6 @@ def main():
         if first_arg == "help" or "help" in first_arg:
             print_help()
 
-    # If no args given, print usage
     # If no args given, print usage
     if len(sys.argv) == 1:
         print("Usage:\n  python samr-enum.py target=dc1.domain-a.local"
@@ -2255,7 +2211,6 @@ def main():
     target = args.get('target', '')
     username = args.get('username', '')
     password = args.get('password', '')  # might be empty -> prompt
-    groupName = args.get('group', '')
     debug = args.get('debug', 'false').lower() == 'true'
     export_file = args.get('export', '')
     export_format = args.get('format', 'txt').lower()
@@ -2811,15 +2766,10 @@ def main():
         print("-" * 55)
 
         for item in opnums_called:
-            # Example item formats you might see:
-            #   "SamrConnect (OpNum 0, Access Mask: 0x00000031)"
-            #   "SamrEnumerateDomainsInSamServer (OpNum 6)"
-            #   "SamrCloseHandle"
             name_str = item
             opnum_str = "--"
             mask_str = "--"
 
-            # Attempt to find something like "(OpNum 7"
             paren_idx = item.find("(OpNum ")
             if paren_idx != -1:
                 # Extract the function name from the front
