@@ -804,6 +804,88 @@ def export_data(filename, fmt, data):
                             "Full Name": full_name
                         })
                     json.dump(json_data, f, indent=2)
+
+            # Branch for summary export
+            # Branch for summary export
+            elif isinstance(data[0], dict) and 'domain_info' in data[0]:
+                # In summary, the exported data is a single dictionary.
+                summary = data[0]
+                domain_info = summary.get('domain_info', {})
+                password_policy = summary.get('password_policy', {})
+                lockout_policy = summary.get('lockout_policy', {})
+
+                if fmt == 'txt':
+                    # Produce a multi-line output similar to on-screen output.
+                    f.write("Domain Information:\n")
+                    f.write(f"  Domain SID:               {domain_info.get('domain_sid', 'N/A')}\n")
+                    f.write(f"  Domain Name:              {domain_info.get('domain_name', 'N/A')}\n")
+                    f.write(f"  UAS Compatible:           {yes_no(domain_info.get('uas_compatible', False))}\n")
+                    f.write(f"  Lockout Threshold:        {domain_info.get('lockout_threshold', 'N/A')}\n")
+                    f.write(f"  Lockout Duration (days):  {domain_info.get('lockout_duration_days', 'N/A')}\n")
+                    f.write(f"  Lockout Observation (days): {domain_info.get('lockout_window_days', 'N/A')}\n")
+                    f.write(f"  Force Logoff (days):      {domain_info.get('force_logoff_days', 'N/A')}\n")
+                    f.write("\n")
+                    f.write("Password Policy:\n")
+                    f.write(f"  Minimum Password Length:  {password_policy.get('min_length', 'N/A')}\n")
+                    f.write(f"  Minimum Password Age (days): {password_policy.get('min_age_days', 'N/A')}\n")
+                    f.write(f"  Maximum Password Age (days): {password_policy.get('max_age_days', 'N/A')}\n")
+                    f.write(f"  Password History Length:  {password_policy.get('history_length', 'N/A')}\n")
+                    f.write(f"  Password Properties:      {', '.join(password_policy.get('properties', []))}\n")
+                    f.write("\n")
+                    f.write("Lockout Policy:\n")
+                    f.write(f"  Lockout Threshold:        {lockout_policy.get('lockout_threshold', 'N/A')}\n")
+                    f.write(f"  Lockout Duration (days):  {lockout_policy.get('lockout_duration', 'N/A')}\n")
+                    f.write(f"  Lockout Observation (days): {lockout_policy.get('lockout_window', 'N/A')}\n")
+                    f.write("\n")
+                    f.write(f"Total Users:               {summary.get('total_users', 'N/A')}\n")
+                    f.write(f"Total Domain Groups:       {summary.get('total_domain_groups', 'N/A')}\n")
+                    f.write(f"Total Local Groups:        {summary.get('total_local_groups', 'N/A')}\n")
+                    f.write(f"Total Computers:           {summary.get('total_computers', 'N/A')}\n")
+
+                elif fmt == 'csv':
+                    # For CSV, output key,value pairs in two columns
+                    import csv
+                    writer = csv.writer(f, delimiter=';')
+                    writer.writerow(["Field", "Value"])
+                    writer.writerow(["Domain SID", domain_info.get('domain_sid', 'N/A')])
+                    writer.writerow(["Domain Name", domain_info.get('domain_name', 'N/A')])
+                    writer.writerow(["UAS Compatible", yes_no(domain_info.get('uas_compatible', False))])
+                    writer.writerow(["Lockout Threshold", domain_info.get('lockout_threshold', 'N/A')])
+                    writer.writerow(["Lockout Duration (days)", domain_info.get('lockout_duration_days', 'N/A')])
+                    writer.writerow(["Lockout Observation (days)", domain_info.get('lockout_window_days', 'N/A')])
+                    writer.writerow(["Force Logoff (days)", domain_info.get('force_logoff_days', 'N/A')])
+                    writer.writerow(["Minimum Password Length", password_policy.get('min_length', 'N/A')])
+                    writer.writerow(["Minimum Password Age (days)", password_policy.get('min_age_days', 'N/A')])
+                    writer.writerow(["Maximum Password Age (days)", password_policy.get('max_age_days', 'N/A')])
+                    writer.writerow(["Password History Length", password_policy.get('history_length', 'N/A')])
+                    writer.writerow(["Password Properties", ", ".join(password_policy.get('properties', []))])
+                    writer.writerow(["Total Users", summary.get('total_users', 'N/A')])
+                    writer.writerow(["Total Domain Groups", summary.get('total_domain_groups', 'N/A')])
+                    writer.writerow(["Total Local Groups", summary.get('total_local_groups', 'N/A')])
+                    writer.writerow(["Total Computers", summary.get('total_computers', 'N/A')])
+
+                elif fmt == 'json':
+                    # In JSON, include all fields (ensure password properties are added)
+                    import json
+                    json_data = {
+                        "Domain SID": domain_info.get('domain_sid', 'N/A'),
+                        "Domain Name": domain_info.get('domain_name', 'N/A'),
+                        "UAS Compatible": yes_no(domain_info.get('uas_compatible', False)),
+                        "Lockout Threshold": domain_info.get('lockout_threshold', 'N/A'),
+                        "Lockout Duration (days)": domain_info.get('lockout_duration_days', 'N/A'),
+                        "Lockout Observation (days)": domain_info.get('lockout_window_days', 'N/A'),
+                        "Force Logoff (days)": domain_info.get('force_logoff_days', 'N/A'),
+                        "Minimum Password Length": password_policy.get('min_length', 'N/A'),
+                        "Minimum Password Age (days)": password_policy.get('min_age_days', 'N/A'),
+                        "Maximum Password Age (days)": password_policy.get('max_age_days', 'N/A'),
+                        "Password History Length": password_policy.get('history_length', 'N/A'),
+                        "Password Properties": password_policy.get('properties', []),
+                        "Total Users": summary.get('total_users', 'N/A'),
+                        "Total Domain Groups": summary.get('total_domain_groups', 'N/A'),
+                        "Total Local Groups": summary.get('total_local_groups', 'N/A'),
+                        "Total Computers": summary.get('total_computers', 'N/A')
+                    }
+                    json.dump(json_data, f, indent=2)
             else:
                 # Fallback for other data types remains unchanged.
                 f.write("Unknown data format for export.\n")
@@ -2013,15 +2095,10 @@ def get_password_policy(dce, domainHandle, debug, opnums_called):
 
 
 def get_domain_info(dce, serverHandle, debug, opnums_called):
-    """
-    Retrieve general domain information using SamrQueryInformationDomain2.
-    """
-
     def ticks_to_days(ticks_obj):
-        """Convert OLD_LARGE_INTEGER to days with Windows special value handling."""
         if not isinstance(ticks_obj, samr.OLD_LARGE_INTEGER):
             return 0
-        if ticks_obj['HighPart'] == -2147483648:  # 0x80000000
+        if ticks_obj['HighPart'] == -2147483648:
             return 0
         ticks = (ticks_obj['HighPart'] << 32) | (ticks_obj['LowPart'] & 0xFFFFFFFF)
         if ticks_obj['HighPart'] < 0:
@@ -2031,7 +2108,6 @@ def get_domain_info(dce, serverHandle, debug, opnums_called):
     log_debug(debug, "[debug] Enumerating domains to get domain name...")
     enumDomainsResp = samr.hSamrEnumerateDomainsInSamServer(dce, serverHandle)
     add_opnum_call(opnums_called, "SamrEnumerateDomainsInSamServer")
-
     domains = enumDomainsResp['Buffer']['Buffer']
     if not domains:
         raise Exception("No domains found on target.")
@@ -2039,11 +2115,13 @@ def get_domain_info(dce, serverHandle, debug, opnums_called):
 
     log_debug(debug, f"[debug] Looking up domain '{domainName}'...")
     lookupResp = samr.hSamrLookupDomainInSamServer(dce, serverHandle, domainName)
+    add_opnum_call(opnums_called, "SamrLookupDomainInSamServer")
     domainSid = lookupResp['DomainId']
     sidString = domainSid.formatCanonical()
 
     log_debug(debug, "[debug] Opening domain with MAXIMUM_ALLOWED access...")
-    openDomResp = samr.hSamrOpenDomain(dce, serverHandle, 0x02000000, domainSid)
+    openDomResp = samr.hSamrOpenDomain(dce, serverHandle, 0x00000305, domainSid)
+    add_opnum_call(opnums_called, "SamrOpenDomain", 0x00000305)
     domainHandle = openDomResp['DomainHandle']
 
     try:
@@ -2052,18 +2130,18 @@ def get_domain_info(dce, serverHandle, debug, opnums_called):
             domainHandle,
             samr.DOMAIN_INFORMATION_CLASS.DomainGeneralInformation2
         )
-        # Impacket returns a flattened structure with a 'fields' dict.
+        # Log the call for SamrQueryInformationDomain2 (OpNum 46)
+        add_opnum_call(opnums_called, "SamrQueryInformationDomain2")
         general_info = resp_general['Buffer']['General2']
 
-        # Query password policy (for max/min password age)
         resp_password = samr.hSamrQueryInformationDomain2(
             dce,
             domainHandle,
             samr.DOMAIN_INFORMATION_CLASS.DomainPasswordInformation
         )
+        add_opnum_call(opnums_called, "SamrQueryInformationDomain2")
         password_info = resp_password['Buffer']['Password']
 
-        # Safely extract DomainModifiedCount; default to 0 if missing.
         modified_struct = general_info.fields.get('DomainModifiedCount')
         modified_count = modified_struct.fields.get('LowPart', 0) if modified_struct is not None else 0
 
@@ -2096,30 +2174,47 @@ def get_domain_info(dce, serverHandle, debug, opnums_called):
 def get_summary(dce, serverHandle, debug, opnums_called):
     summary = {}
 
-    # Get domain info
+    # Get domain info (opens/closes its own handle)
     domain_info = get_domain_info(dce, serverHandle, debug, opnums_called)
     summary['domain_info'] = domain_info
 
+    # Open primary domain handle for users, computers, domain groups, and policies
     domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
     try:
+        # Enumerate users
         users = enumerate_users(dce, domainHandle, debug)
+        # Log opnum for SamrEnumerateUsersInDomain (OpNum 13)
+        add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
         summary['total_users'] = len(users)
+
+        # Enumerate computers
         computers = enumerate_computers(dce, domainHandle, debug)
-        summary['total_computers'] = len(computers)  # Will be 0 if none found
+        summary['total_computers'] = len(computers)
+
+        # Enumerate domain groups
         domain_groups, _ = enumerate_domain_groups(dce, domainHandle, debug)
+        # Log opnum for SamrEnumerateGroupsInDomain (OpNum 11)
+        add_opnum_call(opnums_called, "SamrEnumerateGroupsInDomain")
         summary['total_domain_groups'] = len(domain_groups)
+
+        # Get password policy
         password_policy = get_password_policy(dce, domainHandle, debug, opnums_called)
         summary['password_policy'] = password_policy
+
+        # Get lockout policy
         lockout_policy = get_lockout_policy(dce, domainHandle, debug, opnums_called)
         summary['lockout_policy'] = lockout_policy
     finally:
         samr.hSamrCloseHandle(dce, domainHandle)
         add_opnum_call(opnums_called, "SamrCloseHandle")
 
+    # Open Builtin domain handle for local groups (aliases)
     builtinHandle, builtinName, builtinSid = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
     try:
         try:
             aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, builtinHandle)
+            # Log opnum for SamrEnumerateAliasesInDomain (OpNum 15)
+            add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
             aliases = aliasResp['Buffer']['Buffer'] or []
         except Exception as e:
             aliases = []
