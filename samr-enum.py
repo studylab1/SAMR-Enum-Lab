@@ -438,15 +438,15 @@ def decode_group_attributes(attr):
     """
     flags = []
     if attr & 0x00000001:
-        flags.append("SE_GROUP_MANDATORY")
+        flags.append("Mandatory")
     if attr & 0x00000002:
-        flags.append("SE_GROUP_ENABLED_BY_DEFAULT")
+        flags.append("Enabled by default")
     if attr & 0x00000004:
-        flags.append("SE_GROUP_ENABLED")
+        flags.append("Enabled")
     if attr & 0x00000008:
-        flags.append("SE_GROUP_OWNER")
+        flags.append("Owner")
     if attr & 0x00000010:
-        flags.append("SE_GROUP_USE_FOR_DENY_ONLY")
+        flags.append("Deny only")
     return ", ".join(flags)
 
 
@@ -835,12 +835,104 @@ def export_data(filename, fmt, data):
                         "Total Computers": summary.get('total_computers', 'N/A')
                     }
                     json.dump(json_data, f, indent=2)
+
+            elif isinstance(data[0], tuple) and len(data[0]) >= 2:
+                # Assume the tuple is (Name, RID)
+                if fmt == 'txt':
+                    max_length = max(len(str(item[0])) for item in data)
+                    header_line = f"{'Name':<{max_length}} RID"
+                    f.write(header_line + "\n")
+                    f.write("-" * (max_length + len(" RID") + 2) + "\n")
+                    for item in data:
+                        f.write(f"{item[0]:<{max_length}} {item[1]}\n")
+                elif fmt == 'csv':
+                    import csv
+                    writer = csv.writer(f, delimiter=';')
+                    writer.writerow(['Name', 'RID'])
+                    for item in data:
+                        writer.writerow([item[0], item[1]])
+                elif fmt == 'json':
+                    import json
+                    json_data = [{"Name": item[0], "RID": item[1]} for item in data]
+                    json.dump(json_data, f, indent=2)
+
             else:
                 # Fallback for other data types remains unchanged.
                 f.write("Unknown data format for export.\n")
         print(f"Data exported to {filename} ({fmt.upper()})")
     except Exception as e:
         print(f"Export failed: {str(e)}")
+
+
+def enumerate_local_groups_plain(dce, serverHandle, debug, opnums_called):
+    """
+    Enumerate local (Builtin) groups using the plain method.
+    This is used when the user specifies "enumerate=local-groups" so that
+    no additional OpNum 28 (SamrQueryInformationAlias) is sent.
+
+    :param dce: The DCE/RPC connection object.
+    :param serverHandle: The SAMR server handle.
+    :param debug: Boolean flag indicating whether debug messages should be printed.
+    :param opnums_called: A list used to record the SAMR operation numbers (OpNums) invoked.
+    :return: A tuple containing:
+             - A list of dictionaries, each with details about a local group (group name, RID, and member count).
+             - The domain SID string.
+    """
+    # Get the Builtin domain handle (which is used for local groups)
+    builtinHandle, builtinName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
+    try:
+        aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, builtinHandle)
+        add_opnum_call(opnums_called, "SamrEnumerateAliasesInSamServer")
+        aliases = aliasResp['Buffer']['Buffer'] or []
+    except Exception as e:
+        aliases = []
+    results = []
+    for alias in aliases:
+        alias_name = safe_str(alias['Name'])
+        try:
+            details = get_local_group_details_plain(dce, builtinHandle, alias_name, debug, opnums_called)
+            results.append(details)
+        except Exception as e:
+            results.append({'group_name': alias_name, 'error': str(e)})
+    samr.hSamrCloseHandle(dce, builtinHandle)
+    add_opnum_call(opnums_called, "SamrCloseHandle")
+    return results, domainSidString
+
+
+def get_local_group_details_plain(dce, builtinHandle, alias_name, debug, opnums_called):
+    """
+    Retrieve local group (alias) details without extra SID resolution.
+    This mimics the working version (version 1) for local groups.
+
+    :param dce: The DCE/RPC connection object.
+    :param builtinHandle: The handle to the Builtin domain.
+    :param alias_name: The name of the local group (alias) to retrieve details for.
+    :param debug: Boolean flag indicating whether debug messages should be printed.
+    :param opnums_called: A list used to record the SAMR operation numbers (OpNums) invoked.
+    :return: A dictionary containing the local group details:
+             - 'group_name': The alias (local group) name.
+             - 'rid': The Relative Identifier (RID) of the alias.
+             - 'member_count': The number of members in the alias.
+    """
+    lookupResp = samr.hSamrLookupNamesInDomain(dce, builtinHandle, [alias_name])
+    add_opnum_call(opnums_called, "SamrLookupNamesInSamServer")
+    rids = lookupResp['RelativeIds']['Element']
+    uses = lookupResp['Use']['Element']
+    if not rids or extract_ndr_value(uses[0]) != SID_NAME_ALIAS:
+        raise Exception(f"Alias '{alias_name}' not found or not a valid alias.")
+    alias_rid = extract_ndr_value(rids[0])
+
+    aliasHandle = samr.hSamrOpenAlias(dce, builtinHandle, samr.ALIAS_LIST_MEMBERS, alias_rid)['AliasHandle']
+    add_opnum_call(opnums_called, "SamrOpenAlias")
+
+    membersResp = samr.hSamrGetMembersInAlias(dce, aliasHandle)
+    add_opnum_call(opnums_called, "SamrGetMembersInAlias")
+    member_count = len(membersResp['Members']['Sids'])
+
+    samr.hSamrCloseHandle(dce, aliasHandle)
+    add_opnum_call(opnums_called, "SamrCloseHandle")
+
+    return {'group_name': alias_name, 'rid': alias_rid, 'member_count': member_count}
 
 
 def samr_connect(target, username, password, domain, debug, auth_mode):
@@ -2257,32 +2349,22 @@ def main():
             enumerated_objects = enumerate_computers(dce, domainHandle, debug)
             add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
 
-
         elif enumeration == 'local-groups':
-            # Get the primary domain SID (as used in users/computers)
-            primaryDomainHandle, primaryDomainName, primaryDomainSid = get_domain_handle(dce, serverHandle, debug,
-                                                                                         opnums_called)
-            # Now get the builtin domain handle for enumerating local groups
-            builtinHandle, builtinName, _ = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
-            # For display, use the primary domain SID
-            domainSidString = primaryDomainSid
-
+            # Use the Builtin domain to enumerate local groups (aliases) without extra query.
+            domainHandle, domainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug,
+                                                                                  opnums_called)
             try:
-                aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, builtinHandle)
+                aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
+                add_opnum_call(opnums_called, "SamrEnumerateAliasesInSamServer")
                 aliases = aliasResp['Buffer']['Buffer'] or []
             except Exception as e:
                 aliases = []
-            results = []
-            group_tuples = [(safe_str(alias['Name']), alias['RelativeId']) for alias in aliases]
-            for group_name, group_rid in group_tuples:
-                try:
-                    # Pass the primary domain handle and SID to get the details
-                    details = get_local_group_details(dce, builtinHandle, group_name, group_rid, debug, opnums_called,
-                                                      primaryDomainHandle, primaryDomainSid)
-                    results.append(details)
-                except Exception as e:
-                    results.append({'group_name': group_name, 'rid': group_rid, 'error': str(e)})
-            samr.hSamrCloseHandle(dce, builtinHandle)
+            group_rids = [alias['RelativeId'] for alias in aliases]
+            lookupResp2 = samr.hSamrLookupIdsInDomain(dce, domainHandle, group_rids)
+            names = [safe_str(name['Data']) for name in lookupResp2['Names']['Element']]
+            groups_result = list(zip(names, group_rids))
+            enumerated_objects = groups_result
+            samr.hSamrCloseHandle(dce, domainHandle)
             add_opnum_call(opnums_called, "SamrCloseHandle")
 
         elif enumeration == 'domain-groups':
@@ -2335,6 +2417,7 @@ def main():
                                                                                    opnums_called)
             alias_details = get_local_group_details(dce, builtinHandle, aliasName, debug, opnums_called, primaryHandle,
                                                     primaryDomainSid)
+
             enumerated_objects = [alias_details]
             domainSidString = alias_details.get('primary_domain_sid', '')
 
