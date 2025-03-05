@@ -459,7 +459,8 @@ def export_data(filename, fmt, data):
     For display-info type=computers objects, export the following columns in this order:
       RID, Name, Logons, LastLogon, PwdLastSet, BadPwdCnt, PID, Type, Enabled, PwdNReq, PwdNExp, Deleg, Description
     For display-info type=local-groups objects, export the following columns:
-      RID, MemCnt, Name, Domain SID, Description
+      RID, MemCnt, Name, Description
+    For account-details objects (from enumerate=account-details) export one attribute per line.
     For other data types, the export behavior remains unchanged.
 
     :param filename: The name of the file to export to.
@@ -488,119 +489,148 @@ def export_data(filename, fmt, data):
         except Exception:
             return time_str
 
+    # Helper to export a value for account-details.
+    def export_value(key, value):
+        # List of keys that represent FILETIME values.
+        date_keys = {"last_logon", "password_last_set", "password_can_change", "password_force_change",
+                     "account_expires"}
+        if key in date_keys:
+            return format_date_export(format_time(value))
+        return value
+
     try:
         with open(filename, 'w') as f:
-            # Branch for computers
+            # ----- Branch for plain computers export (from enumerate=computers) -----
             if isinstance(data[0], dict) and 'computer_name' in data[0]:
-                # Define header columns for computers
-                header = ["RID", "Name", "Logons", "LastLogon", "PwdLastSet", "BadPwdCnt",
-                          "PID", "Type", "Enabled", "PwdNReq", "PwdNExp", "Deleg", "Description"]
-                if fmt == 'txt':
-                    # Fixed widths for each column (adjust as needed)
-                    col_widths = {
-                        "RID": 6,
-                        "Name": 18,
-                        "Logons": 6,
-                        "LastLogon": 11,
-                        "PwdLastSet": 11,
-                        "BadPwdCnt": 9,
-                        "PID": 4,
-                        "Type": 14,
-                        "Enabled": 8,
-                        "PwdNReq": 9,
-                        "PwdNExp": 8,
-                        "Deleg": 6,
-                        "Description": 14
-                    }
-                    # Build header line
-                    header_line = ""
-                    for col in header:
-                        header_line += f"{col:<{col_widths[col]}} "
-                    f.write(header_line.strip() + "\n")
-                    f.write("-" * (sum(col_widths.values()) + len(header)) + "\n")
-                    # Write each row
-                    for obj in data:
-                        rid = str(obj.get('rid', 'N/A'))
-                        name = str(obj.get('computer_name', 'N/A')).rstrip('$')
-                        logons = str(obj.get('logon_count', 'N/A'))
-                        last_logon = format_date_export(format_time(obj.get('last_logon', 0)))
-                        pwd_last_set = format_date_export(format_time(obj.get('password_last_set', 0)))
-                        bad_pwd_cnt = str(obj.get('bad_password_count', 'N/A'))
-                        pid = str(obj.get('primary_group_id', 'N/A'))
-                        trust = obj.get('trust_type', 'N/A')
-                        enabled = "Yes" if obj.get('enabled', False) else "No"
-                        pwd_nreq = "Yes" if obj.get('password_not_required', False) else "No"
-                        pwd_nexp = "Yes" if obj.get('password_never_expires', False) else "No"
-                        deleg = obj.get('delegation_status', 'N/A')
-                        desc = obj.get('description', 'N/A')
-                        row = (f"{rid:<{col_widths['RID']}} "
-                               f"{name:<{col_widths['Name']}} "
-                               f"{logons:<{col_widths['Logons']}} "
-                               f"{last_logon:<{col_widths['LastLogon']}} "
-                               f"{pwd_last_set:<{col_widths['PwdLastSet']}} "
-                               f"{bad_pwd_cnt:<{col_widths['BadPwdCnt']}} "
-                               f"{pid:<{col_widths['PID']}} "
-                               f"{trust:<{col_widths['Type']}} "
-                               f"{enabled:<{col_widths['Enabled']}} "
-                               f"{pwd_nreq:<{col_widths['PwdNReq']}} "
-                               f"{pwd_nexp:<{col_widths['PwdNExp']}} "
-                               f"{deleg:<{col_widths['Deleg']}} "
-                               f"{desc:<{col_widths['Description']}}")
-                        f.write(row + "\n")
-                elif fmt == 'csv':
-                    import csv
-                    writer = csv.writer(f, delimiter=';')
-                    writer.writerow(header)
-                    for obj in data:
-                        rid = str(obj.get('rid', 'N/A'))
-                        name = str(obj.get('computer_name', 'N/A')).rstrip('$')
-                        logons = obj.get('logon_count', 'N/A')
-                        last_logon = format_date_export(format_time(obj.get('last_logon', 0)))
-                        pwd_last_set = format_date_export(format_time(obj.get('password_last_set', 0)))
-                        bad_pwd_cnt = str(obj.get('bad_password_count', 'N/A'))
-                        pid = str(obj.get('primary_group_id', 'N/A'))
-                        trust = obj.get('trust_type', 'N/A')
-                        enabled = "Yes" if obj.get('enabled', False) else "No"
-                        pwd_nreq = "Yes" if obj.get('password_not_required', False) else "No"
-                        pwd_nexp = "Yes" if obj.get('password_never_expires', False) else "No"
-                        deleg = obj.get('delegation_status', 'N/A')
-                        desc = obj.get('description', 'N/A')
-                        writer.writerow([rid, name, logons, last_logon, pwd_last_set,
-                                         bad_pwd_cnt, pid, trust, enabled, pwd_nreq, pwd_nexp, deleg, desc])
-                elif fmt == 'json':
-                    import json
-                    json_data = []
-                    for obj in data:
-                        rid = str(obj.get('rid', 'N/A'))
-                        name = str(obj.get('computer_name', 'N/A')).rstrip('$')
-                        logons = obj.get('logon_count', 'N/A')
-                        last_logon = format_date_export(format_time(obj.get('last_logon', 0)))
-                        pwd_last_set = format_date_export(format_time(obj.get('password_last_set', 0)))
-                        bad_pwd_cnt = str(obj.get('bad_password_count', 'N/A'))
-                        pid = str(obj.get('primary_group_id', 'N/A'))
-                        trust = obj.get('trust_type', 'N/A')
-                        enabled = "Yes" if obj.get('enabled', False) else "No"
-                        pwd_nreq = "Yes" if obj.get('password_not_required', False) else "No"
-                        pwd_nexp = "Yes" if obj.get('password_never_expires', False) else "No"
-                        deleg = obj.get('delegation_status', 'N/A')
-                        desc = obj.get('description', 'N/A')
-                        json_data.append({
-                            "RID": rid,
-                            "Name": name,
-                            "Logons": logons,
-                            "LastLogon": last_logon,
-                            "PwdLastSet": pwd_last_set,
-                            "BadPwdCnt": bad_pwd_cnt,
-                            "PID": pid,
-                            "Type": trust,
-                            "Enabled": enabled,
-                            "PwdNReq": pwd_nreq,
-                            "PwdNExp": pwd_nexp,
-                            "Deleg": deleg,
-                            "Description": desc
-                        })
-                    json.dump(json_data, f, indent=2)
-            # Branch for local-groups
+                if ('logon_count' not in data[0]) or (
+                        str(data[0].get('logon_count')).strip().lower() in ['n/a', 'never', 'none', '']):
+                    if fmt == 'txt':
+                        max_length = max(len(str(comp.get('computer_name', '')).rstrip('$')) for comp in data)
+                        header_line = f"{'Name':<{max_length}} RID"
+                        f.write(header_line + "\n")
+                        f.write("-" * (max_length + len(" RID") + 2) + "\n")
+                        for obj in data:
+                            name = str(obj.get('computer_name', '')).rstrip('$')
+                            rid = str(obj.get('rid', 'N/A'))
+                            f.write(f"{name:<{max_length}} {rid}\n")
+                    elif fmt == 'csv':
+                        import csv
+                        writer = csv.writer(f, delimiter=';')
+                        writer.writerow(['Name', 'RID'])
+                        for obj in data:
+                            writer.writerow([str(obj.get('computer_name', '')).rstrip('$'), obj.get('rid', 'N/A')])
+                    elif fmt == 'json':
+                        import json
+                        json_data = [{"Name": str(obj.get('computer_name', '')).rstrip('$'),
+                                      "RID": obj.get('rid', 'N/A')} for obj in data]
+                        json.dump(json_data, f, indent=2)
+                else:
+                    # Detailed export for computers (from display-info type=computers)
+                    header = ["RID", "Name", "Logons", "LastLogon", "PwdLastSet", "BadPwdCnt",
+                              "PID", "Type", "Enabled", "PwdNReq", "PwdNExp", "Deleg", "Description"]
+                    if fmt == 'txt':
+                        col_widths = {
+                            "RID": 6,
+                            "Name": 18,
+                            "Logons": 6,
+                            "LastLogon": 11,
+                            "PwdLastSet": 11,
+                            "BadPwdCnt": 9,
+                            "PID": 4,
+                            "Type": 14,
+                            "Enabled": 8,
+                            "PwdNReq": 9,
+                            "PwdNExp": 8,
+                            "Deleg": 6,
+                            "Description": 14
+                        }
+                        header_line = ""
+                        for col in header:
+                            header_line += f"{col:<{col_widths[col]}} "
+                        f.write(header_line.strip() + "\n")
+                        f.write("-" * (sum(col_widths.values()) + len(header)) + "\n")
+                        for obj in data:
+                            rid = str(obj.get('rid', 'N/A'))
+                            name = str(obj.get('computer_name', 'N/A')).rstrip('$')
+                            logons = str(obj.get('logon_count', 'N/A'))
+                            last_logon = format_date_export(format_time(obj.get('last_logon', 0)))
+                            pwd_last_set = format_date_export(format_time(obj.get('password_last_set', 0)))
+                            bad_pwd_cnt = str(obj.get('bad_password_count', 'N/A'))
+                            pid = str(obj.get('primary_group_id', 'N/A'))
+                            trust = obj.get('trust_type', 'N/A')
+                            enabled = "Yes" if obj.get('enabled', False) else "No"
+                            pwd_nreq = "Yes" if obj.get('password_not_required', False) else "No"
+                            pwd_nexp = "Yes" if obj.get('password_never_expires', False) else "No"
+                            deleg = obj.get('delegation_status', 'N/A')
+                            desc = obj.get('description', 'N/A')
+                            row = (f"{rid:<{col_widths['RID']}} "
+                                   f"{name:<{col_widths['Name']}} "
+                                   f"{logons:<{col_widths['Logons']}} "
+                                   f"{last_logon:<{col_widths['LastLogon']}} "
+                                   f"{pwd_last_set:<{col_widths['PwdLastSet']}} "
+                                   f"{bad_pwd_cnt:<{col_widths['BadPwdCnt']}} "
+                                   f"{pid:<{col_widths['PID']}} "
+                                   f"{trust:<{col_widths['Type']}} "
+                                   f"{enabled:<{col_widths['Enabled']}} "
+                                   f"{pwd_nreq:<{col_widths['PwdNReq']}} "
+                                   f"{pwd_nexp:<{col_widths['PwdNExp']}} "
+                                   f"{deleg:<{col_widths['Deleg']}} "
+                                   f"{desc:<{col_widths['Description']}}")
+                            f.write(row + "\n")
+                    elif fmt == 'csv':
+                        import csv
+                        writer = csv.writer(f, delimiter=';')
+                        writer.writerow(header)
+                        for obj in data:
+                            rid = str(obj.get('rid', 'N/A'))
+                            name = str(obj.get('computer_name', 'N/A')).rstrip('$')
+                            logons = obj.get('logon_count', 'N/A')
+                            last_logon = format_date_export(format_time(obj.get('last_logon', 0)))
+                            pwd_last_set = format_date_export(format_time(obj.get('password_last_set', 0)))
+                            bad_pwd_cnt = str(obj.get('bad_password_count', 'N/A'))
+                            pid = str(obj.get('primary_group_id', 'N/A'))
+                            trust = obj.get('trust_type', 'N/A')
+                            enabled = "Yes" if obj.get('enabled', False) else "No"
+                            pwd_nreq = "Yes" if obj.get('password_not_required', False) else "No"
+                            pwd_nexp = "Yes" if obj.get('password_never_expires', False) else "No"
+                            deleg = obj.get('delegation_status', 'N/A')
+                            desc = obj.get('description', 'N/A')
+                            writer.writerow([rid, name, logons, last_logon, pwd_last_set,
+                                             bad_pwd_cnt, pid, trust, enabled, pwd_nreq, pwd_nexp, deleg, desc])
+                    elif fmt == 'json':
+                        import json
+                        json_data = []
+                        for obj in data:
+                            rid = str(obj.get('rid', 'N/A'))
+                            name = str(obj.get('computer_name', 'N/A')).rstrip('$')
+                            logons = obj.get('logon_count', 'N/A')
+                            last_logon = format_date_export(format_time(obj.get('last_logon', 0)))
+                            pwd_last_set = format_date_export(format_time(obj.get('password_last_set', 0)))
+                            bad_pwd_cnt = str(obj.get('bad_password_count', 'N/A'))
+                            pid = str(obj.get('primary_group_id', 'N/A'))
+                            trust = obj.get('trust_type', 'N/A')
+                            enabled = "Yes" if obj.get('enabled', False) else "No"
+                            pwd_nreq = "Yes" if obj.get('password_not_required', False) else "No"
+                            pwd_nexp = "Yes" if obj.get('password_never_expires', False) else "No"
+                            deleg = obj.get('delegation_status', 'N/A')
+                            desc = obj.get('description', 'N/A')
+                            json_data.append({
+                                "RID": rid,
+                                "Name": name,
+                                "Logons": logons,
+                                "LastLogon": last_logon,
+                                "PwdLastSet": pwd_last_set,
+                                "BadPwdCnt": bad_pwd_cnt,
+                                "PID": pid,
+                                "Type": trust,
+                                "Enabled": enabled,
+                                "PwdNReq": pwd_nreq,
+                                "PwdNExp": pwd_nexp,
+                                "Deleg": deleg,
+                                "Description": desc
+                            })
+                        json.dump(json_data, f, indent=2)
+            # ----- Branch for local-groups export -----
             elif isinstance(data[0], dict) and 'group_name' in data[0]:
                 # Remove "Domain SID" from the header for TXT and JSON exports
                 header = ["RID", "MemCnt", "Name", "Description"]
@@ -653,7 +683,53 @@ def export_data(filename, fmt, data):
                             "Description": desc
                         })
                     json.dump(json_data, f, indent=2)
-            # Existing branch for users
+            # ----- New branch for account-details export -----
+            elif isinstance(data[0], dict) and 'home_directory' in data[0] and 'profile_path' in data[0]:
+                account_keys = [
+                    ("RID", "rid"),
+                    ("Username", "username"),
+                    ("Full Name", "full_name"),
+                    ("Description", "description"),
+                    ("Last Logon", "last_logon"),
+                    ("Logon Count", "logon_count"),
+                    ("Password Last Set", "password_last_set"),
+                    ("Password Can Chg", "password_can_change"),
+                    ("Password Force Chg", "password_force_change"),
+                    ("Password Expired", "password_expired"),
+                    ("Password Never Exp-s", "password_never_expires"),
+                    ("Password Bad Count", "password_bad_count"),
+                    ("Account Expires", "account_expires"),
+                    ("Account Disabled", "account_disabled"),
+                    ("Pre-Auth. Required", "pre_auth"),
+                    ("Delegation Allowed", "delegated"),
+                    ("Smartcard Required", "smartcard_required"),
+                ]
+                additional_keys = [
+                    ("Primary Group ID", "primary_gid"),
+                    ("Home Directory", "home_directory"),
+                    ("Home Drive", "home_drive"),
+                    ("Profile Path", "profile_path"),
+                    ("Script Path", "script_path"),
+                    ("Workstations", "workstations"),
+                ]
+                if fmt == 'txt':
+                    for label, key in account_keys:
+                        val = export_value(key, data[0].get(key, 'N/A'))
+                        f.write(f"{label}: {val}\n")
+                    f.write("\n")
+                    for label, key in additional_keys:
+                        val = export_value(key, data[0].get(key, 'N/A'))
+                        f.write(f"{label}: {val}\n")
+                elif fmt == 'csv':
+                    import csv
+                    writer = csv.writer(f, delimiter=';')
+                    for label, key in account_keys + additional_keys:
+                        val = export_value(key, data[0].get(key, 'N/A'))
+                        writer.writerow([label, val])
+                elif fmt == 'json':
+                    import json
+                    json.dump(data[0], f, indent=2)
+            # ----- Branch for display-info users export -----
             elif isinstance(data[0], dict) and 'last_logon' in data[0]:
                 header = ["RID", "Last Logon", "PwdSet", "PwdNE", "PwdExp", "ForceChg",
                           "AccDis", "PreAuth", "Delg", "BadCnt", "Username", "Full Name"]
@@ -855,6 +931,90 @@ def export_data(filename, fmt, data):
                     import json
                     json_data = [{"Name": item[0], "RID": item[1]} for item in data]
                     json.dump(json_data, f, indent=2)
+
+            # ----- Branch for local-group-details export -----
+            elif isinstance(data[0], dict) and 'alias_name' in data[0]:
+                # If the group details include members, export header info then members table
+                if 'members' in data[0]:
+                    # Export the group header info
+                    f.write(f"Local Group Name:\t{data[0].get('alias_name', 'N/A')}\n")
+                    f.write(f"RID:\t{data[0].get('rid', 'N/A')}\n")
+                    f.write(f"Member Count:\t{data[0].get('member_count', 'N/A')}\n")
+                    # If available, also print the primary domain SID
+                    if data[0].get('primary_domain_sid'):
+                        f.write(f"Domain SID:\t{data[0].get('primary_domain_sid', 'N/A')}\n")
+                    # Add an empty line before the member list
+                    f.write("\n")
+                    # Now export the members table header
+                    header_line = f"{'RID':<10}\t{'Username':<20}"
+                    f.write(header_line + "\n")
+                    f.write("-" * (10 + 20 + 4) + "\n")
+                    # Then export each member row
+                    for member in data[0].get('members', []):
+                        # Assume member is a tuple of (rid, username)
+                        rid_member = str(member[0])
+                        username_member = str(member[1])
+                        f.write(f"{rid_member:<10}\t{username_member:<20}\n")
+                else:
+                    # Fallback export if no members key exists: export group header only
+                    header = ["RID", "Name", "Member Count"]
+                    if fmt == 'txt':
+                        col_widths = {"RID": 6, "Name": 30, "Member Count": 12}
+                        header_line = f"{header[0]:<{col_widths['RID']}} {header[1]:<{col_widths['Name']}} {header[2]:<{col_widths['Member Count']}}"
+                        f.write(header_line + "\n")
+                        f.write("-" * (sum(col_widths.values()) + 2) + "\n")
+                        for obj in data:
+                            rid = str(obj.get('rid', 'N/A'))
+                            name = safe_str(obj.get('alias_name', 'N/A'))
+                            memcnt = str(obj.get('member_count', 'N/A'))
+                            row = f"{rid:<{col_widths['RID']}} {name:<{col_widths['Name']}} {memcnt:<{col_widths['Member Count']}}"
+                            f.write(row + "\n")
+                    elif fmt == 'csv':
+                        import csv
+                        writer = csv.writer(f, delimiter=';')
+                        writer.writerow(header)
+                        for obj in data:
+                            rid = str(obj.get('rid', 'N/A'))
+                            name = safe_str(obj.get('alias_name', 'N/A'))
+                            memcnt = str(obj.get('member_count', 'N/A'))
+                            writer.writerow([rid, name, memcnt])
+                    elif fmt == 'json':
+                        import json
+                        # Build a new dictionary with formatted values for account details.
+                        account_keys = [
+                            ("RID", "rid"),
+                            ("Username", "username"),
+                            ("Full Name", "full_name"),
+                            ("Description", "description"),
+                            ("Last Logon", "last_logon"),
+                            ("Logon Count", "logon_count"),
+                            ("Password Last Set", "password_last_set"),
+                            ("Password Can Chg", "password_can_change"),
+                            ("Password Force Chg", "password_force_change"),
+                            ("Password Expired", "password_expired"),
+                            ("Password Never Exp-s", "password_never_expires"),
+                            ("Password Bad Count", "password_bad_count"),
+                            ("Account Expires", "account_expires"),
+                            ("Account Disabled", "account_disabled"),
+                            ("Pre-Auth. Required", "pre_auth"),
+                            ("Delegation Allowed", "delegated"),
+                            ("Smartcard Required", "smartcard_required"),
+                        ]
+                        additional_keys = [
+                            ("Primary Group ID", "primary_gid"),
+                            ("Home Directory", "home_directory"),
+                            ("Home Drive", "home_drive"),
+                            ("Profile Path", "profile_path"),
+                            ("Script Path", "script_path"),
+                            ("Workstations", "workstations"),
+                        ]
+                        export_dict = {}
+                        # For the date fields in account_keys, export_value applies formatting.
+                        for label, key in account_keys:
+                            export_dict[label] = export_value(key, data[0].get(key, 'N/A'))
+                        for label, key in additional_keys:
+                            export_dict[label] = export_value(key, data[0].get(key, 'N/A'))
+                        json.dump(export_dict, f, indent=2)
 
             else:
                 # Fallback for other data types remains unchanged.
