@@ -50,7 +50,7 @@ The following table provides version numbers for the tools evaluated during this
 | CrackMapExec        | 6.1.0 - John Wick | A post-exploitation and pentesting tool designed to streamline network enumeration, lateral movement, and credential validation within Active Directory environments. Features SAMR-based enumeration for identifying domain objects. |
 | Impacket            | 0.12.0        | A library and suite of tools for interacting with network protocols. For this research, only `samrdump.py` and `net.py` from the Impacket suite were used. These tools facilitate detailed enumeration through SAMR. |
 | rpcclient           | 4.15.13       | A command-line tool, part of the Samba suite, used to interact with the Microsoft Remote Procedure Call (MS-RPC) protocol. It allows querying and managing Windows-based systems remotely over SMB, enabling tasks like enumerating users, groups, shares, and retrieving domain or system information. |
-
+| **samr-enum**       | 1.0.0         | A SAMR enumeration tool developed as part of a Master's thesis "Investigating SAMR Enumeration Attacks in Active Directory Multi-Forest Environments". It leverages the Impacket library to enumerate domain users, groups, computers, password policies, etc., and supports both NTLM and Kerberos authentication. The tool logs SAMR OpNums for detailed auditing and supports exporting results in TXT, CSV, and JSON formats. |
 
 ## Criteria for Tool Evaluation
 
@@ -67,17 +67,18 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 > **Note:** The evaluation results analyze tools’ support for cross-forest SAMR requests. If a tool does not support cross-forest SAMR or uses a different protocol for enumeration, other criteria are not assessed, and the corresponding values are marked as "Not Applicable".
 
-| Tool Name    | Cross-Forest Request Support | OpNum Coverage | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
+| Tool Name    | Cross-Forest Request Support | OpNum Coverage (37 total) | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
 |--------------|------------------------------|----------------|--------------------------------|---------------------------|--------------------------------|---------------------------|
 | Net          | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | Enum4linux   | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | Enum4linux-ng| Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | PowerShell   | Supported                    | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
-| SharpHound   | Supported                    | Low Coverage (25%) | Not Detected               | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| Metasploit   | Supported                    | Low Coverage (28.1%) | Not Detected             | Accurate                  | NTLM                           | Standard Access Sufficient|
-| CrackMapExec | Supported                    | Low Coverage (34.3%) | Detected                 | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| Impacket     | Supported                    | Moderate Coverage (59.3%)| Detected             | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| rpcclient    | Supported                    | High Coverage (84.3%) | Detected                | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| SharpHound   | Supported                    | Low Coverage (21.62%, 8) | Not Detected               | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| Metasploit   | Supported                    | Low Coverage (24.32%, 9) | Not Detected             | Accurate                  | NTLM                           | Standard Access Sufficient|
+| CrackMapExec | Supported                    | Low Coverage (29.73%, 11) | Detected                 | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| Impacket     | Supported                    | Moderate Coverage (54.5%, 20)| Detected             | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| **samr-enum**| Supported                    | Moderate Coverage (54.5%, 20) | Not Detected            | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| rpcclient    | Supported                    | High Coverage (72.97%, 27) | Detected                | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
 
 > Cmdlets from the Active Directory module in PowerShell did not use the SAMR for communication. Instead, these cmdlets primarily relied on the Microsoft .NET Naming Service (MS-NNS) and Microsoft .NET Message Framing Protocol (MS-NMF) for their operations.
 > For Metasploit, only the "auxiliary/scanner/smb/smb_enumusers" and "auxiliary/admin/dcerpc/samr_account" modules were examined.
@@ -92,18 +93,18 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 ○ - Not Supported
 
 
-| Tool \ OpNum         | 0  | 1  | 3  | 5  | 6  | 7  | 8  | 11 | 13 | 15 | 16 | 17 | 18 | 19 | 20 | 25 | 27 | 33 | 34 | 36 | 39 | 40 | 41 | 44 | 46 | 47 | 48 | 51 | 56 | 57 | 64 | 65 |
-|----------------------|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
-| Net                  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | 
-| Enum4linux           | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
-| Enum4linux-ng        | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
-| PowerShell           | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
-| SharpHound           | ○  | ●  | ○  | ●  | ●  | ●  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | 
-| Metasploit           | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ○  | ●  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  |
-| CrackMapExec         | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ●  | ○  | ○  |
-| Impacket             | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ○  | ●  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ●  |
-| rpcclient            | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ○  | ●  | ●  | ●  | ○  | ●  | ○  |
-
+| Tool \ OpNum | 0  | 1  | 3  | 5  | 6  | 7  | 8  | 11 | 13 | 15 | 16 | 17 | 18 | 19 | 20 | 25 | 27 | 28 | 33 | 34 | 36 | 39 | 40 | 41 | 44 | 46 | 47 | 48 | 49 | 51 | 56 | 57 | 62 | 64 | 65 | 74 | 77 |
+|--------------|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
+| Net          | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
+| Enum4linux   | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
+| Enum4linux-ng| ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
+| PowerShell   | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
+| SharpHound   | ○  | ●  | ○  | ●  | ●  | ●  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  |
+| Metasploit   | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ○  | ●  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | ○  |
+| CrackMapExec | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  |
+| Impacket     | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ●  | ●  | ○  | ●  | ●  | ○  | ●  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ●  | ○  | ○  |
+| **samr-enum**| ●  | ●  | ○  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ●  | ○  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
+| rpcclient    | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ○  | ●  | ○  | ●  | ●  | ○  | ○  | ●  | ○  | ○  | ○  |
 
 ### Excessive Permission Detection Criterion
 
