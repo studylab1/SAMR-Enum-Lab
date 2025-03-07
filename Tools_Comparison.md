@@ -301,6 +301,243 @@ Executed following commands:
 | `SamrOpenGroup`     | `OpenGroup`         | 19        | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
 
 
+#### samr-enum
+
+Executed following commands:  
+- `python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=users`
+- `python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=computers`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrEnumerateUsersInDomain` | `EnumDomainUsers`      | 13        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+
+Executed following command:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=local-groups`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000300`   | `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   |    Compliant                |
+| `SamrEnumerateAliasesInDomain` | `EnumDomainAliases`    | 15        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+
+Executed following command:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=domain-groups`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrEnumerateGroupsInDomain ` | `EnumDomainGroups`    | 11        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+
+Executed following command:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=local-group-details group=Administrators`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000300`   | `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`)| Yes   | Compliant                    |
+| `SamrLookupNamesInDomain` | `LookupNames`         | 17        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenAlias`     | `OpenAlias`               | 27        | `0x00000004`   | `ALIAS_LIST_MEMBERS` (`0x00000004`)        | Yes                         | Compliant                            |
+| `SamrGetMembersInAlias` | `GetMembersInAlias`           | 33        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupIdsInDomain` | `LookupRids`           | 18        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+
+Executed following command:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=domain-group-details group="Domain Admins"`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrLookupNamesInDomain` | `LookupNames`         | 17        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenGroup`     | `OpenGroup`               | 19        | `0x00000010`   | `GROUP_LIST_MEMBERS` (`0x00000010`)        | Yes                         | Compliant                            |
+| `SamrGetMembersInGroup` | `QueryGroupMember`           | 25        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupIdsInDomain` | `LookupRids`           | 18        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+Executed following command:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=user-memberships-localgroups user=Administrator`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrLookupNamesInDomain` | `LookupNames`         | 17        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrEnumerateAliasesInDomain` | `EnumDomainAliases`    | 15        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenAlias`    | `OpenAlias`                | 27        | `0x00000004`   | `ALIAS_LIST_MEMBERS` (`0x00000004`)        | Yes                         | Compliant                            |
+| `SamrGetMembersInAlias` | `GetMembersInAlias`           | 33        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+
+Executed following command:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=user-memberships-domaingroups user=Administrator`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000300`   | `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`)| Yes   | Compliant                    |
+| `SamrLookupNamesInDomain` | `LookupNames`         | 17        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenUser`      | `OpenUser`               | 34        | `0x00000100`             | `USER_LIST_GROUPS` (`0x00000100`)| Yes                         | Compliant                            |
+| `SamrGetGroupsForUser`     | `GetGroupsForUser`        | 39        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupIdsInDomain` | `LookupRids`           | 18        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+
+Executed following command:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=account-details user=Administrator`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrLookupIdsInDomain` | `LookupRids`           | 18        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupNamesInDomain` | `LookupNames`         | 17        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenUser`      | `OpenUser`               | 34        | `0x0002011b`             | `USER_READ_GENERAL` (`0x00000001`) <br> `USER_READ_PREFERENCES` (`0x00000002`) <br> `USER_LIST_GROUPS` (`0x00000100`) <br> `READ_CONTROL` (`0x00020000`)| Yes  | Compliant   |
+| `SamrQueryInformationUser2` | `QueryUserInfo2`       | 47        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+
+
+Executed following command:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=local-group-details group="Administrators"`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000300`   | `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`)| Yes   | Compliant                    |
+| `SamrLookupNamesInDomain` | `LookupNames`         | 17        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenAlias`    | `OpenAlias`                | 27        | `0x00020004`   | `ALIAS_READ` (`0x00020004`)        | Yes                         | Compliant                            |
+| `SamrGetMembersInAlias` | `GetMembersInAlias`           | 33        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupIdsInDomain` | `LookupRids`           | 18        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+
+Executed following command:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=domain-group-details group="Domain Admins"`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrLookupNamesInDomain` | `LookupNames`         | 17        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenGroup`     | `OpenGroup`               | 19        | `0x00000010`   | `GROUP_LIST_MEMBERS` (`0x00000010`)        | Yes                         | Compliant                            |
+| `SamrGetMembersInGroup` | `QueryGroupMember`           | 25        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupIdsInDomain` | `LookupRids`           | 18        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+
+Executed following command:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=display-info type=users`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrLookupNamesInDomain` | `LookupNames`         | 17        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenUser`      | `OpenUser`               | 34        | `0x0002011b`             | `USER_READ_GENERAL` (`0x00000001`) <br> `USER_READ_PREFERENCES` (`0x00000002`) <br> `USER_LIST_GROUPS` (`0x00000100`) <br> `READ_CONTROL` (`0x00020000`)| Yes  | Compliant   |
+| `SamrQueryInformationUser2` | `QueryUserInfo2`       | 47        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+
+
+Executed following commands:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=display-info type=computers`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrEnumerateUsersInDomain` | `EnumDomainUsers`      | 13        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenUser`      | `OpenUser`               | 34        | `0x0002011b`             | `USER_READ_GENERAL` (`0x00000001`) <br> `USER_READ_PREFERENCES` (`0x00000002`) <br> `USER_LIST_GROUPS` (`0x00000100`) <br> `READ_CONTROL` (`0x00020000`)| Yes  | Compliant   |
+| `SamrQueryInformationUser2` | `QueryUserInfo2`       | 47        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+
+Executed following command:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=display-info type=local-groups`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000300`   | `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrEnumerateAliasesInDomain` | `EnumDomainAliases`    | 15        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenAlias`    | `OpenAlias`                | 27        | `0x0000000c`   | `ALIAS_LIST_MEMBERS` (`0x00000004`) <br> `ALIAS_READ_INFORMATION` (`0x00000008`) | Yes                         | Compliant                            |
+| `SamrQueryInformationAlias` | `QueryAliasInfo`       | 28        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrGetMembersInAlias` | `GetMembersInAlias`           | 33        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+Executed following command:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=display-info type=domain-groups`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrEnumerateGroupsInDomain ` | `EnumDomainGroups`    | 11        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenGroup`     | `OpenGroup`               | 19        | `0x00000011`   | `GROUP_LIST_MEMBERS` (`0x00000010`) <br>  `GROUP_READ_INFORMATION` (`0x00000001`)   | Ye | Compliant            |
+| `SamrGetMembersInGroup` | `QueryGroupMember`           | 25        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrQueryInformationGroup` | `QueryGroupInfo`       | 20        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupIdsInDomain` |  `LookupRids`           | 18        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+
+Executed following command:  
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=summary`
+
+| **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
+|---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
+| `SamrConnect`       | `Connect`           | 0         | `0x00000031` | `SAM_SERVER_CONNECT` (`0x00000001`)<br> `SAM_SERVER_ENUMERATE_DOMAINS` (`0x00000010`) <br> `SAM_SERVER_LOOKUP_DOMAIN`  (`0x00000020`)  | Yes | Compliant  |
+| `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrQueryInformationDomain2`| `QueryDomainInfo2`      | 46        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000305`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) <br> `DOMAIN_READ_OTHER_PARAMETERS` (`0x00000004`) | Yes   | Compliant  |
+| `SamrEnumerateUsersInDomain` | `EnumDomainUsers`      | 13        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrEnumerateGroupsInDomain ` | `EnumDomainGroups`    | 11        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrEnumerateAliasesInDomain` | `EnumDomainAliases`    | 15        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000300`   | `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
+
+
 ### Data Parsing and Accuracy Criterion
  
 This section displays how tools parse and present data attributes retrieved through SAMR operations. The analysis evaluates the completeness of the attributes retrieved for each SAMR operation and the accuracy of the values compared to expected results. Tools are assessed based on their handling of expected data types, edge cases, and inconsistencies.
