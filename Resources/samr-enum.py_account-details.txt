@@ -1,0 +1,51 @@
+Execution started at: 2025-03-08 17:40:35.104369
+
+Account Details for Administrator:
+  RID:                  500
+  Username:             Administrator
+  Full Name:            Display name
+  Description:          Built-in account for administering the computer/domain
+  Last Logon:           2025-03-08 13:37:57
+  Logon Count:          68
+  Password Last Set:    2025-02-02 15:42:23
+  Password Can Chg:     2025-02-03 15:42:23
+  Password Force Chg:   Never
+  Password Expired:     No
+  Password Never Exp-s: No
+  Password Bad Count:   0
+  Account Expires:      Never
+  Account Disabled:     No
+  Pre-Auth. Required:   Yes
+  Delegation Allowed:   Yes
+  Smartcard Required:   No
+
+  Primary Group ID:     513
+  Home Directory:       C:\temp
+  Home Drive:           
+  Profile Path:         profile path
+  Script Path:          logon script
+  Workstations:         
+================================================================
+Execution time:     	0.16 seconds
+Destination target: 	ydc1.domain-y.local
+Domain SID:         	S-1-5-21-3461051276-3658573231-1749369878
+Account:            	enum-x
+Enumerate:          	account-details
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	1
+OpNums called:
+  Name                              OpNum  Access Mask
+-------------------------------------------------------
+  SamrConnect                       0     0x00000031
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000301
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+================================================================
+

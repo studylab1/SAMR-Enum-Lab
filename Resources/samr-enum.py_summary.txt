@@ -1,0 +1,66 @@
+Execution started at: 2025-03-08 18:26:13.605986
+
+Domain Information:
+  Domain SID:                  S-1-5-21-3461051276-3658573231-1749369878
+  Domain Name:                 DOMAIN-Y
+  UAS Compatible:              No
+
+Account Lockout Settings:
+  Lockout Threshold:           0
+  Lockout Duration (days):     0
+  Lockout Window (days):       0
+  Force Logoff (days):         0
+
+Password Policy:
+  Minimum Password Length:     N/A
+  Minimum Password Age (days): 1
+  Maximum Password Age (days): 0
+  Password History Length:     N/A
+  Password Properties:
+    PwdComplex                 Yes
+    NoAnon                     No
+    NoClrChg                   No
+    LockAdmins                 No
+    StoreClr                   No
+    RefuseChg                  No
+
+Total Users:                   497
+Total Computers:               12
+Total Domain Groups:           114
+Total Local Groups:            28
+
+================================================================
+Execution time:     	0.24 seconds
+Destination target: 	ydc1.domain-y.local
+Domain SID:         	
+Account:            	enum-x
+Enumerate:          	summary
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	1
+OpNums called:
+  Name                              OpNum  Access Mask
+-------------------------------------------------------
+  SamrConnect                       0     0x00000031
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000305
+  SamrQueryInformationDomain2       46    --
+  SamrQueryInformationDomain2       46    --
+  SamrCloseHandle                   1     --
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000301
+  SamrEnumerateUsersInDomain        13    --
+  SamrEnumerateGroupsInDomain       11    --
+  SamrQueryInformationDomain2       46    --
+  SamrQueryInformationDomain2       46    --
+  SamrCloseHandle                   1     --
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000300
+  SamrEnumerateAliasesInDomain      15    --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+================================================================
+

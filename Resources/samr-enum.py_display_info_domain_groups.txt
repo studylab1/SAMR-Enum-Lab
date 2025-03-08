@@ -1,0 +1,710 @@
+Execution started at: 2025-03-08 17:55:12.396810
+
+RID    MemCnt  Name                           Description                             
+---------------------------------------------------------------------------------------
+498    0       Enterprise Read-only Domain Controllers Members of this group are Read-Only D...
+512    7       Domain Admins                  Designated administrators of the domain 
+513    498     Domain Users                   All domain users                        
+514    1       Domain Guests                  All domain guests                       
+515    14      Domain Computers               All workstations and servers joined t...
+516    6       Domain Controllers             All domain controllers in the domain    
+518    1       Schema Admins                  Designated administrators of the schema 
+519    1       Enterprise Admins              Designated administrators of the ente...
+520    5       Group Policy Creator Owners    Members in this group can modify grou...
+521    4       Read-only Domain Controllers   Members of this group are Read-Only D...
+522    4       Cloneable Domain Controllers   Members of this group that are domain...
+525    4       Protected Users                Members of this group are afforded ad...
+526    2       Key Admins                     Members of this group can perform adm...
+527    0       Enterprise Key Admins          Members of this group can perform adm...
+1102   28      DnsUpdateProxy                 DNS clients who are permitted to perf...
+1610   26      HO-qje-distlist1               User Group Created by Badblood github...
+1611   17      PH-agu-admingroup1             User Group Created by Badblood github...
+1612   22      JA-ilo-distlist1               User Group Created by Badblood github...
+1613   33      CA-mis3amore-admingroup1       User Group Created by Badblood github...
+1614   16      HU-ila-distlist1               User Group Created by Badblood github...
+1615   25      NU-ale-distlist1               User Group Created by Badblood github...
+1616   25      CH-140-distlist1               User Group Created by Badblood github...
+1617   29      BR-homebueno-admingroup1       User Group Created by Badblood github...
+1618   18      EM-bc4-distlist1               User Group Created by Badblood github...
+1619   29      NA-lui-distlist1               User Group Created by Badblood github...
+1620   33      61-211-distlist1               User Group Created by Badblood github...
+1621   42      CL-lau-distlist1               User Group Created by Badblood github...
+1622   31      LE-156580552-distlist1         User Group Created by Badblood github...
+1623   24      CH-bailameel-distlist1         User Group Created by Badblood github...
+1624   34      RU-rod-distlist1               User Group Created by Badblood github...
+1625   25      AL-betoron10-distlist1         User Group Created by Badblood github...
+1626   29      FA-199-distlist1               User Group Created by Badblood github...
+1627   24      HO-203-distlist1               User Group Created by Badblood github...
+1628   25      98-1.47258E1-admingroup1       User Group Created by Badblood github...
+1629   28      TO-met-distlist1               User Group Created by Badblood github...
+1630   24      TY-arr-admingroup1             User Group Created by Badblood github...
+1631   27      CE-gun-distlist1               User Group Created by Badblood github...
+1632   19      CA-439-distlist1               User Group Created by Badblood github...
+1633   22      18-cho-distlist1               User Group Created by Badblood github...
+1634   30      CH-lecera198-distlist1         User Group Created by Badblood github...
+1635   27      DA-ped-admingroup1             User Group Created by Badblood github...
+1636   37      JO-avr-distlist1               User Group Created by Badblood github...
+1637   32      TO-120-distlist1               User Group Created by Badblood github...
+1638   33      KA-355-distlist1               User Group Created by Badblood github...
+1639   22      KE-ton-distlist1               User Group Created by Badblood github...
+1640   30      MO-hor-admingroup1             User Group Created by Badblood github...
+1641   22      EL-nin-distlist1               User Group Created by Badblood github...
+1642   29      22-axbraham0-distlist1         User Group Created by Badblood github...
+1643   14      NE-yon-distlist1               User Group Created by Badblood github...
+1644   22      TA-la3-admingroup1             User Group Created by Badblood github...
+1645   32      CE-797-distlist1               User Group Created by Badblood github...
+1646   22      RO-788-distlist1               User Group Created by Badblood github...
+1647   25      HI-bla-distlist1               User Group Created by Badblood github...
+1648   19      LE-viv-distlist1               User Group Created by Badblood github...
+1649   25      OL-759-distlist1               User Group Created by Badblood github...
+1650   17      GE-bar-distlist1               User Group Created by Badblood github...
+1651   22      CA-anabolics-distlist1         User Group Created by Badblood github...
+1652   27      DO-enfermeri-distlist1         User Group Created by Badblood github...
+1653   28      JA-der-admingroup1             User Group Created by Badblood github...
+1654   27      AD-nawale212-distlist1         User Group Created by Badblood github...
+1655   29      MA-cri-distlist1               User Group Created by Badblood github...
+1656   24      DO-tor-distlist1               User Group Created by Badblood github...
+1657   27      JE-t0011119d-distlist1         User Group Created by Badblood github...
+1658   20      LA-cro-distlist1               User Group Created by Badblood github...
+1659   27      IR-boe-distlist1               User Group Created by Badblood github...
+1660   25      HI-ilo-admingroup1             User Group Created by Badblood github...
+1661   21      TE-felina199-distlist1         User Group Created by Badblood github...
+1662   19      IV-loq-admingroup1             User Group Created by Badblood github...
+1663   17      JO-lov-admingroup1             User Group Created by Badblood github...
+1664   25      SH-sol-distlist1               User Group Created by Badblood github...
+1665   28      MA-bin-distlist1               User Group Created by Badblood github...
+1666   31      TA-pel-admingroup1             User Group Created by Badblood github...
+1667   27      MA-ah4432jiu-admingroup1       User Group Created by Badblood github...
+1668   34      JE-joa-distlist1               User Group Created by Badblood github...
+1669   22      LI-paranoidp-distlist1         User Group Created by Badblood github...
+1670   26      18-pan-admingroup1             User Group Created by Badblood github...
+1671   25      KA-09o-distlist1               User Group Created by Badblood github...
+1672   30      LE-imaf29301-distlist1         User Group Created by Badblood github...
+1673   22      YO-beb-distlist1               User Group Created by Badblood github...
+1674   32      HE-cas-distlist1               User Group Created by Badblood github...
+1675   17      GE-062-distlist1               User Group Created by Badblood github...
+1676   32      AL-siv-distlist1               User Group Created by Badblood github...
+1677   18      DA-songongor-distlist1         User Group Created by Badblood github...
+1678   21      DA-alcantari-distlist1         User Group Created by Badblood github...
+1679   23      TA-est-distlist1               User Group Created by Badblood github...
+1680   20      43-bet-distlist1               User Group Created by Badblood github...
+1681   30      TI-dun-admingroup1             User Group Created by Badblood github...
+1682   27      ED-ele-admingroup1             User Group Created by Badblood github...
+1683   31      RE-jacquelin-distlist1         User Group Created by Badblood github...
+1684   23      RO-3el-distlist1               User Group Created by Badblood github...
+1685   25      DE-qpzm57wox-distlist1         User Group Created by Badblood github...
+1686   27      MA-pedoapest-admingroup1       User Group Created by Badblood github...
+1687   25      RO-Mel-admingroup1             User Group Created by Badblood github...
+1688   33      BU-msn-distlist1               User Group Created by Badblood github...
+1689   26      LE-bac-admingroup1             User Group Created by Badblood github...
+1690   28      SO-gordas080-distlist1         User Group Created by Badblood github...
+1691   24      34-123-distlist1               User Group Created by Badblood github...
+1692   27      AH-naza78.co-distlist1         User Group Created by Badblood github...
+1693   28      OL-sos-distlist1               User Group Created by Badblood github...
+1694   29      AI-universit-admingroup1       User Group Created by Badblood github...
+1695   32      HE-marianela-distlist1         User Group Created by Badblood github...
+1696   22      JA-pradhan14-distlist1         User Group Created by Badblood github...
+1697   20      CR-3ma-admingroup1             User Group Created by Badblood github...
+1698   24      TA-beg-distlist1               User Group Created by Badblood github...
+1699   27      MA-697962370-admingroup1       User Group Created by Badblood github...
+1700   26      TA-gtagtagta-admingroup1       User Group Created by Badblood github...
+1701   24      JI-berny3873-distlist1         User Group Created by Badblood github...
+1702   22      DE-gerard197-distlist1         User Group Created by Badblood github...
+1703   26      MA-art-distlist1               User Group Created by Badblood github...
+1704   18      SA-TEQUIERO1-admingroup1       User Group Created by Badblood github...
+1705   35      WI-212-admingroup1             User Group Created by Badblood github...
+1706   18      TO-paulaliza-distlist1         User Group Created by Badblood github...
+1707   26      RO-tissuemil-distlist1         User Group Created by Badblood github...
+1708   21      IN-111-distlist1               User Group Created by Badblood github...
+---------------------------------------------------------------------------------------
+RID    MemCnt  Name                           Description                             
+
+================================================================
+Execution time:     	1.74 seconds
+Destination target: 	ydc1.domain-y.local
+Domain SID:         	S-1-5-21-3461051276-3658573231-1749369878
+Account:            	enum-x
+Enumerate:          	display-info
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	114
+OpNums called:
+  Name                              OpNum  Access Mask
+-------------------------------------------------------
+  SamrConnect                       0     0x00000031
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000301
+  SamrEnumerateGroupsInDomain       11    --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+================================================================
+

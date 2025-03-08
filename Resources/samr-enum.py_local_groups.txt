@@ -1,0 +1,54 @@
+Execution started at: 2025-03-08 16:23:33.431985
+
+Member                              RID
+--------------------------------------------------
+Server Operators                    549
+Account Operators                   548
+Pre-Windows 2000 Compatible Access  554
+Incoming Forest Trust Builders      557
+Windows Authorization Access Group  560
+Terminal Server License Servers     561
+Administrators                      544
+Users                               545
+Guests                              546
+Print Operators                     550
+Backup Operators                    551
+Replicator                          552
+Remote Desktop Users                555
+Network Configuration Operators     556
+Performance Monitor Users           558
+Performance Log Users               559
+Distributed COM Users               562
+IIS_IUSRS                           568
+Cryptographic Operators             569
+Event Log Readers                   573
+Certificate Service DCOM Access     574
+RDS Remote Access Servers           575
+RDS Endpoint Servers                576
+RDS Management Servers              577
+Hyper-V Administrators              578
+Access Control Assistance Operators 579
+Remote Management Users             580
+Storage Replica Administrators      582
+================================================================
+Execution time:     	0.16 seconds
+Destination target: 	ydc1.domain-y.local
+Domain SID:         	S-1-5-32
+Account:            	enum-x
+Enumerate:          	local-groups
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	28
+OpNums called:
+  Name                              OpNum  Access Mask
+-------------------------------------------------------
+  SamrConnect                       0     0x00000031
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000300
+  SamrEnumerateAliasesInDomain      15    --
+  SamrLookupIdsInDomain             18    --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+================================================================
+

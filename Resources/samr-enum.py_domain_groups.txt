@@ -1,0 +1,139 @@
+Execution started at: 2025-03-08 16:44:59.245833
+
+Member                                  RID
+------------------------------------------------------
+Enterprise Read-only Domain Controllers 498
+Domain Admins                           512
+Domain Users                            513
+Domain Guests                           514
+Domain Computers                        515
+Domain Controllers                      516
+Schema Admins                           518
+Enterprise Admins                       519
+Group Policy Creator Owners             520
+Read-only Domain Controllers            521
+Cloneable Domain Controllers            522
+Protected Users                         525
+Key Admins                              526
+Enterprise Key Admins                   527
+DnsUpdateProxy                          1102
+HO-qje-distlist1                        1610
+PH-agu-admingroup1                      1611
+JA-ilo-distlist1                        1612
+CA-mis3amore-admingroup1                1613
+HU-ila-distlist1                        1614
+NU-ale-distlist1                        1615
+CH-140-distlist1                        1616
+BR-homebueno-admingroup1                1617
+EM-bc4-distlist1                        1618
+NA-lui-distlist1                        1619
+61-211-distlist1                        1620
+CL-lau-distlist1                        1621
+LE-156580552-distlist1                  1622
+CH-bailameel-distlist1                  1623
+RU-rod-distlist1                        1624
+AL-betoron10-distlist1                  1625
+FA-199-distlist1                        1626
+HO-203-distlist1                        1627
+98-1.47258E1-admingroup1                1628
+TO-met-distlist1                        1629
+TY-arr-admingroup1                      1630
+CE-gun-distlist1                        1631
+CA-439-distlist1                        1632
+18-cho-distlist1                        1633
+CH-lecera198-distlist1                  1634
+DA-ped-admingroup1                      1635
+JO-avr-distlist1                        1636
+TO-120-distlist1                        1637
+KA-355-distlist1                        1638
+KE-ton-distlist1                        1639
+MO-hor-admingroup1                      1640
+EL-nin-distlist1                        1641
+22-axbraham0-distlist1                  1642
+NE-yon-distlist1                        1643
+TA-la3-admingroup1                      1644
+CE-797-distlist1                        1645
+RO-788-distlist1                        1646
+HI-bla-distlist1                        1647
+LE-viv-distlist1                        1648
+OL-759-distlist1                        1649
+GE-bar-distlist1                        1650
+CA-anabolics-distlist1                  1651
+DO-enfermeri-distlist1                  1652
+JA-der-admingroup1                      1653
+AD-nawale212-distlist1                  1654
+MA-cri-distlist1                        1655
+DO-tor-distlist1                        1656
+JE-t0011119d-distlist1                  1657
+LA-cro-distlist1                        1658
+IR-boe-distlist1                        1659
+HI-ilo-admingroup1                      1660
+TE-felina199-distlist1                  1661
+IV-loq-admingroup1                      1662
+JO-lov-admingroup1                      1663
+SH-sol-distlist1                        1664
+MA-bin-distlist1                        1665
+TA-pel-admingroup1                      1666
+MA-ah4432jiu-admingroup1                1667
+JE-joa-distlist1                        1668
+LI-paranoidp-distlist1                  1669
+18-pan-admingroup1                      1670
+KA-09o-distlist1                        1671
+LE-imaf29301-distlist1                  1672
+YO-beb-distlist1                        1673
+HE-cas-distlist1                        1674
+GE-062-distlist1                        1675
+AL-siv-distlist1                        1676
+DA-songongor-distlist1                  1677
+DA-alcantari-distlist1                  1678
+TA-est-distlist1                        1679
+43-bet-distlist1                        1680
+TI-dun-admingroup1                      1681
+ED-ele-admingroup1                      1682
+RE-jacquelin-distlist1                  1683
+RO-3el-distlist1                        1684
+DE-qpzm57wox-distlist1                  1685
+MA-pedoapest-admingroup1                1686
+RO-Mel-admingroup1                      1687
+BU-msn-distlist1                        1688
+LE-bac-admingroup1                      1689
+SO-gordas080-distlist1                  1690
+34-123-distlist1                        1691
+AH-naza78.co-distlist1                  1692
+OL-sos-distlist1                        1693
+AI-universit-admingroup1                1694
+HE-marianela-distlist1                  1695
+JA-pradhan14-distlist1                  1696
+CR-3ma-admingroup1                      1697
+TA-beg-distlist1                        1698
+MA-697962370-admingroup1                1699
+TA-gtagtagta-admingroup1                1700
+JI-berny3873-distlist1                  1701
+DE-gerard197-distlist1                  1702
+MA-art-distlist1                        1703
+SA-TEQUIERO1-admingroup1                1704
+WI-212-admingroup1                      1705
+TO-paulaliza-distlist1                  1706
+RO-tissuemil-distlist1                  1707
+IN-111-distlist1                        1708
+================================================================
+Execution time:     	0.17 seconds
+Destination target: 	ydc1.domain-y.local
+Domain SID:         	S-1-5-21-3461051276-3658573231-1749369878
+Account:            	enum-x
+Enumerate:          	domain-groups
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	114
+OpNums called:
+  Name                              OpNum  Access Mask
+-------------------------------------------------------
+  SamrConnect                       0     0x00000031
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000301
+  SamrEnumerateGroupsInDomain       11    --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+================================================================
+

@@ -1,0 +1,42 @@
+Execution started at: 2025-03-08 16:49:55.493825
+
+-----------------------------------------------------------------
+Domain Group Name:  	Domain Admins
+RID:                	512
+Member Count:       	7
+-----------------------------------------------------------------
+RID                 	Username            
+--------------------------------
+500                 	Administrator       
+1136                	INES_RIVAS          
+1204                	STEVEN_JENKINS      
+1303                	CALVIN_LINDSEY      
+1516                	CHRISTIAN_PUGH      
+1588                	CAROLE_MARSH        
+2101                	enum-y              
+
+================================================================
+Execution time:     	0.16 seconds
+Destination target: 	ydc1.domain-y.local
+Domain SID:         	S-1-5-21-3461051276-3658573231-1749369878
+Account:            	enum-x
+Enumerate:          	domain-group-details
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	1
+OpNums called:
+  Name                              OpNum  Access Mask
+-------------------------------------------------------
+  SamrConnect                       0     0x00000031
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000301
+  SamrLookupNamesInDomain           17    --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+================================================================
+

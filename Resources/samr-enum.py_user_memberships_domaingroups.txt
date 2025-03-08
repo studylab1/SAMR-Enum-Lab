@@ -1,0 +1,43 @@
+Execution started at: 2025-03-08 16:58:07.971284
+
+Member                      RID     Attributes
+---------------------------------------------------------
+CA-mis3amore-admingroup1    1613    Mandatory, Enabled by default, Enabled
+Schema Admins               518     Mandatory, Enabled by default, Enabled
+Domain Admins               512     Mandatory, Enabled by default, Enabled
+JA-der-admingroup1          1653    Mandatory, Enabled by default, Enabled
+JA-ilo-distlist1            1612    Mandatory, Enabled by default, Enabled
+Domain Users                513     Mandatory, Enabled by default, Enabled
+Enterprise Admins           519     Mandatory, Enabled by default, Enabled
+TA-pel-admingroup1          1666    Mandatory, Enabled by default, Enabled
+LE-bac-admingroup1          1689    Mandatory, Enabled by default, Enabled
+18-cho-distlist1            1633    Mandatory, Enabled by default, Enabled
+IR-boe-distlist1            1659    Mandatory, Enabled by default, Enabled
+Group Policy Creator Owners 520     Mandatory, Enabled by default, Enabled
+NU-ale-distlist1            1615    Mandatory, Enabled by default, Enabled
+AL-siv-distlist1            1676    Mandatory, Enabled by default, Enabled
+================================================================
+Execution time:     	0.16 seconds
+Destination target: 	ydc1.domain-y.local
+Domain SID:         	S-1-5-21-3461051276-3658573231-1749369878
+Account:            	enum-x
+Enumerate:          	user-memberships-domaingroups
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	14
+OpNums called:
+  Name                              OpNum  Access Mask
+-------------------------------------------------------
+  SamrConnect                       0     0x00000031
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000301
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrGetGroupsForUser              39    --
+  SamrCloseHandle                   1     --
+  SamrLookupIdsInDomain             18    --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+================================================================
+

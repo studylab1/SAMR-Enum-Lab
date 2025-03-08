@@ -1,0 +1,2513 @@
+Execution started at: 2025-03-08 17:49:01.843145
+
+RID      Last Logon   PwdSet     PwdNE      PwdExp     ForceChg   AccDis     PreAuth    Delg     BadCnt     Username        Full Name            
+-------------------------------------------------------------------------------------------------------------------------------------------------
+500      2025.03.08   2025.02.02 No         No         Never      No         Yes        Yes      0          Administrator   Display name        
+501      Never        Never      Yes        No         Never      Yes        Yes        Yes      0          Guest                               
+502      Never        2024.11.01 No         No         Never      Yes        Yes        Yes      0          krbtgt                              
+1105     2025.02.02   2024.11.01 Yes        No         Never      No         Yes        Yes      0          enum            Domain Enum         
+1119     2025.01.24   2024.11.01 No         No         Never      No         Yes        Yes      0          enum_a          enum                
+1120     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ANTONE_PICKETT  ANTONE_PICKETT      
+1121     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MICHEL_OSBORNE  MICHEL_OSBORNE      
+1122     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CARL_ANDREWS    CARL_ANDREWS        
+1123     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LORIE_CHASE     LORIE_CHASE         
+1124     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DICK_CRAFT      DICK_CRAFT          
+1125     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MANUELA_SANDERS MANUELA_SANDERS     
+1126     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TORY_NIXON      TORY_NIXON          
+1127     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LAVONNE_DODSON  LAVONNE_DODSON      
+1128     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          NORA_SIMS       NORA_SIMS           
+1129     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MATILDA_CALHOUN MATILDA_CALHOUN     
+1130     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          PETER_MORGAN    PETER_MORGAN        
+1131     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CHRISTINE_KLEIN CHRISTINE_KLEIN     
+1132     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CHAUNCEY_WOLFE  CHAUNCEY_WOLFE      
+1133     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JERRI_KING      JERRI_KING          
+1134     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          HERBERT_CHANG   HERBERT_CHANG       
+1135     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          FREDA_DILLON    FREDA_DILLON        
+1136     Never        2024.11.02 No         No         Never      No         No         Yes      0          INES_RIVAS      INES_RIVAS          
+1137     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LES_VILLARREAL  LES_VILLARREAL      
+1138     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          NANNIE_GUTIERREZ NANNIE_GUTIERREZ    
+1139     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RORY_ORR        RORY_ORR            
+1140     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ROLAND_RODRIQUEZ ROLAND_RODRIQUEZ    
+1141     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          VIRGINIA_PITTS  VIRGINIA_PITTS      
+1142     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ANASTASIA_WATKINS ANASTASIA_WATKINS   
+1143     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          STACEY_WOODWARD STACEY_WOODWARD     
+1144     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ALVA_FINCH      ALVA_FINCH          
+1145     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          YVONNE_SHIELDS  YVONNE_SHIELDS      
+1146     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JOANNE_HOGAN    JOANNE_HOGAN        
+1147     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          GRETA_LOPEZ     GRETA_LOPEZ         
+1148     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          NED_DALTON      NED_DALTON          
+1149     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CATHERINE_ORTEGA CATHERINE_ORTEGA    
+1150     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DESMOND_WIGGINS DESMOND_WIGGINS     
+1151     Never        2024.11.02 No         No         Never      No         No         Yes      0          KARA_TRUJILLO   KARA_TRUJILLO       
+1152     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LAKEISHA_BALL   LAKEISHA_BALL       
+1153     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KATE_KERR       KATE_KERR           
+1154     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ANGELO_THORNTON ANGELO_THORNTON     
+1155     Never        2024.11.02 No         No         Never      No         No         Yes      0          ELDON_WALLER    ELDON_WALLER        
+1156     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          HANS_GRAY       HANS_GRAY           
+1157     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          INA_JORDAN      INA_JORDAN          
+1158     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LUCY_VANCE      LUCY_VANCE          
+1159     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LARRY_MCKEE     LARRY_MCKEE         
+1160     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BRENDA_HAHN     BRENDA_HAHN         
+1161     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          GARLAND_HANSON  GARLAND_HANSON      
+1162     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          INES_GUTIERREZ  INES_GUTIERREZ      
+1163     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          1273197649SA    1273197649SA        
+1164     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JAYSON_ROBLES   JAYSON_ROBLES       
+1165     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LYLE_GILLESPIE  LYLE_GILLESPIE      
+1166     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          PHILIP_SHAW     PHILIP_SHAW         
+1167     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          3687586594SA    3687586594SA        
+1168     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          SANTIAGO_PAYNE  SANTIAGO_PAYNE      
+1169     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EDDY_DUNCAN     EDDY_DUNCAN         
+1170     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BEN_MERRITT     BEN_MERRITT         
+1171     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          AUBREY_STEVENSON AUBREY_STEVENSON    
+1172     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          GARTH_CLEMENTS  GARTH_CLEMENTS      
+1173     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LEOLA_REESE     LEOLA_REESE         
+1174     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          PHYLLIS_POWERS  PHYLLIS_POWERS      
+1175     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DONNY_HANSON    DONNY_HANSON        
+1176     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          AHMED_CARSON    AHMED_CARSON        
+1177     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          STEVE_WRIGHT    STEVE_WRIGHT        
+1178     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JOANNA_SCHMIDT  JOANNA_SCHMIDT      
+1179     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BRENDA_GARNER   BRENDA_GARNER       
+1180     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ESMERALDA_WEBSTER ESMERALDA_WEBSTER   
+1181     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          FREDERICK_KLINE FREDERICK_KLINE     
+1182     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          GERARD_DORSEY   GERARD_DORSEY       
+1183     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KENDRICK_TATE   KENDRICK_TATE       
+1184     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ZACHARY_RYAN    ZACHARY_RYAN        
+1185     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          GABRIELLE_ALSTON GABRIELLE_ALSTON    
+1186     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MAUREEN_SAVAGE  MAUREEN_SAVAGE      
+1187     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          SALVATORE_MULLINS SALVATORE_MULLINS   
+1188     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LESLEY_SARGENT  LESLEY_SARGENT      
+1189     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MARCI_DONOVAN   MARCI_DONOVAN       
+1190     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LEOPOLDO_CANTRELL LEOPOLDO_CANTRELL   
+1191     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LAVERNE_PETTY   LAVERNE_PETTY       
+1192     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CHERIE_GALLOWAY CHERIE_GALLOWAY     
+1193     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ELLEN_CLEMONS   ELLEN_CLEMONS       
+1194     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CAITLIN_HART    CAITLIN_HART        
+1195     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LANA_FOWLER     LANA_FOWLER         
+1196     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TWILA_BRAY      TWILA_BRAY          
+1197     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          5569296786SA    5569296786SA        
+1198     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JEWEL_BEARD     JEWEL_BEARD         
+1199     Never        2024.11.02 No         No         Never      No         No         Yes      0          ALEJANDRO_MCCORMICK ALEJANDRO_MCCORMICK 
+1200     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ASHLEY_CARTER   ASHLEY_CARTER       
+1201     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TERRIE_BECKER   TERRIE_BECKER       
+1202     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          REBEKAH_SILVA   REBEKAH_SILVA       
+1203     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CAMERON_TERRY   CAMERON_TERRY       
+1204     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          STEVEN_JENKINS  STEVEN_JENKINS      
+1205     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          3477848735SA    3477848735SA        
+1206     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          AIMEE_MOSLEY    AIMEE_MOSLEY        
+1207     Never        2024.11.02 No         No         Never      No         No         Yes      0          DARNELL_RUSSELL DARNELL_RUSSELL     
+1208     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          SERGIO_BURTON   SERGIO_BURTON       
+1209     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ALTON_EWING     ALTON_EWING         
+1210     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BRYON_FOX       BRYON_FOX           
+1211     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LILIAN_GIBSON   LILIAN_GIBSON       
+1212     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          9570489284SA    9570489284SA        
+1213     Never        2024.11.02 No         No         Never      No         No         Yes      0          CHRISTIE_TYSON  CHRISTIE_TYSON      
+1214     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          SONNY_PEREZ     SONNY_PEREZ         
+1215     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MARCELO_BRAY    MARCELO_BRAY        
+1216     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ESTELA_WALTER   ESTELA_WALTER       
+1217     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          GRETCHEN_AYALA  GRETCHEN_AYALA      
+1218     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BRANDI_JOSEPH   BRANDI_JOSEPH       
+1219     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          FANNIE_SNIDER   FANNIE_SNIDER       
+1220     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          6188958331SA    6188958331SA        
+1221     Never        2024.11.02 No         No         Never      No         No         Yes      0          AISHA_CHEN      AISHA_CHEN          
+1222     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DELORES_HENDRICKS DELORES_HENDRICKS   
+1223     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ORLANDO_CROSBY  ORLANDO_CROSBY      
+1224     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          OFELIA_NOLAN    OFELIA_NOLAN        
+1225     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MONIQUE_YOUNG   MONIQUE_YOUNG       
+1226     Never        2024.11.02 No         No         Never      No         No         Yes      0          LORA_VALDEZ     LORA_VALDEZ         
+1227     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JEROLD_DIAZ     JEROLD_DIAZ         
+1228     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TOMMIE_SWEET    TOMMIE_SWEET        
+1229     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          NUMBERS_GUERRA  NUMBERS_GUERRA      
+1230     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          FOSTER_GOLDEN   FOSTER_GOLDEN       
+1231     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          PAULINE_HODGE   PAULINE_HODGE       
+1232     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ALBERTA_WATKINS ALBERTA_WATKINS     
+1233     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TAMMY_GORDON    TAMMY_GORDON        
+1234     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CHRISTY_FITZGERALD CHRISTY_FITZGERALD  
+1235     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CAROL_DENNIS    CAROL_DENNIS        
+1236     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          3271151998SA    3271151998SA        
+1237     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ESSIE_WEBSTER   ESSIE_WEBSTER       
+1238     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EVERETTE_JARVIS EVERETTE_JARVIS     
+1239     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DEWITT_MCKINNEY DEWITT_MCKINNEY     
+1240     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          SHERYL_COCHRAN  SHERYL_COCHRAN      
+1241     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ODESSA_DRAKE    ODESSA_DRAKE        
+1242     Never        2024.11.02 No         No         Never      No         No         Yes      0          LORNA_BERG      LORNA_BERG          
+1243     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KAREN_DUKE      KAREN_DUKE          
+1244     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ELVIS_HINTON    ELVIS_HINTON        
+1245     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          NATHANIEL_MCCARTY NATHANIEL_MCCARTY   
+1246     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RUDY_DAVID      RUDY_DAVID          
+1247     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          GORDON_CONNER   GORDON_CONNER       
+1248     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EVANGELINA_BRUCE EVANGELINA_BRUCE    
+1249     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          WALKER_GOULD    WALKER_GOULD        
+1250     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JUNE_GUZMAN     JUNE_GUZMAN         
+1251     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CASSIE_WILSON   CASSIE_WILSON       
+1252     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          THERESE_SARGENT THERESE_SARGENT     
+1253     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          OLGA_BROWN      OLGA_BROWN          
+1254     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JAYSON_FARLEY   JAYSON_FARLEY       
+1255     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          YOUNG_TUCKER    YOUNG_TUCKER        
+1256     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JARED_MORAN     JARED_MORAN         
+1257     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          REED_LEWIS      REED_LEWIS          
+1258     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LETA_PETTY      LETA_PETTY          
+1259     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DICK_MONTOYA    DICK_MONTOYA        
+1260     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RODRIGO_WELCH   RODRIGO_WELCH       
+1261     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          NATHAN_FRY      NATHAN_FRY          
+1262     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JEFFERSON_MAXWELL JEFFERSON_MAXWELL   
+1263     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          REYES_BRADLEY   REYES_BRADLEY       
+1264     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          FLORA_CANTU     FLORA_CANTU         
+1265     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          PHYLLIS_CASE    PHYLLIS_CASE        
+1266     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ISSAC_MILES     ISSAC_MILES         
+1267     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JACLYN_CARDENAS JACLYN_CARDENAS     
+1268     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          AVERY_DONOVAN   AVERY_DONOVAN       
+1269     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ROLAND_MERCADO  ROLAND_MERCADO      
+1270     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CHARLENE_DONALDSON CHARLENE_DONALDSON  
+1271     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RONDA_VELAZQUEZ RONDA_VELAZQUEZ     
+1272     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ADAN_LUCAS      ADAN_LUCAS          
+1273     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RUSS_HOWE       RUSS_HOWE           
+1274     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KATINA_MULLINS  KATINA_MULLINS      
+1275     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JACQUELINE_MOSES JACQUELINE_MOSES    
+1276     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          FRANKIE_NEAL    FRANKIE_NEAL        
+1277     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          VITO_MARSH      VITO_MARSH          
+1278     Never        2024.11.02 No         No         Never      No         No         Yes      0          TIMMY_SALAZAR   TIMMY_SALAZAR       
+1279     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          SHAWNA_SHEPPARD SHAWNA_SHEPPARD     
+1280     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CARMEN_GUY      CARMEN_GUY          
+1281     Never        2024.11.02 No         No         Never      No         No         Yes      0          LETA_TRUJILLO   LETA_TRUJILLO       
+1282     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          NEVA_LESTER     NEVA_LESTER         
+1283     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          COLE_BOND       COLE_BOND           
+1284     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BELINDA_LYNCH   BELINDA_LYNCH       
+1285     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BRIDGETTE_CANTRELL BRIDGETTE_CANTRELL  
+1286     Never        2024.11.02 No         No         Never      No         No         Yes      0          LILIAN_MCLAUGHLIN LILIAN_MCLAUGHLIN   
+1287     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JANIE_GALLOWAY  JANIE_GALLOWAY      
+1288     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CRISTINA_TERRELL CRISTINA_TERRELL    
+1289     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LAURIE_WALLER   LAURIE_WALLER       
+1290     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EMMANUEL_MCKAY  EMMANUEL_MCKAY      
+1291     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          STERLING_CLEMENTS STERLING_CLEMENTS   
+1292     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          IRMA_MORSE      IRMA_MORSE          
+1293     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          COLE_CLINE      COLE_CLINE          
+1294     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          FREDERICK_OWENS FREDERICK_OWENS     
+1295     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CANDACE_HOPKINS CANDACE_HOPKINS     
+1296     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BRENTON_WIGGINS BRENTON_WIGGINS     
+1297     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CALEB_PACE      CALEB_PACE          
+1298     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ADAM_DEJESUS    ADAM_DEJESUS        
+1299     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JERROLD_CRAWFORD JERROLD_CRAWFORD    
+1300     Never        2024.11.02 No         No         Never      No         No         Yes      0          KAY_COLEMAN     KAY_COLEMAN         
+1301     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          PRINCE_HOLLAND  PRINCE_HOLLAND      
+1302     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          GRACIE_CORTEZ   GRACIE_CORTEZ       
+1303     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CALVIN_LINDSEY  CALVIN_LINDSEY      
+1304     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BRIDGETT_SIMON  BRIDGETT_SIMON      
+1305     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EDGAR_ANTHONY   EDGAR_ANTHONY       
+1306     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CHERYL_STRONG   CHERYL_STRONG       
+1307     Never        2024.11.02 No         No         Never      No         No         Yes      0          TAMRA_DELEON    TAMRA_DELEON        
+1308     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ROSALINDA_COX   ROSALINDA_COX       
+1309     Never        2024.11.02 No         No         Never      No         No         Yes      0          2211637050SA    2211637050SA        
+1310     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          FELECIA_THOMAS  FELECIA_THOMAS      
+1311     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JACOB_CASH      JACOB_CASH          
+1312     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MAXWELL_SCHULTZ MAXWELL_SCHULTZ     
+1313     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CHARLIE_MCKINNEY CHARLIE_MCKINNEY    
+1314     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RAE_HULL        RAE_HULL            
+1315     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CARMEN_PORTER   CARMEN_PORTER       
+1316     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          PEDRO_EVANS     PEDRO_EVANS         
+1317     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ERWIN_GILLESPIE ERWIN_GILLESPIE     
+1318     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MISTY_ASHLEY    MISTY_ASHLEY        
+1319     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ALANA_CAMPBELL  ALANA_CAMPBELL      
+1320     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          COLEEN_DOMINGUEZ COLEEN_DOMINGUEZ    
+1321     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MORGAN_PRUITT   MORGAN_PRUITT       
+1322     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ALEJANDRA_BERNARD ALEJANDRA_BERNARD   
+1323     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ALLEN_MORENO    ALLEN_MORENO        
+1324     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ANTONIO_OLSON   ANTONIO_OLSON       
+1325     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LUELLA_VAUGHN   LUELLA_VAUGHN       
+1326     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          3993264011SA    3993264011SA        
+1327     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JOHNATHON_CLARKE JOHNATHON_CLARKE    
+1328     Never        2024.11.02 No         No         Never      No         No         Yes      0          KITTY_CARSON    KITTY_CARSON        
+1329     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DONA_WILEY      DONA_WILEY          
+1330     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JUSTINE_MASSEY  JUSTINE_MASSEY      
+1331     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          REVA_BARNES     REVA_BARNES         
+1332     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          4388795927SA    4388795927SA        
+1333     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LOURDES_BRYANT  LOURDES_BRYANT      
+1334     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KATHARINE_NUNEZ KATHARINE_NUNEZ     
+1335     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          VERNON_DAVID    VERNON_DAVID        
+1336     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ELMER_WALKER    ELMER_WALKER        
+1337     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          WILLIE_CHAPMAN  WILLIE_CHAPMAN      
+1338     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CECILE_AUSTIN   CECILE_AUSTIN       
+1339     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          PAULA_BUCKNER   PAULA_BUCKNER       
+1340     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          HARRIS_HEATH    HARRIS_HEATH        
+1341     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MOLLIE_CHEN     MOLLIE_CHEN         
+1342     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BRETT_BARRERA   BRETT_BARRERA       
+1343     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          3179941294SA    3179941294SA        
+1344     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          VICTOR_BULLOCK  VICTOR_BULLOCK      
+1345     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KATIE_NEAL      KATIE_NEAL          
+1346     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          IVORY_FRAZIER   IVORY_FRAZIER       
+1347     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JEANNETTE_BOWMAN JEANNETTE_BOWMAN    
+1348     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CATHERINE_GATES CATHERINE_GATES     
+1349     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RAE_TANNER      RAE_TANNER          
+1350     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DEWAYNE_COLE    DEWAYNE_COLE        
+1351     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LINA_LINDSEY    LINA_LINDSEY        
+1352     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EDDIE_NORMAN    EDDIE_NORMAN        
+1353     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MONA_WHITEHEAD  MONA_WHITEHEAD      
+1354     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JAYNE_SNOW      JAYNE_SNOW          
+1355     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RACHAEL_BRADY   RACHAEL_BRADY       
+1356     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DEIDRE_AGUILAR  DEIDRE_AGUILAR      
+1357     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DION_BROWN      DION_BROWN          
+1358     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          STACIE_CAMERON  STACIE_CAMERON      
+1359     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CATHRYN_AVERY   CATHRYN_AVERY       
+1360     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          GUY_GORDON      GUY_GORDON          
+1361     Never        2024.11.02 No         No         Never      No         No         Yes      0          BERNADINE_RASMUSSEN BERNADINE_RASMUSSEN 
+1362     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          NUMBERS_OSBORNE NUMBERS_OSBORNE     
+1363     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LUCILLE_BERNARD LUCILLE_BERNARD     
+1364     Never        2024.11.02 No         No         Never      No         No         Yes      0          TRACIE_PRUITT   TRACIE_PRUITT       
+1365     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TAMEKA_FITZPATRICK TAMEKA_FITZPATRICK  
+1366     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ABRAHAM_DODSON  ABRAHAM_DODSON      
+1367     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          OLA_ONEILL      OLA_ONEILL          
+1368     Never        2024.11.02 No         No         Never      No         No         Yes      0          MARIANNE_ARMSTRONG MARIANNE_ARMSTRONG  
+1369     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LILIANA_FLOWERS LILIANA_FLOWERS     
+1370     Never        2024.11.02 No         No         Never      No         No         Yes      0          ANGEL_PAUL      ANGEL_PAUL          
+1371     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          SANDRA_MCDANIEL SANDRA_MCDANIEL     
+1372     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TOMAS_CAMACHO   TOMAS_CAMACHO       
+1373     Never        2024.11.02 No         No         Never      No         No         Yes      0          JAMIE_COFFEY    JAMIE_COFFEY        
+1374     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TIFFANY_ROBBINS TIFFANY_ROBBINS     
+1375     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ELNORA_TILLMAN  ELNORA_TILLMAN      
+1376     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DOUGLAS_STEPHENSON DOUGLAS_STEPHENSON  
+1377     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          THADDEUS_MILLS  THADDEUS_MILLS      
+1378     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JOSIE_FROST     JOSIE_FROST         
+1379     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EDUARDO_PEARSON EDUARDO_PEARSON     
+1380     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ELBA_DUNLAP     ELBA_DUNLAP         
+1381     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JOSE_DENNIS     JOSE_DENNIS         
+1382     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DANIAL_STOUT    DANIAL_STOUT        
+1383     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MARCI_RODGERS   MARCI_RODGERS       
+1384     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MARVIN_SHARP    MARVIN_SHARP        
+1385     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          SUNG_DUNN       SUNG_DUNN           
+1386     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CARMINE_WILDER  CARMINE_WILDER      
+1387     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EULA_HANSEN     EULA_HANSEN         
+1388     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DELBERT_PRICE   DELBERT_PRICE       
+1389     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EVANGELINA_HAYES EVANGELINA_HAYES    
+1390     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MILO_SHANNON    MILO_SHANNON        
+1391     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MOISES_GUTIERREZ MOISES_GUTIERREZ    
+1392     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JULIETTE_SWEET  JULIETTE_SWEET      
+1393     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TRAVIS_MORSE    TRAVIS_MORSE        
+1394     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          AURELIO_BLACKBURN AURELIO_BLACKBURN   
+1395     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CESAR_GUY       CESAR_GUY           
+1396     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ESSIE_HARRISON  ESSIE_HARRISON      
+1397     Never        2024.11.02 No         No         Never      No         No         Yes      0          CLAUDETTE_PEREZ CLAUDETTE_PEREZ     
+1398     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MERLIN_ROBBINS  MERLIN_ROBBINS      
+1399     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          VERONICA_BARTLETT VERONICA_BARTLETT   
+1400     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LAURA_MAY       LAURA_MAY           
+1401     Never        2024.11.02 No         No         Never      No         No         Yes      0          IVY_STUART      IVY_STUART          
+1402     Never        2024.11.02 No         No         Never      No         No         Yes      0          LETITIA_HUTCHINSON LETITIA_HUTCHINSON  
+1403     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TANYA_JOSEPH    TANYA_JOSEPH        
+1404     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BRANDY_MERRITT  BRANDY_MERRITT      
+1405     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DANA_SMALL      DANA_SMALL          
+1406     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          NANETTE_KNIGHT  NANETTE_KNIGHT      
+1407     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CALVIN_SHEPARD  CALVIN_SHEPARD      
+1408     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          AURORA_MONTGOMERY AURORA_MONTGOMERY   
+1409     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          3850018498SA    3850018498SA        
+1410     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ERWIN_ABBOTT    ERWIN_ABBOTT        
+1411     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KERRY_IRWIN     KERRY_IRWIN         
+1412     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LAURIE_SAWYER   LAURIE_SAWYER       
+1413     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          SAMUEL_GUZMAN   SAMUEL_GUZMAN       
+1414     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MARI_FRANKS     MARI_FRANKS         
+1415     Never        2024.11.02 No         No         Never      No         No         Yes      0          MATILDA_BARRERA MATILDA_BARRERA     
+1416     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BEATRIZ_GOLDEN  BEATRIZ_GOLDEN      
+1417     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DALTON_EMERSON  DALTON_EMERSON      
+1418     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DENNIS_SOTO     DENNIS_SOTO         
+1419     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MILLARD_PENNINGTON MILLARD_PENNINGTON  
+1420     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          SYDNEY_HALL     SYDNEY_HALL         
+1421     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LEONA_HORTON    LEONA_HORTON        
+1422     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MILES_ADAMS     MILES_ADAMS         
+1423     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          YONG_KNAPP      YONG_KNAPP          
+1424     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CAROL_SOLOMON   CAROL_SOLOMON       
+1425     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RORY_SNOW       RORY_SNOW           
+1426     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TRACEY_BEASLEY  TRACEY_BEASLEY      
+1427     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          FLORINE_FOSTER  FLORINE_FOSTER      
+1428     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CONRAD_WALLER   CONRAD_WALLER       
+1429     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RACHEL_WALLACE  RACHEL_WALLACE      
+1430     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DENISE_ATKINSON DENISE_ATKINSON     
+1431     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KERRY_LAMB      KERRY_LAMB          
+1432     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          HORACIO_BOYD    HORACIO_BOYD        
+1433     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          WILBERT_GILLESPIE WILBERT_GILLESPIE   
+1434     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          SHELLY_HUFFMAN  SHELLY_HUFFMAN      
+1435     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MAGGIE_ALSTON   MAGGIE_ALSTON       
+1436     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BURT_STONE      BURT_STONE          
+1437     Never        2024.11.02 No         No         Never      No         No         Yes      0          ADOLFO_CROSS    ADOLFO_CROSS        
+1438     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DOLLY_DELACRUZ  DOLLY_DELACRUZ      
+1439     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BERTA_RICHARDS  BERTA_RICHARDS      
+1440     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CLAY_SELLERS    CLAY_SELLERS        
+1441     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RENA_DELANEY    RENA_DELANEY        
+1442     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EMMA_PACE       EMMA_PACE           
+1443     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KELLIE_VAUGHAN  KELLIE_VAUGHAN      
+1444     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ANGELIA_BURKS   ANGELIA_BURKS       
+1445     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KRISTI_GONZALEZ KRISTI_GONZALEZ     
+1446     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          VALERIA_KEMP    VALERIA_KEMP        
+1447     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          NADINE_ANDREWS  NADINE_ANDREWS      
+1448     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ROYCE_BURNS     ROYCE_BURNS         
+1449     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DANA_COBB       DANA_COBB           
+1450     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          HIRAM_PIERCE    HIRAM_PIERCE        
+1451     Never        2024.11.02 No         No         Never      No         No         Yes      0          JULIO_MCCLAIN   JULIO_MCCLAIN       
+1452     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ELLIS_HEATH     ELLIS_HEATH         
+1453     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CONNIE_CAMPBELL CONNIE_CAMPBELL     
+1454     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TOMAS_SLATER    TOMAS_SLATER        
+1455     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ABEL_RIVAS      ABEL_RIVAS          
+1456     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CHARLIE_CHRISTENSEN CHARLIE_CHRISTENSEN 
+1457     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DEXTER_MALONE   DEXTER_MALONE       
+1458     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          FELICIA_MURRAY  FELICIA_MURRAY      
+1459     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ALLISON_MUELLER ALLISON_MUELLER     
+1460     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JIMMIE_WHITE    JIMMIE_WHITE        
+1461     Never        2024.11.02 No         No         Never      No         No         Yes      0          ALFRED_STEPHENS ALFRED_STEPHENS     
+1462     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JOAN_LAMB       JOAN_LAMB           
+1463     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DANNY_HOUSTON   DANNY_HOUSTON       
+1464     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          IMELDA_REILLY   IMELDA_REILLY       
+1465     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EVE_JACKSON     EVE_JACKSON         
+1466     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          GWENDOLYN_JUAREZ GWENDOLYN_JUAREZ    
+1467     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          GERTRUDE_WALTON GERTRUDE_WALTON     
+1468     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MADELEINE_LARSEN MADELEINE_LARSEN    
+1469     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          VITO_LYNCH      VITO_LYNCH          
+1470     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DELORES_ENGLISH DELORES_ENGLISH     
+1471     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EVA_CARTER      EVA_CARTER          
+1472     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          OLIVIA_ADKINS   OLIVIA_ADKINS       
+1473     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JESSE_BISHOP    JESSE_BISHOP        
+1474     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EVANGELINA_RANDOLPH EVANGELINA_RANDOLPH 
+1475     Never        2024.11.02 No         No         Never      No         No         Yes      0          RUSSELL_CAMPBELL RUSSELL_CAMPBELL    
+1476     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JAIME_HUMPHREY  JAIME_HUMPHREY      
+1477     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KARIN_FITZGERALD KARIN_FITZGERALD    
+1478     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          HORACE_MACDONALD HORACE_MACDONALD    
+1479     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MARIBEL_MOLINA  MARIBEL_MOLINA      
+1480     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TONYA_HALL      TONYA_HALL          
+1481     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RICO_GALLOWAY   RICO_GALLOWAY       
+1482     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DION_ACOSTA     DION_ACOSTA         
+1483     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ROBERTO_DECKER  ROBERTO_DECKER      
+1484     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CESAR_PUCKETT   CESAR_PUCKETT       
+1485     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KERMIT_PETERSEN KERMIT_PETERSEN     
+1486     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JERI_BURT       JERI_BURT           
+1487     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MARIO_CALDERON  MARIO_CALDERON      
+1488     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          PAIGE_MALONE    PAIGE_MALONE        
+1489     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          HUGO_HAMPTON    HUGO_HAMPTON        
+1490     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          1891345774SA    1891345774SA        
+1491     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          GINA_DICKSON    GINA_DICKSON        
+1492     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BOBBI_WHITEHEAD BOBBI_WHITEHEAD     
+1493     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CHRIS_CONLEY    CHRIS_CONLEY        
+1494     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          SALVADOR_HOBBS  SALVADOR_HOBBS      
+1495     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DARNELL_SHARPE  DARNELL_SHARPE      
+1496     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TRAVIS_NGUYEN   TRAVIS_NGUYEN       
+1497     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          SONYA_DILLARD   SONYA_DILLARD       
+1498     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          FREDDIE_CRAIG   FREDDIE_CRAIG       
+1499     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TOMMIE_BOYD     TOMMIE_BOYD         
+1500     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CHERI_MOONEY    CHERI_MOONEY        
+1501     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EDGARDO_WALTERS EDGARDO_WALTERS     
+1502     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BLANCA_MURPHY   BLANCA_MURPHY       
+1503     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LATISHA_CONWAY  LATISHA_CONWAY      
+1504     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          9859594570SA    9859594570SA        
+1505     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          5246740189SA    5246740189SA        
+1506     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          IRVIN_ROSS      IRVIN_ROSS          
+1507     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JEROLD_CANNON   JEROLD_CANNON       
+1508     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RACHEL_GUZMAN   RACHEL_GUZMAN       
+1509     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MORRIS_HORN     MORRIS_HORN         
+1510     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          PAULINE_FERRELL PAULINE_FERRELL     
+1511     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          WILSON_BOONE    WILSON_BOONE        
+1512     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RUBEN_LITTLE    RUBEN_LITTLE        
+1513     Never        2024.11.02 No         No         Never      No         No         Yes      0          ESTEBAN_SOLIS   ESTEBAN_SOLISertertertret
+1514     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          AUTUMN_VALENZUELA AUTUMN_VALENZUELA   
+1515     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MELODY_GRAHAM   MELODY_GRAHAM       
+1516     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CHRISTIAN_PUGH  CHRISTIAN_PUGH      
+1517     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JOYCE_HOOD      JOYCE_HOOD          
+1518     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ADELA_TURNER    ADELA_TURNER        
+1519     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EMMANUEL_FRANKLIN EMMANUEL_FRANKLIN   
+1520     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          NELL_PECK       NELL_PECK           
+1521     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CALEB_FROST     CALEB_FROST         
+1522     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MORGAN_NIEVES   MORGAN_NIEVES       
+1523     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CYRIL_PALMER    CYRIL_PALMER        
+1524     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CECILE_ENGLAND  CECILE_ENGLAND      
+1525     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JOEY_KIRK       JOEY_KIRK           
+1526     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CARMELO_PENNINGTON CARMELO_PENNINGTON  
+1527     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KARIN_FARMER    KARIN_FARMER        
+1528     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          HERBERT_FERGUSON HERBERT_FERGUSON    
+1529     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          THERON_DECKER   THERON_DECKER       
+1530     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KATELYN_SNYDER  KATELYN_SNYDER      
+1531     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DARREN_FOWLER   DARREN_FOWLER       
+1532     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ADRIENNE_ROJAS  ADRIENNE_ROJAS      
+1533     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CORNELIA_CERVANTES CORNELIA_CERVANTES  
+1534     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LENORA_PORTER   LENORA_PORTER       
+1535     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JAMES_BENJAMIN  JAMES_BENJAMIN      
+1536     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          NEVA_MCKNIGHT   NEVA_MCKNIGHT       
+1537     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KIRBY_RAMIREZ   KIRBY_RAMIREZ       
+1538     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KATHIE_POWERS   KATHIE_POWERS       
+1539     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DORA_WHITE      DORA_WHITE          
+1540     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LOLA_PIERCE     LOLA_PIERCE         
+1541     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ELVIA_MORGAN    ELVIA_MORGAN        
+1542     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ARON_HOLLOWAY   ARON_HOLLOWAY       
+1543     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TYREE_MARTINEZ  TYREE_MARTINEZ      
+1544     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          YOUNG_BENTLEY   YOUNG_BENTLEY       
+1545     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          WILSON_NIEVES   WILSON_NIEVES       
+1546     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MARGARITO_GAMBLE MARGARITO_GAMBLE    
+1547     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ZACHARY_WILLIAMSON ZACHARY_WILLIAMSON  
+1548     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DEANA_HUTCHINSON DEANA_HUTCHINSON    
+1549     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JUSTINE_TALLEY  JUSTINE_TALLEY      
+1550     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          PENNY_BARRON    PENNY_BARRON        
+1551     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          8405845287SA    8405845287SA        
+1552     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MYRON_BARTLETT  MYRON_BARTLETT      
+1553     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CLARISSA_SOTO   CLARISSA_SOTO       
+1554     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ERICKA_TERRELL  ERICKA_TERRELL      
+1555     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MARCOS_DELGADO  MARCOS_DELGADO      
+1556     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EARNESTINE_JAMES EARNESTINE_JAMES    
+1557     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CASSANDRA_COBB  CASSANDRA_COBB      
+1558     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TOMMIE_FRAZIER  TOMMIE_FRAZIER      
+1559     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          HOUSTON_WALLS   HOUSTON_WALLS       
+1560     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DAVID_SOTO      DAVID_SOTO          
+1561     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MARTIN_GILLIAM  MARTIN_GILLIAM      
+1562     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ANGIE_MCKEE     ANGIE_MCKEE         
+1563     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MICHAEL_NIELSEN MICHAEL_NIELSEN     
+1564     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ANASTASIA_STEVENSON ANASTASIA_STEVENSON 
+1565     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KATHERYN_FLYNN  KATHERYN_FLYNN      
+1566     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          EDGAR_CHRISTIAN EDGAR_CHRISTIAN     
+1567     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          RORY_WADE       RORY_WADE           
+1568     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CARLO_DILLARD   CARLO_DILLARD       
+1569     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MITCH_ROBERSON  MITCH_ROBERSON      
+1570     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          THADDEUS_WELCH  THADDEUS_WELCH      
+1571     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          PATSY_REYES     PATSY_REYES         
+1572     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KENT_BRADY      KENT_BRADY          
+1573     Never        2024.11.02 No         No         Never      No         No         Yes      0          JULIUS_WHITFIELD JULIUS_WHITFIELD    
+1574     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ANGELA_FERGUSON ANGELA_FERGUSON     
+1575     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ROCCO_SCHNEIDER ROCCO_SCHNEIDER     
+1576     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BERTIE_GUERRERO BERTIE_GUERRERO     
+1577     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MARTINA_LE      MARTINA_LE          
+1578     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ELNORA_HICKS    ELNORA_HICKS        
+1579     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ARLENE_ROBLES   ARLENE_ROBLES       
+1580     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          HARRISON_ERICKSON HARRISON_ERICKSON   
+1581     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          MARCI_MCKEE     MARCI_MCKEE         
+1582     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JAMAL_GARZA     JAMAL_GARZA         
+1583     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CARRIE_MCLEAN   CARRIE_MCLEAN       
+1584     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DIANNE_ROBERSON DIANNE_ROBERSON     
+1585     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          FAYE_ASHLEY     FAYE_ASHLEY         
+1586     Never        2024.11.02 No         No         Never      No         No         Yes      0          GERMAN_SILVA    GERMAN_SILVA        
+1587     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          IDA_VARGAS      IDA_VARGAS          
+1588     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          CAROLE_MARSH    CAROLE_MARSH        
+1589     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TYRONE_BRIDGES  TYRONE_BRIDGES      
+1590     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DEXTER_RUSSO    DEXTER_RUSSO        
+1591     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          FOSTER_RYAN     FOSTER_RYAN         
+1592     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          JAMI_AVILA      JAMI_AVILA          
+1593     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          3946918371SA    3946918371SA        
+1594     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          ANASTASIA_PETERSON ANASTASIA_PETERSON  
+1595     Never        2024.11.02 No         No         Never      No         No         Yes      0          JEANNE_HOFFMAN  JEANNE_HOFFMAN      
+1596     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          GERARDO_HARRIS  GERARDO_HARRIS      
+1597     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          WILBUR_TATE     WILBUR_TATE         
+1598     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          HILDA_HAYES     HILDA_HAYES         
+1599     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          BOBBIE_ROWLAND  BOBBIE_ROWLAND      
+1600     Never        2024.11.02 No         No         Never      No         No         Yes      0          JILL_TYSON      JILL_TYSON          
+1601     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LELIA_OSBORNE   LELIA_OSBORNE       
+1602     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LAVERNE_HAWKINS LAVERNE_HAWKINS     
+1603     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          7732396008SA    7732396008SA        
+1604     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          TERRI_LEON      TERRI_LEON          
+1605     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          KRISTA_AGUILAR  KRISTA_AGUILAR      
+1606     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          HANK_STANLEY    HANK_STANLEY        
+1607     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          DOREEN_MILES    DOREEN_MILES        
+1608     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          REX_MCMILLAN    REX_MCMILLAN        
+1609     Never        2024.11.02 No         No         Never      No         Yes        Yes      0          LYNDA_GORDON    LYNDA_GORDON        
+2101     Never        2025.02.11 Yes        No         Never      No         Yes        Yes      0          enum-y          enum-y              
+2102     2025.02.24   2025.02.24 No         No         Never      No         Yes        Yes      0          daniel_carter   Daniel DC. Carter   
+-------------------------------------------------------------------------------------------------------------------------------------------------
+RID      Last Logon   PwdSet     PwdNE      PwdExp     ForceChg   AccDis     PreAuth    Delg     BadCnt     Username        Full Name            
+
+================================================================
+Execution time:     	5.35 seconds
+Destination target: 	ydc1.domain-y.local
+Domain SID:         	
+Account:            	enum-x
+Enumerate:          	display-info
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	497
+OpNums called:
+  Name                              OpNum  Access Mask
+-------------------------------------------------------
+  SamrConnect                       0     0x00000031
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000301
+  SamrEnumerateUsersInDomain        13    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+================================================================
+
