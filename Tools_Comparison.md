@@ -106,6 +106,154 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | **samr-enum**| ●  | ●  | ○  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ●  | ○  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
 | rpcclient    | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ○  | ●  | ○  | ●  | ●  | ○  | ○  | ●  | ○  | ○  | ○  |
 
+<table>
+  <thead>
+    <tr>
+      <!-- First row of headers -->
+      <th></th>
+      <th colspan="4">Connection Operations</th>
+      <th colspan="5">Handle Management</th>
+    </tr>
+    <tr>
+      <th>Tool \ OpNum</th>
+      <th>0</th>
+      <th>57</th>
+      <th>62</th>
+      <th>64</th>
+      <th>1</th>
+      <th>7</th>
+      <th>19</th>
+      <th>27</th>
+      <th>34</th>
+    </tr>
+  </thead>
+  <tbody>
+    <tr>
+      <td>Net</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+    </tr>
+    <tr>
+      <td>Enum4linux</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+    </tr>
+    <tr>
+      <td>Enum4linux-ng</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+    </tr>
+   <tr>
+      <td>PowerShell</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+    </tr>
+   <tr>
+      <td>SharpHound</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>●</td>
+      <td>●</td>
+      <td>●</td>
+      <td>○</td>
+      <td>●</td>
+      <td>○</td>
+    </tr>
+   <tr>
+      <td>Metasploit</td>
+      <td>●</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>●</td>
+      <td>●</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+    </tr>
+   <tr>
+      <td>CrackMapExec</td>
+      <td>●</td>
+      <td>●</td>
+      <td>○</td>
+      <td>○</td>
+      <td>●</td>
+      <td>●</td>
+      <td>○</td>
+      <td>○</td>
+      <td>●</td>
+    </tr>
+   <tr>
+      <td>Impacket</td>
+      <td>●</td>
+      <td>●</td>
+      <td>○</td>
+      <td>○</td>
+      <td>●</td>
+      <td>●</td>
+      <td>●</td>
+      <td>●</td>
+      <td>●</td>
+    </tr>
+        <tr>
+      <td>rpcclient</td>
+      <td>●</td>
+      <td>○</td>
+      <td>○</td>
+      <td>●</td>
+      <td>○</td>
+      <td>●</td>
+      <td>●</td>
+      <td>●</td>
+      <td>●</td>
+    </tr>
+   <tr>
+      <td>samr-enum</td>
+      <td>●</td>
+      <td>○</td>
+      <td>○</td>
+      <td>○</td>
+      <td>●</td>
+      <td>●</td>
+      <td>●</td>
+      <td>●</td>
+      <td>●</td>
+    </tr>
+  </tbody>
+</table>
+
+
+
+
 ### Excessive Permission Detection Criterion
 
 The evaluation focuses on analyzing the **'Desired Access'** field in SAMR requests. For clarity:
