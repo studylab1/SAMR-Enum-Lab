@@ -188,6 +188,7 @@ The table below provides an overview of SAMR operation numbers (OpNums) relevant
 | 20        | `SamrQueryInformationGroup`   | Varies (based on Information Level)   | Retrieves information about a specific group in a domain.                                        |
 | 25        | `SamrGetMembersInGroup`       | List of Integers                      | Retrieves the list of members' RIDs for a given group.                                           |
 | 27        | `SamrOpenAlias`               | Handle                                | Opens a handle to a specific alias (local group) for further operations.                         |
+| 28        | `SamrQueryInformationAlias`   | Varies (based on Information Level)   | Retrieves detailed information about an alias (local group), such as its description and member statistics, depending on the requested information level.| 
 | 33        | `SamrGetMembersInAlias`       | List of SIDs                          | Retrieves a list of members for a specified alias (local group).                                 |
 | 34        | `SamrOpenUser`                | Handle                                | Opens a handle to a specific user account for further operations.                                |
 | 36        | `SamrQueryInformationUser`    | Varies (based on Information Level)   | Retrieves detailed information on a specific user account.                                       |
@@ -198,11 +199,15 @@ The table below provides an overview of SAMR operation numbers (OpNums) relevant
 | 46        | `SamrQueryInformationDomain2` | List of Strings and Integers          | Retrieves display information (e.g., names, account descriptions) for domain accounts. This operation is similar to SamrQueryDisplayInformation, but allows for extended querying. |
 | 47        | `SamrQueryInformationUser2`   | Varies (based on Information Level)   | Provides additional detailed information about a user account, similar to `SamrQueryInformationUser`.|
 | 48        | `SamrQueryDisplayInformation2`| Paginated List of Strings             | Retrieves display information for domain accounts (e.g., users, groups) in a paginated format.    |
+| 49        | `SamrGetDisplayEnumerationIndex2` | Integer                           | Retrieves the display index for paginated enumerations in scenarios requiring extended enumeration. |
 | 51        | `SamrQueryDisplayInformation3`| Paginated and Filtered List of Strings| Enables detailed and filtered queries for large-scale user, group, or machine account enumeration.|
 | 56        | `SamrGetDomainPasswordInformation` | Structure                        | Retrieves password policy information for the domain.                                           |
 | 57        | `SamrConnect2`                | Handle                                | Establishes a connection to the SAM server, specifically optimized for certain environments or use cases. |
+| 62        | `SamrConnect4`                | Handle                                | Establishes a connection to the SAM server using extended security negotiation parameters, offering additional features compared to SamrConnect. |
 | 64        | `SamrConnect5`                | Handle                                | Establishes a connection to the SAM server for domain enumeration and lookup.                   |
 | 65        | `SamrRidToSid`                | SID                                   | Converts a relative identifier (RID) to a security identifier (SID) within the domain.          |
+| 74        | `SamrValidateComputerAccountReuseAttempt` | Integer                   | Validates whether a computer account reuse attempt complies with domain policies, returning a status code that indicates if reuse is permitted. |
+| 77        | `SamrAccountIsDelegatedManagedServiceAccount` | Integer               | Determines if a computer account is a Delegated Managed Service Account (gMSA), returning a flag indicating its managed service status. |
 
 ## PowerShell AD Module Cmdlets Details
 
