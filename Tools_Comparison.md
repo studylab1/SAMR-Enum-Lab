@@ -327,6 +327,7 @@ Executed following command:
 | `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000300`   | `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   |    Compliant                |
 | `SamrEnumerateAliasesInDomain` | `EnumDomainAliases`    | 15        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrLookupIdsInDomain` | `LookupRids`           | 18        | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
 
 
@@ -416,7 +417,6 @@ Executed following command:
 | `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
-| `SamrLookupIdsInDomain` | `LookupRids`           | 18        | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrLookupNamesInDomain` | `LookupNames`         | 17        | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrOpenUser`      | `OpenUser`               | 34        | `0x0002011b`             | `USER_READ_GENERAL` (`0x00000001`) <br> `USER_READ_PREFERENCES` (`0x00000002`) <br> `USER_LIST_GROUPS` (`0x00000100`) <br> `READ_CONTROL` (`0x00020000`)| Yes  | Compliant   |
 | `SamrQueryInformationUser2` | `QueryUserInfo2`       | 47        | Access not requested               | N/A                    | N/A                         | N/A                                  |
@@ -466,6 +466,7 @@ Executed following command:
 | `SamrEnumerateDomainsInSamServer` | `EnumDomains` | 6         | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrLookupDomainInSamServer` | `LookupDomain`     | 5         | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrOpenDomain`    | `OpenDomain`               | 7         | `0x00000301`   | `DOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_LIST_ACCOUNTS` (`0x00000100`) <br> `DOMAIN_LOOKUP` (`0x00000200`) | Yes   | Compliant  |
+| `SamrEnumerateUsersInDomain` | `EnumDomainUsers`      | 13        | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrLookupNamesInDomain` | `LookupNames`         | 17        | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrOpenUser`      | `OpenUser`               | 34        | `0x0002011b`             | `USER_READ_GENERAL` (`0x00000001`) <br> `USER_READ_PREFERENCES` (`0x00000002`) <br> `USER_LIST_GROUPS` (`0x00000100`) <br> `READ_CONTROL` (`0x00020000`)| Yes  | Compliant   |
 | `SamrQueryInformationUser2` | `QueryUserInfo2`       | 47        | Access not requested               | N/A                    | N/A                         | N/A                                  |
