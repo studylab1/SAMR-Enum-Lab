@@ -73,12 +73,12 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | Enum4linux   | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | Enum4linux-ng| Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | PowerShell   | Supported                    | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
-| SharpHound   | Supported                    | Low Coverage (21.62%, 8) | Not Detected               | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| Metasploit   | Supported                    | Low Coverage (24.32%, 9) | Not Detected             | Accurate                  | NTLM                           | Standard Access Sufficient|
-| CrackMapExec | Supported                    | Low Coverage (29.73%, 11) | Detected                 | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| Impacket     | Supported                    | Moderate Coverage (54.5%, 20)| Detected             | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| **samr-enum**| Supported                    | Moderate Coverage (54.5%, 20) | Not Detected            | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| rpcclient    | Supported                    | High Coverage (72.97%, 27) | Detected                | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| SharpHound   | Supported                    | Low Coverage (17.3%, 4) | Not Detected               | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| Metasploit   | Supported                    | Low Coverage (26%, 6) | Not Detected             | Accurate                  | NTLM                           | Standard Access Sufficient|
+| CrackMapExec | Supported                    | Low Coverage (26%, 6) | Detected                 | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| Impacket     | Supported                    | Moderate Coverage (56.5%, 13)| Detected             | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| rpcclient    | Supported                    | High Coverage (82.6%, 19) | Detected                | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| **samr-enum**| Supported                    | Moderate Coverage (60.8%, 14) | Not Detected            | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
 
 > Cmdlets from the Active Directory module in PowerShell did not use the SAMR for communication. Instead, these cmdlets primarily relied on the Microsoft .NET Naming Service (MS-NNS) and Microsoft .NET Message Framing Protocol (MS-NMF) for their operations.
 > For Metasploit, only the "auxiliary/scanner/smb/smb_enumusers" and "auxiliary/admin/dcerpc/samr_account" modules were examined.
@@ -91,20 +91,6 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 ⚫️ - Supported  
 ○ - Not Supported
-
-
-| Tool \ OpNum | 0  | 1  | 3  | 5  | 6  | 7  | 8  | 11 | 13 | 15 | 16 | 17 | 18 | 19 | 20 | 25 | 27 | 28 | 33 | 34 | 36 | 39 | 40 | 41 | 44 | 46 | 47 | 48 | 49 | 51 | 56 | 57 | 62 | 64 | 65 | 74 | 77 |
-|--------------|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|----|
-| Net          | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
-| Enum4linux   | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
-| Enum4linux-ng| ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
-| PowerShell   | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
-| SharpHound   | ○  | ●  | ○  | ●  | ●  | ●  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  |
-| Metasploit   | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ○  | ●  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | ○  |
-| CrackMapExec | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ○  |
-| Impacket     | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ●  | ●  | ○  | ●  | ●  | ○  | ●  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ○  | ○  | ●  | ○  | ○  | ●  | ○  | ○  |
-| **samr-enum**| ●  | ●  | ○  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ●  | ○  | ○  | ○  | ●  | ●  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  | ○  |
-| rpcclient    | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ●  | ●  | ●  | ●  | ●  | ●  | ●  | ○  | ○  | ●  | ○  | ●  | ●  | ○  | ○  | ●  | ○  | ○  | ○  |
 
 <table>
   <thead>
@@ -251,6 +237,189 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
   </tbody>
 </table>
 
+
+
+<table>
+  <thead>
+    <!-- First row of headers: high-level categories -->
+    <tr>
+      <th rowspan="2">Tool \ OpNum</th>
+      <!-- Domain Enumeration and Query -->
+      <th colspan="5">Domain Enumeration and Query Operations</th>
+      <!-- Group and Alias -->
+      <th colspan="9">Group and Alias Operations</th>
+      <!-- User -->
+      <th colspan="5">User Operations</th>
+      <!-- Display and Lookup -->
+      <th colspan="6">Display and Lookup Operations</th>
+      <!-- Password and Policy -->
+      <th colspan="3">Password and Policy Operations</th>
+    </tr>
+    <!-- Second row of headers: individual OpNums in each group -->
+    <tr>
+      <!-- Domain Enumeration and Query (5 columns) -->
+      <th>6</th>
+      <th>5</th>
+      <th>8</th>
+      <th>46</th>
+      <th>3</th>
+      <!-- Group and Alias (9 columns) -->
+      <th>11</th>
+      <th>15</th>
+      <th>20</th>
+      <th>28</th>
+      <th>25</th>
+      <th>33</th>
+      <th>17</th>
+      <th>18</th>
+      <th>16</th>
+      <!-- User (5 columns) -->
+      <th>13</th>
+      <th>36</th>
+      <th>47</th>
+      <th>39</th>
+      <th>44</th>
+      <!-- Display and Lookup (6 columns) -->
+      <th>40</th>
+      <th>48</th>
+      <th>51</th>
+      <th>41</th>
+      <th>49</th>
+      <th>65</th>
+      <!-- Password and Policy (3 columns) -->
+      <th>56</th>
+      <th>74</th>
+      <th>77</th>
+    </tr>
+  </thead>
+  <tbody>
+    <!-- 1) Net -->
+    <tr>
+      <td>Net</td>
+      <!-- Domain 5 -->
+      <td>○</td><td>○</td><td colspan="2" align="center">○</td><td>○</td>
+      <!-- Group/Alias -->
+      <td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td>
+      <!-- User -->
+      <td>○</td><td colspan="2" align="center">○</td><td>○</td><td>○</td>
+      <!-- Display  -->
+      <td colspan="3" align="center">○</td><td colspan="2" align="center">○</td><td>○</td>
+      <!-- Password -->
+      <td>○</td><td>○</td><td>○</td>
+    </tr>
+    <!-- 2) Enum4linux -->
+    <tr>
+        <td>Enum4linux</td>
+        <td>○</td><td>○</td><td colspan="2" align="center">○</td><td>○</td>
+        <td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td>
+        <td>○</td><td colspan="2" align="center">○</td><td>○</td><td>○</td>
+      <td colspan="3" align="center">○</td><td colspan="2" align="center">○</td><td>○</td>
+      <td>○</td><td>○</td><td>○</td>
+    </tr>
+    <!-- 3) Enum4linux-ng -->
+    <tr>
+      <td>Enum4linux-ng</td>
+      <td>○</td><td>○</td><td colspan="2" align="center">○</td><td>○</td>
+      <td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td>
+      <td>○</td><td colspan="2" align="center">○</td><td>○</td><td>○</td>
+      <td colspan="3" align="center">○</td><td colspan="2" align="center">○</td><td>○</td>
+      <td>○</td><td>○</td><td>○</td>
+    </tr>
+    <!-- 4) PowerShell -->
+    <tr>
+      <td>PowerShell</td>
+      <td>○</td><td>○</td><td colspan="2" align="center">○</td><td>○</td>
+      <td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td>
+      <td>○</td><td colspan="2" align="center">○</td><td>○</td><td>○</td>
+      <td colspan="3" align="center">○</td><td colspan="2" align="center">○</td><td>○</td>
+      <td>○</td><td>○</td><td>○</td>
+    </tr>
+    <!-- 5) SharpHound -->
+    <tr>
+      <td>SharpHound</td>
+      <!-- Domain  -->
+      <td>●</td><td>●</td><td colspan="2" align="center">○</td><td>○</td>
+      <!-- Group/Alias -->
+      <td>○</td><td>●</td><td>○</td><td>○</td><td>○</td><td>●</td><td>○</td><td>○</td><td>○</td>
+      <!-- User -->
+      <td>○</td><td colspan="2" align="center">○</td><td>○</td><td>○</td>
+      <!-- Display  -->
+     <td colspan="3" align="center">○</td><td colspan="2" align="center">○</td><td>○</td>
+      <!-- Password -->
+      <td>○</td><td>○</td><td>○</td>
+    </tr>
+    <!-- 6) Metasploit -->
+    <tr>
+      <td>Metasploit</td>
+      <!-- Domain  -->
+      <td>●</td><td>●</td><td colspan="2" align="left">●</td><td>○</td>
+      <!-- Group/Alias -->
+     <td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>●</td><td>○</td><td>○</td>
+      <!-- User -->
+      <td>●</td><td colspan="2" align="center">○</td><td>○</td><td>○</td>
+      <!-- Display -->
+      <td colspan="3" align="center">○</td><td colspan="2" align="center">○</td><td>●</td>
+      <!-- Password  -->
+      <td>○</td><td>○</td><td>○</td>
+    </tr>
+    <!-- 7) CrackMapExec -->
+    <tr>
+      <td>CrackMapExec</td>
+      <!-- Domain -->
+      <td>●</td><td>●</td><td colspan="2" align="right">●</td><td>○</td>
+      <!-- Group/Alias  -->
+      <td>○</td><td>●</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td><td>○</td>
+      <!-- User -->
+      <td>●</td><td colspan="2" align="right">●</td><td>○</td><td>○</td>
+      <!-- Display  -->
+      <td colspan="3" align="center">○</td><td colspan="2" align="right">○</td><td>○</td>
+      <!-- Password -->
+      <td>○</td><td>○</td><td>○</td>
+    </tr>
+    <!-- Impacket -->
+    <tr>
+      <td>Impacket</td>
+      <!-- Domain -->
+      <td>●</td><td>●</td><td colspan="2" align="center">○</td><td>○</td>
+      <!-- Group/Alias -->
+      <td>●</td><td>●</td><td>○</td><td>○</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td>
+      <!-- User  -->
+      <td>●</td><td colspan="2" align="right">●</td><td>●</td><td>○</td>
+      <!-- Display -->
+      <td colspan="3" align="center">○</td><td colspan="2" align="right">○</td><td>●</td>
+      <!-- Password -->
+      <td>○</td><td>○</td><td>○</td>
+    </tr>
+    <!-- 10) rpcclient -->
+    <tr>
+      <td>rpcclient</td>
+      <!-- Domain -->
+      <td>●</td><td>●</td><td colspan="2" align="left">●</td><td>●</td>
+      <!-- Group/Alias -->
+      <td>●</td><td>●</td><td>●</td><td>○</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td>
+      <!-- User -->
+      <td>●</td><td colspan="2" align="left">●</td><td>●</td><td>●</td>
+      <!-- Display -->
+      <td colspan="3" align="center">●</td><td colspan="2" align="left">●</td><td>○</td>
+      <!-- Password -->
+      <td>●</td><td>○</td><td>○</td>
+    </tr>
+    <!-- 9) samr-enum -->
+    <tr>
+      <td><strong>samr-enum</strong></td>
+      <!-- Domain  -->
+      <td>●</td><td>●</td><td colspan="2" align="right">●</td><td>○</td>
+      <!-- Group/Alias  -->
+      <td>●</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td><td>○</td>
+      <!-- User -->
+      <td>●</td><td colspan="2" align="right">●</td><td>●</td><td>○</td>
+      <!-- Display -->
+      <td colspan="3" align="center">○</td><td colspan="2" align="center">○</td><td>○</td>
+      <!-- Password -->
+      <td>○</td><td>○</td><td>○</td>
+    </tr>
+  </tbody>
+</table>
 
 
 
