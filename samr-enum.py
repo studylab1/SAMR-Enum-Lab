@@ -2068,6 +2068,7 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
         # Get primary domain handle and enumerate users
         domainHandle, domainName, domainSid = get_domain_handle(dce, serverHandle, debug, opnums_called)
         users = enumerate_users(dce, domainHandle, debug)
+        add_opnum_call(opnums_called, "SamrEnumerateUsersInDomain")
         for username, rid in users:
             try:
                 details = get_user_details(dce, domainHandle, username, debug, opnums_called)
@@ -2515,12 +2516,13 @@ def main():
                                                                                   opnums_called)
             try:
                 aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, domainHandle)
-                add_opnum_call(opnums_called, "SamrEnumerateAliasesInSamServer")
+                add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
                 aliases = aliasResp['Buffer']['Buffer'] or []
             except Exception as e:
                 aliases = []
             group_rids = [alias['RelativeId'] for alias in aliases]
             lookupResp2 = samr.hSamrLookupIdsInDomain(dce, domainHandle, group_rids)
+            add_opnum_call(opnums_called, "SamrLookupIdsInDomain")
             names = [safe_str(name['Data']) for name in lookupResp2['Names']['Element']]
             groups_result = list(zip(names, group_rids))
             enumerated_objects = groups_result
