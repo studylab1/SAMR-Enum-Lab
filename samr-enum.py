@@ -2601,11 +2601,14 @@ def main():
                 enumerated_objects, domainSidString = display_info(dce, serverHandle, info_type, debug, opnums_called)
             else:
                 enumerated_objects = display_info(dce, serverHandle, info_type, debug, opnums_called)
+                if info_type in ['users', 'computers']:
+                    _, _, domainSidString = get_domain_handle(dce, serverHandle, debug, opnums_called)
 
         elif enumeration == 'summary':
             # Call get_summary() to get the aggregated domain summary info
             summary = get_summary(dce, serverHandle, debug, opnums_called)
             enumerated_objects = [summary]
+            domainSidString = summary.get('domain_info', {}).get('domain_sid', '')
 
         else:
             raise Exception(f"Unknown enumeration: {enumeration}")
