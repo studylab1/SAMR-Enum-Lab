@@ -1,6 +1,6 @@
 # SAMR Enumeration in Multi-Forest Active Directory Environments
 
-**Version 1.0 (Draft)**
+**Research Document Version 1.0 (Draft)**
 
 ## Overview
 
@@ -283,6 +283,14 @@ Contributions are welcome! Please adhere to PEP 8 styling and include appropriat
 
 - This project is licensed under the MIT License. See the LICENSE file for details.
 - Impacket is licensed under a modified version of the Apache License 2.0. See the NOTICE file for more details.
+
+## Versioning
+
+This project uses [Semantic Versioning](https://semver.org/) (SemVer) to track releases. The current version is defined in the `samr-enum.py` file as follows:
+
+```python
+__version__ = "1.0.1"
+```
 
 ## Acknowledgements
 
