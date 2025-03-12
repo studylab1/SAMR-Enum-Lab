@@ -195,7 +195,7 @@ OpNums called:
 ```
 $ python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=display-info type=users
 
-Execution started at: 2025-03-08 17:49:01.843145
+Execution started at: 2025-03-12 22:34:42.314859
 
 RID      Last Logon   PwdSet     PwdNE      PwdExp     ForceChg   AccDis     PreAuth    Delg     BadCnt     Username        Full Name            
 -------------------------------------------------------------------------------------------------------------------------------------------------
@@ -215,9 +215,9 @@ RID      Last Logon   PwdSet     PwdNE      PwdExp     ForceChg   AccDis     Pre
 RID      Last Logon   PwdSet     PwdNE      PwdExp     ForceChg   AccDis     PreAuth    Delg     BadCnt     Username        Full Name            
 
 ================================================================
-Execution time:     	5.35 seconds
+Execution time:     	5.28 seconds
 Destination target: 	ydc1.domain-y.local
-Domain SID:         	
+Domain SID:         	S-1-5-21-3461051276-3658573231-1749369878
 Account:            	enum-x
 Enumerate:          	display-info
 Authentication:     	NTLM
@@ -227,9 +227,8 @@ Number of objects:  	497
 ```
 
 ```
-$ python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=display-info type=summary
-
-Execution started at: 2025-03-08 18:26:13.605986
+$ python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=summary
+Execution started at: 2025-03-12 22:33:46.027930
 
 Domain Information:
   Domain SID:                  S-1-5-21-3461051276-3658573231-1749369878
@@ -261,9 +260,9 @@ Total Domain Groups:           114
 Total Local Groups:            28
 
 ================================================================
-Execution time:     	0.24 seconds
+Execution time:     	0.35 seconds
 Destination target: 	ydc1.domain-y.local
-Domain SID:         	
+Domain SID:         	S-1-5-21-3461051276-3658573231-1749369878
 Account:            	enum-x
 Enumerate:          	summary
 Authentication:     	NTLM
@@ -283,8 +282,10 @@ Contributions are welcome! Please adhere to PEP 8 styling and include appropriat
 ## License
 
 - This project is licensed under the MIT License. See the LICENSE file for details.
-- Impacket is licensed under the Apache License 2.0. See the NOTICE file for more details.
+- Impacket is licensed under a modified version of the Apache License 2.0. See the NOTICE file for more details.
 
 ## Acknowledgements
 
-Thanks to the developers of Impacket for their invaluable library.
+This project makes use of [Impacket](https://github.com/fortra/impacket), a library that provides essential implementations for SMB and various RPC protocols. Impacket is distributed under a modified version of the Apache License 2.0. While it largely follows the standard Apache 2.0 terms, please review the [Impacket LICENSE file](https://github.com/fortra/impacket/blob/master/LICENSE) for the exact terms and any modifications that apply.
+
+Sincere thanks are extended to the developers and contributors of Impacket for their outstanding work.
