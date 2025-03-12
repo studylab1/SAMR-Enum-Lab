@@ -7,6 +7,7 @@ This Python tool leverages the Microsoft SAMR protocol to enumerate domain
 users, groups, computers, password policies, and other account-related information
 from a target system. It supports both NTLM (default) and Kerberos authentication,
 and can optionally export results in various formats (TXT, CSV, JSON).
+Special thanks to the developers of Impacket (https://github.com/fortra/impacket) for providing the underlying library used in this project.
 
 Features:
   - Enumerate domain users, local groups, domain groups, and more.
@@ -171,6 +172,7 @@ import time
 import getpass
 from datetime import datetime
 from impacket.dcerpc.v5 import transport, samr
+import csv, json, csv
 
 # SID_NAME_USE local definitions
 SID_NAME_USER = 1
@@ -514,13 +516,11 @@ def export_data(filename, fmt, data):
                             rid = str(obj.get('rid', 'N/A'))
                             f.write(f"{name:<{max_length}} {rid}\n")
                     elif fmt == 'csv':
-                        import csv
                         writer = csv.writer(f, delimiter=';')
                         writer.writerow(['Name', 'RID'])
                         for obj in data:
                             writer.writerow([str(obj.get('computer_name', '')).rstrip('$'), obj.get('rid', 'N/A')])
                     elif fmt == 'json':
-                        import json
                         json_data = [{"Name": str(obj.get('computer_name', '')).rstrip('$'),
                                       "RID": obj.get('rid', 'N/A')} for obj in data]
                         json.dump(json_data, f, indent=2)
@@ -578,7 +578,6 @@ def export_data(filename, fmt, data):
                                    f"{desc:<{col_widths['Description']}}")
                             f.write(row + "\n")
                     elif fmt == 'csv':
-                        import csv
                         writer = csv.writer(f, delimiter=';')
                         writer.writerow(header)
                         for obj in data:
@@ -598,7 +597,6 @@ def export_data(filename, fmt, data):
                             writer.writerow([rid, name, logons, last_logon, pwd_last_set,
                                              bad_pwd_cnt, pid, trust, enabled, pwd_nreq, pwd_nexp, deleg, desc])
                     elif fmt == 'json':
-                        import json
                         json_data = []
                         for obj in data:
                             rid = str(obj.get('rid', 'N/A'))
@@ -658,7 +656,6 @@ def export_data(filename, fmt, data):
                                f"{desc:<{col_widths['Description']}}")
                         f.write(row + "\n")
                 elif fmt == 'csv':
-                    import csv
                     writer = csv.writer(f, delimiter=';')
                     # Export CSV without the Domain SID column
                     writer.writerow(header)
@@ -669,7 +666,6 @@ def export_data(filename, fmt, data):
                         desc = safe_str(obj.get('description', ''))
                         writer.writerow([rid, memcnt, name, desc])
                 elif fmt == 'json':
-                    import json
                     json_data = []
                     for obj in data:
                         rid = str(obj.get('rid', 'N/A'))
@@ -721,13 +717,11 @@ def export_data(filename, fmt, data):
                         val = export_value(key, data[0].get(key, 'N/A'))
                         f.write(f"{label}: {val}\n")
                 elif fmt == 'csv':
-                    import csv
                     writer = csv.writer(f, delimiter=';')
                     for label, key in account_keys + additional_keys:
                         val = export_value(key, data[0].get(key, 'N/A'))
                         writer.writerow([label, val])
                 elif fmt == 'json':
-                    import json
                     json.dump(data[0], f, indent=2)
             # ----- Branch for display-info users export -----
             elif isinstance(data[0], dict) and 'last_logon' in data[0]:
@@ -781,7 +775,6 @@ def export_data(filename, fmt, data):
                         f.write(row + "\n")
                 # [CSV and JSON branches for users remain unchanged...]
                 elif fmt == 'csv':
-                    import csv
                     writer = csv.writer(f, delimiter=';')
                     writer.writerow(header)
                     for obj in data:
@@ -800,7 +793,6 @@ def export_data(filename, fmt, data):
                         writer.writerow([rid, last_logon, pwd_set, pwd_ne, pwd_exp, force_chg,
                                          acc_dis, pre_auth, delegated, bad_cnt, username_val, full_name])
                 elif fmt == 'json':
-                    import json
                     json_data = []
                     for obj in data:
                         rid = str(obj.get('rid', 'N/A'))
@@ -869,7 +861,6 @@ def export_data(filename, fmt, data):
 
                 elif fmt == 'csv':
                     # For CSV, output key,value pairs in two columns
-                    import csv
                     writer = csv.writer(f, delimiter=';')
                     writer.writerow(["Field", "Value"])
                     writer.writerow(["Domain SID", domain_info.get('domain_sid', 'N/A')])
@@ -891,7 +882,6 @@ def export_data(filename, fmt, data):
 
                 elif fmt == 'json':
                     # In JSON, include all fields (ensure password properties are added)
-                    import json
                     json_data = {
                         "Domain SID": domain_info.get('domain_sid', 'N/A'),
                         "Domain Name": domain_info.get('domain_name', 'N/A'),
@@ -922,13 +912,11 @@ def export_data(filename, fmt, data):
                     for item in data:
                         f.write(f"{item[0]:<{max_length}} {item[1]}\n")
                 elif fmt == 'csv':
-                    import csv
                     writer = csv.writer(f, delimiter=';')
                     writer.writerow(['Name', 'RID'])
                     for item in data:
                         writer.writerow([item[0], item[1]])
                 elif fmt == 'json':
-                    import json
                     json_data = [{"Name": item[0], "RID": item[1]} for item in data]
                     json.dump(json_data, f, indent=2)
 
@@ -970,7 +958,6 @@ def export_data(filename, fmt, data):
                             row = f"{rid:<{col_widths['RID']}} {name:<{col_widths['Name']}} {memcnt:<{col_widths['Member Count']}}"
                             f.write(row + "\n")
                     elif fmt == 'csv':
-                        import csv
                         writer = csv.writer(f, delimiter=';')
                         writer.writerow(header)
                         for obj in data:
@@ -979,7 +966,6 @@ def export_data(filename, fmt, data):
                             memcnt = str(obj.get('member_count', 'N/A'))
                             writer.writerow([rid, name, memcnt])
                     elif fmt == 'json':
-                        import json
                         # Build a new dictionary with formatted values for account details.
                         account_keys = [
                             ("RID", "rid"),
