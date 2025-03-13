@@ -17,6 +17,8 @@ Features:
   - Supports NTLM (default) and Kerberos authentication.
 """
 
+__version__ = "1.0.1"
+
 # Global help text constant
 HELP_TEXT = r"""
 SAMR Enumeration Script - Help
