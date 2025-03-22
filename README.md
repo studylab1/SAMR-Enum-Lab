@@ -55,6 +55,10 @@ This project explores the enumeration capabilities of the **Security Account Man
 - **Dependencies**:
   - `Impacket` 0.12 (MIT License)  
     *Note: Some antivirus solutions (e.g., Microsoft Defender, CrowdStrike) may flag Impacket components.*
+  - Linux-Specific Packages (required if running on Linux):  
+     - python3-dev (or your distribution’s equivalent, e.g. python3.12-dev)
+     - libkrb5-dev  
+These packages provide the necessary C headers and libraries for compiling parts of Impacket (and its dependencies like pyasn1 and gssapi) to support encryption and Kerberos functionality.
 - **Platform**: Windows or Linux systems with access to a configured Active Directory.
 
 
