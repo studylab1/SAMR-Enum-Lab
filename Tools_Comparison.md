@@ -73,12 +73,12 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | Enum4linux   | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | Enum4linux-ng| Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | PowerShell   | Supported                    | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
-| SharpHound   | Supported                    | Low Coverage (17.3%, 4) | Not Detected               | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| Metasploit   | Supported                    | Low Coverage (26%, 6) | Not Detected             | Accurate                  | NTLM                           | Standard Access Sufficient|
-| CrackMapExec | Supported                    | Low Coverage (26%, 6) | Detected                 | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| Impacket     | Supported                    | Moderate Coverage (56.5%, 13)| Detected             | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| rpcclient    | Supported                    | High Coverage (82.6%, 19) | Detected                | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| **samr-enum**| Supported                    | Moderate Coverage (60.8%, 14) | Not Detected            | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| SharpHound   | Supported                    | Low Coverage (17.3%, 4) | Not Detected          | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| Metasploit   | Supported                    | Low Coverage (26%, 6) | Not Detected            | Accurate                  | NTLM                           | Standard Access Sufficient|
+| CrackMapExec | Supported                    | Low Coverage (26%, 6) | Not Detected            | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| Impacket     | Supported                    | Moderate Coverage (56.5%, 13)| Not Detected     | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| rpcclient    | Supported                    | High Coverage (82.6%, 19) | Not Detected        | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| **samr-enum**| Supported                    | Moderate Coverage (60.8%, 14) | Not Detected    | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
 
 > Cmdlets from the Active Directory module in PowerShell did not use the SAMR for communication. Instead, these cmdlets primarily relied on the Microsoft .NET Naming Service (MS-NNS) and Microsoft .NET Message Framing Protocol (MS-NMF) for their operations.
 > For Metasploit, only the "auxiliary/scanner/smb/smb_enumusers" and "auxiliary/admin/dcerpc/samr_account" modules were examined.
@@ -505,9 +505,9 @@ Executed with the following parameters:
 | `SamrConnect2`      | `Connect2`          | 57        | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
 | `SamrEnumerateDomainsInSamServer` | `EnumDomains`| 6  | Access not requested              | N/A                     | N/A                         | N/A                                  |
 | `SamrLookupDomainInSamServer`     | `LookupDomain`| 5 | Access not requested              | N/A                     | N/A                         | N/A                                  |
-| `SamrOpenDomain`    | `OpenDomain`        | 7         | `0x02000000`                      | **`MAXIMUM_ALLOWED` (`0x02000000`)**   | No         | Not Compliant                        |
+| `SamrOpenDomain`    | `OpenDomain`        | 7         | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
 | `SamrEnumerateUsersInDomain` | `EnumDomainUsers` | 13 | Access not requested              | N/A                     | N/A                         | N/A                                  |
-| `SamrOpenUser`      | `OpenUser`          | 34        | `0x02000000`                      | **`MAXIMUM_ALLOWED` (`0x02000000`)**   | No         | Not Compliant                        |
+| `SamrOpenUser`      | `OpenUser`          | 34        | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
 | `SamrQueryInformationUser2` | `QueryUserInfo2` | 47   | Access not requested              | N/A                     | N/A                         | N/A                                  |
 | `SamrCloseHandle`   | `Close`             | 1         | Access not requested              | N/A                     | N/A                         | N/A                                  |
 | `SamrConnect`       | `Connect`           | 0         | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes         | Compliant                        |
@@ -524,12 +524,12 @@ Executed with the following parameters:
 
 | **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
 |---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
-| `SamrConnect`       | `Connect`           | 0         | `0x02000000`     | `MAXIMUM_ALLOWED` (``0x02000000``)       | Yes                         | Compliant                            |
+| `SamrConnect`       | `Connect`           | 0         | `0x02000000`                      | `MAXIMUM_ALLOWED` (``0x02000000``)  | Yes             | Compliant                            |
 | `SamrEnumerateDomainsInSamServer` | `EnumDomains`| 6  | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrLookupDomainInSamServer`     | `LookupDomain`    | 5   | Access not requested         | N/A                    | N/A                         | N/A                                  |
-| `SamrOpenDomain`    | `OpenDomain`        | 7         | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
+| `SamrOpenDomain`    | `OpenDomain`        | 7         | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
 | `SamrEnumerateUsersInDomain` | `EnumDomainUsers` | 13 | Access not requested               | N/A                    | N/A                         | N/A                                  |
-| `SamrOpenUser`      | `OpenUser`          | 34        | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
+| `SamrOpenUser`      | `OpenUser`          | 34        | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
 | `SamrQueryInformationUser2` | `QueryUserInfo2` | 47   | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrCloseHandle` | `Close` | 1                       | Access not requested               | N/A                    | N/A                         | N/A                                  |
 
@@ -548,23 +548,23 @@ Executed with the following parameters:
 | `SamrConnect`       | `Connect`           | 0         | `0x02000000`     | `MAXIMUM_ALLOWED` (``0x02000000``)       | Yes                         | Compliant                            |
 | `SamrEnumerateDomainsInSamServer` | `EnumDomains`| 6  | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrLookupDomainInSamServer`     | `LookupDomain`    | 5   | Access not requested         | N/A                    | N/A                         | N/A                                  |
-| `SamrOpenDomain`    | `OpenDomain`        | 7         | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
+| `SamrOpenDomain`    | `OpenDomain`        | 7         | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
 | `SamrEnumerateUsersInDomain` | `EnumDomainUsers` | 13 | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrLookupNamesInDomain`    | `LookupNames`     | 17 | Access not requested               | N/A                    | N/A                         | N/A                                  |
-| `SamrOpenUser`      | `OpenUser`          | 34        | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
+| `SamrOpenUser`      | `OpenUser`          | 34        | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
 | `SamrQueryInformationUser2` | `QueryUserInfo2` | 47   | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrGetGroupsForUser` | `GetGroupsForUser` | 39      | Access not requested               | N/A                    | N/A                         | N/A                                  |
-| `SamrOpenGroup`        | `OpenGroup`        | 19      | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
+| `SamrOpenGroup`        | `OpenGroup`        | 19      | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
 | `SamrRidToSid`         | `RidToSid`         | 65      | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrCloseHandle` | `Close` | 1                       | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrLookupIdsInDomain` | `LookupRids`      |  18     | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrLookupDomainInSamServer` | `LookupDomain` | 5    | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrGetAliasMembership` | `GetAliasMembership` | 16  | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrEnumerateGroupsInDomain`|`EnumDomainGroups`| 11  | Access not requested               | N/A                    | N/A                         | N/A                                  |
-| `SamrOpenGroup`             | `OpenGroup`       | 19  | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
+| `SamrOpenGroup`             | `OpenGroup`       | 19  | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
 | `SamrGetMembersInGroup`     | `QueryGroupMember`  | 25| Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrEnumerateAliasesInDomain`| EnumDomainAliases`| 15| Access not requested               | N/A                    | N/A                         | N/A                                  |
-| `SamrOpenAlias`   | `OpenAlias`            | 27       | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
+| `SamrOpenAlias`   | `OpenAlias`            | 27       | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
 | `SamrGetMembersInAlias` | `GetMembersInAlias`| 33     | Access not requested               | N/A                    | N/A                         | N/A                                  |
 
 #### rpcclient
@@ -608,15 +608,14 @@ Executed following commands:
 | `SamrConnect5`      | `Connect5`          | 64        | `0x02000000`                      | `MAXIMUM_ALLOWED` (``0x02000000``)   | Yes            | Compliant                            |
 | `SamrEnumerateDomainsInSamServer` | `EnumDomains`| 6  | Access not requested              | N/A                     | N/A                         | N/A                                  |
 | `SamrLookupDomainInSamServer`     | `LookupDomain` | 5| Access not requested              | N/A                     | N/A                         | N/A                                  |
-| `SamrOpenDomain`    | `OpenDomain`        | 7         | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
+| `SamrOpenDomain`    | `OpenDomain`        | 7         | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
 | `SamrEnumerateAliasesInDomain`| `EnumDomainAliases`| 15| Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrCloseHandle`   | `Close`             | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrOpenDomain`    | `OpenDomain`        | 7         | `0x0000000b`     | `MDOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_WRITE_PASSWORD_PARAMS` (`0x00000002`) <br> `DOMAIN_WRITE_OTHER_PARAMETERS` (`0x00000008`)   | Yes  | Compliant  |
 | `SamrOpenDomain`    | `OpenDomain`        | 7         | `0x0000000d`     | `MDOMAIN_READ_PASSWORD_PARAMETERS` (`0x00000001`) <br> `DOMAIN_READ_OTHER_PARAMETERS` (`0x00000004`) <br> `DOMAIN_WRITE_OTHER_PARAMETERS` (`0x00000008`)   | Yes  | Compliant  |
-| `SamrOpenUser`      | `OpenUser`          | 34        | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
-| `SamrOpenAlias`     | `OpenAlias`         | 27        | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
-| `SamrOpenGroup`     | `OpenGroup`         | 19        | `0x02000000`     | **`MAXIMUM_ALLOWED` (``0x02000000``)**   | No                          | Not Compliant                        |
-
+| `SamrOpenUser`      | `OpenUser`          | 34        | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
+| `SamrOpenAlias`     | `OpenAlias`         | 27        | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
+| `SamrOpenGroup`     | `OpenGroup`         | 19        | `0x02000000`                      | `MAXIMUM_ALLOWED` (`0x02000000`)   | Yes              | Compliant                            |
 
 #### samr-enum
 
