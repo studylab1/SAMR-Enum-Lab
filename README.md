@@ -41,6 +41,9 @@ This project explores the enumeration capabilities of the **Security Account Man
 
 `samr-enum.py` is a SAMR Enumeration Script that leverages the Microsoft SAMR protocol to enumerate domain users, groups, computers, password policies, and other account-related information from a target system. It supports both **NTLM** (default) and **Kerberos** authentication and can optionally export results in multiple formats (TXT, CSV, JSON).
 
+The tool has now been extracted into its own dedicated repository. For users who only need the tool without the additional research data, please visit the [samr-enum](https://github.com/studylab1/samr-enum/) standalone repository. The standalone version may receive more frequent updates, bug fixes, and feature improvements specifically focused on the tool’s functionality.
+
+
 ### Notable Features
 
 - Enumerate domain users, local (alias) groups, domain groups, and more.
@@ -65,15 +68,9 @@ These packages provide the necessary C headers and libraries for compiling parts
 
 ### Installation
 
-1. **Clone the Repository (Full Project)**
+1. **Clone the Repository**
 
-This repository contains multiple resources—such as traffic captures and output from different enumeration programs—because it’s part of a larger research project. If you need **all** those resources, clone the entire project:
-
-   ```bash
-   git clone https://github.com/studylab1/SAMR-Enum-Lab.git
-   cd SAMR-Enum-Lab
-   ```
-However, if you only want to test the samr-enum.py tool without downloading the other resources, it’s often easier to download just that single [file](https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/samr-enum.py) directly from the GitHub web interface.
+Please visit dedicated repository [samr-enum](https://github.com/studylab1/samr-enum/).
 
 2. **Install Dependencies**
 ```bash
