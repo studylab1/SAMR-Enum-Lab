@@ -48,10 +48,11 @@ This project explores the enumeration capabilities of the **Security Account Man
 - Securely prompt for a password if none is provided.
 - Export enumeration results in multiple formats (TXT, CSV, JSON).
 - Supports **NTLM** (default) and **Kerberos** authentication.
+- Cross-forest enumeration.
 
 ### Requirements
 
-- **Python**: 3.12.8
+- **Python**: 3
 - **Dependencies**:
   - `Impacket` 0.12 (MIT License)  
     *Note: Some antivirus solutions (e.g., Microsoft Defender, CrowdStrike) may flag Impacket components.*
@@ -287,6 +288,10 @@ Contributions are welcome! Please adhere to PEP 8 styling and include appropriat
 
 - This project is licensed under the MIT License. See the LICENSE file for details.
 - Impacket is licensed under a modified version of the Apache License 2.0. See the NOTICE file for more details.
+
+## Disclaimer
+
+This tool is provided for legitimate security testing, research, or educational purposes only. Ensure that you have proper authorization before enumerating Active Directory systems.
 
 ## Versioning
 
