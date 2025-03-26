@@ -70,7 +70,7 @@ These packages provide the necessary C headers and libraries for compiling parts
 
 1. **Clone the Repository**
 
-Please visit dedicated repository [samr-enum](https://github.com/studylab1/samr-enum/).
+Please visit dedicated repository [samr-enum](https://github.com/studylab1/samr-enum/)
 
 2. **Install Dependencies**
 ```bash
@@ -279,7 +279,9 @@ Number of objects:  	1
 
 ## Contributing
 
-Contributions are welcome! Please adhere to PEP 8 styling and include appropriate PEP 257 docstrings in your code. Fork the repository, implement your changes, and submit a pull request.
+This project is part of a research lab and is not actively maintained for external contributions.
+
+If you are interested in extending or modifying the tool, you are encouraged to fork the repository and develop it as a separate project. Please refrain from submitting pull requests to this repository [samr-enum](https://github.com/studylab1/samr-enum/).
 
 ## License
 
