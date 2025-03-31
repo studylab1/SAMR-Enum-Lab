@@ -55,8 +55,8 @@ The host server was used for tool evaluation activities and contained virtual ma
   - "Microsoft Azure VFP Switch Extension": Disabled
   - "Microsoft NDIS Capture": Enabled
  
-### The Host Server Specifications for SAMRClient Tool Enumeration
-The host server was used to enumerate domains in foreign forests using the SAMRClient tool.
+### The Host Server Specifications for samr-enum Tool Enumeration
+The host server was used to enumerate domains in foreign forests using the `samr-enum` tool.
 
 - **Operating System:** Windows 11 Enterprise (Version 23H2)
 - **RAM:** 64 GB
@@ -161,8 +161,7 @@ The computer names follow this convention (excluding router server):
 - `ydc1` and `zdc1`: domain controllers used to execute enumeration scans for comparing existing tools.
 - `xdc1`: domain controller that contains a set of data for replication to other domains.
 - `xws1`: Linux client used to execute the enumeration scan with tools available only on Linux.
-- `xws2`: A development machine for programming and testing SAMRClient.
-- `xws3`: A client to execute SAMR enumeration with SAMRCLient tool.
+- `xws2`: A development machine for programming and testing `samr-enum`.
 - `yws1`: workstation from which the enumeration scan is executed to compare existing tools.
 
 ### Network Setup
@@ -173,28 +172,17 @@ The following table outlines the IP addressing scheme used for the lab environme
 |-----------------------|-------------------|---------------------------------------------|-------------|-----------------------|------------------------------|
 | **Routing Server**    | router            | <div align="right">N/A</div>                | 10          | 192.168.1.1/24         | N/A                          |
 |                       |                   |                                             | 20          | 192.168.2.1/24         | N/A                          |
-|                       |                   |                                             | 30          | 192.168.3.1/24         | N/A                          |
-|                       |                   |                                             | 40          | 192.168.4.1/24         | N/A                          |
-|                       |                   |                                             | 50          | 192.168.5.1/24         | N/A                          |
 |                       |                   |                                             | 100         | 192.168.10.1/24        | N/A                          |
 |                       |                   |                                             | 110         | 192.168.11.1/24        | N/A                          |
 |                       |                   |                                             | 120         | 192.168.12.1/24        | N/A                          |
-| **Domain Controller** | adc1              | <div align="right">domain-a.local</div>    | 10          | 192.168.1.11/24        | 192.168.1.1                  |
-| **Domain Controller** | bdc1              | <div align="right">domain-b.local</div>    | 20          | 192.168.2.11/24        | 192.168.2.1                  |
-| **Domain Controller** | bdc2              | <div align="right">b1.domain-b.local</div> | 20          | 192.168.2.12/24        | 192.168.2.1                  |
-| **Domain Controller** | cdc1              | <div align="right">domain-c.local</div>    | 30          | 192.168.3.11/24        | 192.168.3.1                  |
-| **Domain Controller** | cdc2              | <div align="right">c1.domain-c.local</div> | 30          | 192.168.3.12/24        | 192.168.3.1                  |
-| **Domain Controller** | ddc1              | <div align="right">domain-d.local</div>    | 40          | 192.168.4.11/24        | 192.168.4.1                  |
-| **Domain Controller** | ddc2              | <div align="right">d1.domain-d.local</div> | 40          | 192.168.4.12/24        | 192.168.4.1                  |
-| **Domain Controller** | edc1              | <div align="right">domain-e.local</div>    | 50          | 192.168.5.11/24        | 192.168.5.1                  |
-| **Domain Controller** | edc2              | <div align="right">e1.domain-e.local</div> | 50          | 192.168.5.12/24        | 192.168.5.1                  |
-| **Domain Controller** | xdc1              | <div align="right">domain-x.local</div>    | 100         | 192.168.10.11/24       | 192.168.10.1                 |
-| **Workstation**       | xws1              | <div align="right">N/A</div>               | 100         | 192.168.10.101/24      | 192.168.10.1                 |
-| **Workstation**       | xws2              | <div align="right">domain-x.local</div>    | 100         | 192.168.10.102/24      | 192.168.10.1                 |
-| **Workstation**       | xws3              | <div align="right">N/A</div>               | 100         | 192.168.10.103/24      | 192.168.10.1                 |
-| **Domain Controller** | ydc1              | <div align="right">domain-y.local</div>    | 110         | 192.168.11.11/24       | 192.168.11.1                 |
-| **Workstation**       | yws1              | <div align="right">domain-y.local</div>    | 110         | 192.168.11.101/24      | 192.168.11.1                 |
-| **Domain Controller** | zdc1              | <div align="right">domain-z.local</div>    | 120         | 192.168.12.11/24       | 192.168.12.1                 |
+| **Domain Controller** | adc1              | <div align="right">domain-a.local</div>     | 10          | 192.168.1.11/24        | 192.168.1.1                  |
+| **Domain Controller** | bdc1              | <div align="right">domain-b.local</div>     | 20          | 192.168.2.11/24        | 192.168.2.1                  |
+| **Domain Controller** | xdc1              | <div align="right">domain-x.local</div>     | 100         | 192.168.10.11/24       | 192.168.10.1                 |
+| **Workstation**       | xws1              | <div align="right">N/A</div>                | 100         | 192.168.10.101/24      | 192.168.10.1                 |
+| **Workstation**       | xws2              | <div align="right">domain-x.local</div>     | 100         | 192.168.10.102/24      | 192.168.10.1                 |
+| **Domain Controller** | ydc1              | <div align="right">domain-y.local</div>     | 110         | 192.168.11.11/24       | 192.168.11.1                 |
+| **Workstation**       | yws1              | <div align="right">domain-y.local</div>     | 110         | 192.168.11.101/24      | 192.168.11.1                 |
+| **Domain Controller** | zdc1              | <div align="right">domain-z.local</div>     | 120         | 192.168.12.11/24       | 192.168.12.1                 |
 
 The entire network is configured to be **isolated** from the host machine to ensure a controlled and contained environment. No traffic can enter or exit the lab network from the host server, preventing external interference and ensuring accurate testing conditions.
 
