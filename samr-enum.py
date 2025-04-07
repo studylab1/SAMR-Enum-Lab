@@ -17,7 +17,7 @@ Features:
   - Supports NTLM (default) and Kerberos authentication.
 """
 
-__version__ = "1.1.1"
+__version__ = "1.1.2"
 
 # Global help text constant
 HELP_TEXT = r"""
@@ -1135,9 +1135,6 @@ def get_user_security_descriptor(dce, domainHandle, user_rid, debug, opnums_call
         sec_desc_obj = security_resp['SecurityDescriptor']
         if isinstance(sec_desc_obj, list):
             sec_desc_obj = sec_desc_obj[0]
-        # DEBUG: Dump the outer security descriptor fields.
-        print("[DEBUG] Outer SD fields:", sec_desc_obj.fields)
-
         # Try retrieving the inner security descriptor.
         if "SecurityDescriptor" in sec_desc_obj.fields:
             inner_sd = sec_desc_obj.fields["SecurityDescriptor"]
@@ -1145,9 +1142,6 @@ def get_user_security_descriptor(dce, domainHandle, user_rid, debug, opnums_call
             inner_sd = sec_desc_obj.fields[0]
         else:
             raise Exception("Could not find inner security descriptor in SAMPR_SR_SECURITY_DESCRIPTOR fields.")
-
-        # DEBUG: Dump the inner security descriptor fields.
-        print("[DEBUG] Inner SD fields:", inner_sd.fields)
 
         raw_bytes = None
         fields = inner_sd.fields
@@ -1162,18 +1156,14 @@ def get_user_security_descriptor(dce, domainHandle, user_rid, debug, opnums_call
         if raw_bytes is None:
             raise Exception("Could not find 'Data' field in inner SecurityDescriptor structure.")
 
-        print("[DEBUG] Extracted raw_bytes:", repr(raw_bytes))
         try:
             raw_data = bytes(raw_bytes)
         except Exception as conv_err:
-            print("[DEBUG] Exception converting raw_bytes to bytes:", conv_err)
             if hasattr(raw_bytes, "getData") and callable(raw_bytes.getData):
                 raw_data = raw_bytes.getData()
             else:
                 raise conv_err
-        print("[DEBUG] Converted raw_data:", repr(raw_data))
     except Exception as e:
-        print("[DEBUG] Exception while extracting raw bytes:", e)
         raise
 
     samr.hSamrCloseHandle(dce, userHandle)
@@ -1456,7 +1446,6 @@ def resolve_sid_name_by_samr(sid_str, dce, domainHandle, serverHandle, debug, op
         parts = sid_str.split('-')
         rid = int(parts[-1])
     except Exception as e:
-        log_debug(debug, f"[DEBUG] Failed to extract RID from SID {sid_str}: {e}")
         return resolve_sid_name(sid_str)
 
     try:
@@ -1488,7 +1477,6 @@ def resolve_sid_name_by_samr(sid_str, dce, domainHandle, serverHandle, debug, op
                 return safe_str(names_array[0].Data)
         return "Unknown"
     except Exception as e:
-        log_debug(debug, f"[DEBUG] Failed to resolve SID {sid_str} via SAMR: {e}")
         return resolve_sid_name(sid_str)
 
 
@@ -3147,12 +3135,8 @@ def main():
             if 'acl' in args or any(arg.lower() == 'acl' for arg in sys.argv):
                 sd_raw = get_user_security_descriptor(dce, domainHandle, user_details['rid'], debug, opnums_called)
                 sd_bytes = bytes(sd_raw)
-                print("[DEBUG] sd_bytes:", repr(sd_bytes))
                 # Parse the security descriptor including the DACL offset.
                 owner_sid, group_sid, control_flags, dacl_offset = parse_self_relative_sd(sd_bytes)
-                print(f"[DEBUG] Parsed Owner SID: {owner_sid}")
-                print(f"[DEBUG] Parsed Group SID: {group_sid}")
-                print(f"[DEBUG] Control Flags: {control_flags}")
 
                 # Resolve friendly names for owner and group.
                 owner_name = resolve_sid_name_by_samr(owner_sid, dce, domainHandle, serverHandle, debug, opnums_called)
@@ -3167,39 +3151,6 @@ def main():
                 else:
                     aces = []
                 user_details['acl_dacl'] = aces
-
-                # --- ACE processing loop ---
-                ACE_TYPE_MAP = {
-                    0: "Access Allowed",
-                    1: "Access Denied",
-                    2: "System Audit",
-                    3: "System Alarm",
-                }
-                if 'acl_dacl' in user_details:
-                    aces = user_details.get('acl_dacl', [])
-                    print("  DACL ACEs:")
-                    if aces:
-                        for i, ace in enumerate(aces, start=1):
-                            print(f"\tACE {i}:")
-                            # Compute ACE type string (use your mapping, or check for a pre‐computed 'type_str')
-                            ace_type = ace.get('ace_type')
-                            if ace_type == 0:
-                                ace_type_str = "Access Allowed"
-                            elif ace_type == 1:
-                                ace_type_str = "Access Denied"
-                            elif ace_type is not None:
-                                ace_type_str = f"Unknown ({ace_type})"
-                            else:
-                                ace_type_str = "N/A"
-                            print(f"\t\tType: {ace_type_str}")
-                            print(f"\t\tNT ACE Flags: 0x{ace.get('ace_flags', 0):02X}")
-                            print(f"\t\tAccess Mask: 0x{ace.get('access_mask', 0):08X}")
-                            sid = ace.get('sid', "N/A")
-                            friendly = resolve_sid_name_by_samr(sid, dce, domainHandle, serverHandle, debug,
-                                                                opnums_called)
-                            print(f"\t\tSID: {sid} ({friendly})")
-                    else:
-                        print("\tNone")
 
             enumerated_objects = [user_details]
 
