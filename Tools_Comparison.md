@@ -50,7 +50,7 @@ The following table provides version numbers for the tools evaluated during this
 | CrackMapExec        | 6.1.0 - John Wick | A post-exploitation and pentesting tool designed to streamline network enumeration, lateral movement, and credential validation within Active Directory environments. Features SAMR-based enumeration for identifying domain objects. |
 | Impacket            | 0.12.0        | A library and suite of tools for interacting with network protocols. For this research, only `samrdump.py` and `net.py` from the Impacket suite were used. These tools facilitate detailed enumeration through SAMR. |
 | rpcclient           | 4.15.13       | A command-line tool, part of the Samba suite, used to interact with the Microsoft Remote Procedure Call (MS-RPC) protocol. It allows querying and managing Windows-based systems remotely over SMB, enabling tasks like enumerating users, groups, shares, and retrieving domain or system information. |
-| **samr-enum**       | 1.0.0         | A SAMR enumeration tool developed as part of a Master's thesis "Investigating SAMR Enumeration Attacks in Active Directory Multi-Forest Environments". It leverages the Impacket library to enumerate domain users, groups, computers, password policies, etc., and supports both NTLM and Kerberos authentication. The tool logs SAMR OpNums for detailed auditing and supports exporting results in TXT, CSV, and JSON formats. |
+| **samr-enum**       | 1.2.0         | A SAMR enumeration tool developed as part of a Master's thesis "Investigating SAMR Enumeration Attacks in Active Directory Multi-Forest Environments". It leverages the Impacket library to enumerate domain users, groups, computers, password policies, etc., and supports both NTLM and Kerberos authentication. The tool logs SAMR OpNums for detailed auditing and supports exporting results in TXT, CSV, and JSON formats. |
 
 ## Criteria for Tool Evaluation
 
@@ -67,7 +67,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 > **Note:** The evaluation results analyze tools’ support for cross-forest SAMR requests. If a tool does not support cross-forest SAMR or uses a different protocol for enumeration, other criteria are not assessed, and the corresponding values are marked as "Not Applicable".
 
-| Tool Name    | Cross-Forest Request Support | OpNum Coverage (23 total) | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
+| Tool Name    | Cross-Forest Request Support | OpNum Coverage (23 total, grouped) | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
 |--------------|------------------------------|----------------|--------------------------------|---------------------------|--------------------------------|---------------------------|
 | Net          | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | Enum4linux   | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
@@ -78,7 +78,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | CrackMapExec | Supported                    | Low Coverage (26%, 6) | Not Detected            | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
 | Impacket     | Supported                    | Moderate Coverage (56.5%, 13)| Not Detected     | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
 | rpcclient    | Supported                    | High Coverage (82.6%, 19) | Not Detected        | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| **samr-enum**| Supported                    | Moderate Coverage (60.8%, 14) | Not Detected    | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| **samr-enum**| Supported                    | Moderate Coverage (65.2%, 15) | Not Detected    | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
 
 > Cmdlets from the Active Directory module in PowerShell did not use the SAMR for communication. Instead, these cmdlets primarily relied on the Microsoft .NET Naming Service (MS-NNS) and Microsoft .NET Message Framing Protocol (MS-NMF) for their operations.
 > For Metasploit, only the "auxiliary/scanner/smb/smb_enumusers" and "auxiliary/admin/dcerpc/samr_account" modules were examined.
@@ -408,7 +408,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
     <tr>
       <td><strong>samr-enum</strong></td>
       <!-- Domain  -->
-      <td>●</td><td>●</td><td colspan="2" align="right">●</td><td>○</td>
+      <td>●</td><td>●</td><td colspan="2" align="right">●</td><td>●</td>
       <!-- Group/Alias  -->
       <td>●</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td><td>●</td><td>○</td>
       <!-- User -->
@@ -725,7 +725,7 @@ Executed following command:
 
 
 Executed following command:  
-`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=account-details user=Administrator`
+`python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=account-details user=Administrator acl`
 
 | **SAMR Operation**  | **Wireshark Label** | **OpNum** | **Requested Access Rights (Hex)** | **Rights Description**  | **Required for Operation?** | **Compliance with Requested Access** |
 |---------------------|---------------------|-----------|-----------------------------------|-------------------------|-----------------------------|--------------------------------------|
@@ -736,6 +736,7 @@ Executed following command:
 | `SamrLookupNamesInDomain` | `LookupNames`         | 17        | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrOpenUser`      | `OpenUser`               | 34        | `0x0002011b`             | `USER_READ_GENERAL` (`0x00000001`) <br> `USER_READ_PREFERENCES` (`0x00000002`) <br> `USER_LIST_GROUPS` (`0x00000100`) <br> `READ_CONTROL` (`0x00020000`)| Yes  | Compliant   |
 | `SamrQueryInformationUser2` | `QueryUserInfo2`       | 47        | Access not requested               | N/A                    | N/A                         | N/A                                  |
+| `SamrQuerySecurityObject` | `QuerySecurity`       | 3         | Access not requested               | N/A                    | N/A                         | N/A                                  |
 | `SamrCloseHandle`   | `Close`               | 1         | Access not requested               | N/A                    | N/A                         | N/A                                  |
 
 
@@ -1134,7 +1135,7 @@ Executed following commands:
 - `python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=domain-group-details group="Domain Admins"`
 - `python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=user-memberships-localgroups user=Administrator`
 - `python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=user-memberships-domaingroups user=Administrator`
-- `python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=account-details user=username/RID`
+- `python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=account-details user=username/RID acl`
 - `python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=display-info type=users`
 - `python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=display-info type=computers`
 - `python samr-enum.py target=ydc1.domain-y.local username=enum-x password=LabAdm1! enumerate=display-info type=local-groups`
@@ -1209,4 +1210,11 @@ Executed following commands:
 | 28        | `SamrQueryInformationAlias`   | `Name`                         | `cn` or `sAMAccountName`     | Unicode string    | Yes         | Yes                   | Accurate     | The alias (local group) name. Often stored in AD as `cn` or `sAMAccountName`. |
 | 28        | `SamrQueryInformationAlias`   | `AdminComment`                 | `description`                | Unicode string    | Yes         | Yes                   | Accurate     | The alias’s admin comment or description field.        |
 | 28        | `SamrQueryInformationAlias`   | `MemberCount`                  | `member` (or similar)        | Integer (32-bit)  | Yes         | Yes                   | Accurate     | The total number of members in the alias (local group).|
-
+| 3         | `SamrQuerySecurityObject`  | `Control`                         | `sdControl`                  | 16-bit Flags (Bitmask)         | Yes              | Yes                  | Accurate     | Control flags such as SE_DACL_PRESENT, SE_SELF_RELATIVE, etc.                         |
+| 3         | `SamrQuerySecurityObject`  | `Owner SID`                       | `owner`                      | SID String                     | Yes              | Yes                  | Accurate     | SID of the security principal that owns the object.                                   |
+| 3         | `SamrQuerySecurityObject`  | `Group SID`                       | `group`                      | SID String                     | Yes              | Yes                  | Accurate     | SID representing the object's primary group.                                          |
+| 3         | `SamrQuerySecurityObject`  | `DACL` (Discretionary ACL)        | `dacl`                       | List of ACEs                   | Yes              | Yes                  | Accurate     | Contains access control entries that govern permissions on the object.                |
+| 3         | `SamrQuerySecurityObject`  | `SACL` (System ACL)               | `sacl`                       | List of ACEs                   | N/A              | No                   | N/A          | Auditing rules — access requires SeSecurityPrivilege.                                 |
+| 3         | `SamrQuerySecurityObject`  | `ACE Type` (from DACL)            | `aceType`                    | Integer / Enum                 | Yes              | Yes                  | Accurate     | Indicates if the ACE is Allow or Deny, etc.                                           |
+| 3         | `SamrQuerySecurityObject`  | `Access Mask` (from ACE)          | `accessMask`                 | Bitmask                       | Yes              | Yes                  | Accurate     | Set of rights granted or denied by this ACE.                                          |
+| 3         | `SamrQuerySecurityObject`  | `SID` (from ACE)                  | `trustee`                    | SID String                     | Yes              | Yes                  | Accurate     | SID to which the access control entry applies.                                        |
