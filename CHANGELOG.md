@@ -4,6 +4,13 @@ This file documents all notable changes made to the SAMR enumeration tool samr-e
 
 The format is based on [Keep a Changelog](https://keepachangelog.com/en/1.0.0/) and this project adheres to [Semantic Versioning](https://semver.org/).
 
+## [1.2.0] - 2025-04-08
+### Changed
+  Simplified the usage of the `opnums` and `debug` parameters. These can now be specified as flags (e.g., `opnums` or `debug`) without requiring an explicit value such as `true`.
+
+### Fixed
+  Corrected the OpNum list output when using the `acl` parameter so that the proper operation numbers are displayed in the final output.
+
 ## [1.1.2] - 2025-04-08
 ### Fixed
   Errors in the output when using the acl parameter.
