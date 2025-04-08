@@ -17,7 +17,7 @@ Features:
   - Supports NTLM (default) and Kerberos authentication.
 """
 
-__version__ = "1.1.2"
+__version__ = "1.2.0"
 
 # Global help text constant
 HELP_TEXT = r"""
@@ -35,10 +35,10 @@ Required OPTIONS:
 Optional OPTIONS:
   domain            Domain of the user for authentication (required if using Kerberos).
   auth              Authentication protocol. Acceptable values: 'ntlm' (default) or 'kerberos'.
-  debug             Display debug details of the SAMR calls. Acceptable values: 'true' or 'false' (default: 'false').
+  debug             Display debug details of the SAMR calls.
   export            Export the data. Acceptable values: 'txt' (default), 'csv', or 'json'.
     format          Acceptable values are 'txt', 'csv' or 'json', with the default being 'txt'.
-  opnums            Set to 'true' to display SAMR OpNums in output (default: 'false').
+  opnums            Display SAMR OpNums in output.
   help              Print help page.
   acl               Query and display the Access Control List (ACL) for the target object (only for 'enumerate=account-details' supported)
 
@@ -91,9 +91,9 @@ ENUMERATION PARAMETERS:
 
 Usage Examples:
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
-  python samr-enum.py target=192.168.1.1 username=micky password=  enumerate=computers debug=true
+  python samr-enum.py target=192.168.1.1 username=micky password=  enumerate=computers debug
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=local-groups export=export.csv format=csv
-  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=domain-groups opnums=true
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=domain-groups opnums
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=user-memberships-localgroups user=Administrator
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=account-details user=Administrator acl
@@ -163,7 +163,7 @@ A list of flags representing password policy requirements (when using enumerate=
   LockAdmins:                Lockout applies to administrators.
   StoreClr:                  Store passwords using reversible (cleartext) encryption.
   RefuseChg:                 Refuse password changes under specific conditions.
-  
+
 Column Abbreviations for Security Descriptor Controls:
   OWND  SE_OWNER_DEFAULTED          Owner field was defaulted rather than explicitly set.
   GRPD  SE_GROUP_DEFAULTED          Group field was defaulted rather than explicitly set.
@@ -212,7 +212,6 @@ from impacket.dcerpc.v5.dtypes import SECURITY_DESCRIPTOR
 from impacket.structure import Structure
 import csv, json, csv
 
-
 # SID_NAME_USE local definitions
 SID_NAME_USER = 1
 SID_NAME_GROUP = 2
@@ -238,12 +237,12 @@ CONTROL_FLAGS = {
     0x8000: "SE_SELF_RELATIVE",
 }
 
-
 # SAMR FUNCTION -> OPNUM MAPPING
 # Official reference from MS-SAMR specification (decimal).
 SAMR_FUNCTION_OPNUMS = {
     'SamrConnect': 0,
     'SamrCloseHandle': 1,
+    'SamrQuerySecurityObject': 3,
     'SamrLookupDomainInSamServer': 5,
     'SamrEnumerateDomainsInSamServer': 6,
     'SamrOpenDomain': 7,
@@ -265,7 +264,6 @@ SAMR_FUNCTION_OPNUMS = {
     'SamrQueryInformationUser2': 47,
 }
 
-
 # SAMR FUNCTION -> ACCESS MASK
 # Only track calls that actually specify a desiredAccess.
 # Others show no Access Mask.
@@ -278,17 +276,17 @@ SAMR_FUNCTION_ACCESS = {
 }
 
 ACCESS_MASK_MAPPING = {
-    0x00000001: "USR_READ_GEN",      # User: Read General Information
-    0x00000002: "USR_READ_PREF",     # User: Read Preferences
-    0x00000004: "USR_READ_LOGON",    # User: Read Logon Info
-    0x00000008: "USR_CHG_PW",        # User: Change Password
-    0x00000010: "USR_FORCE_PW",      # User: Force Password Change
-    0x00000020: "USR_LIST_GRPS",     # User: List Groups
-    0x00000040: "USR_READ_ACC",      # User: Read Account Info
-    0x00000080: "USR_WR_ACC",        # User: Write Account Info
-    0x00000100: "USR_CREATE",        # User: Create Account (example)
-    0x00000200: "USR_DELETE",        # User: Delete Account (example)
-    0x00000400: "USR_AUTO_LOCK",     # User: Auto-Lock (example)
+    0x00000001: "USR_READ_GEN",  # User: Read General Information
+    0x00000002: "USR_READ_PREF",  # User: Read Preferences
+    0x00000004: "USR_READ_LOGON",  # User: Read Logon Info
+    0x00000008: "USR_CHG_PW",  # User: Change Password
+    0x00000010: "USR_FORCE_PW",  # User: Force Password Change
+    0x00000020: "USR_LIST_GRPS",  # User: List Groups
+    0x00000040: "USR_READ_ACC",  # User: Read Account Info
+    0x00000080: "USR_WR_ACC",  # User: Write Account Info
+    0x00000100: "USR_CREATE",  # User: Create Account (example)
+    0x00000200: "USR_DELETE",  # User: Delete Account (example)
+    0x00000400: "USR_AUTO_LOCK",  # User: Auto-Lock (example)
     # Generic rights (if applicable – these are common generic rights bits):
     0x00020000: "GEN_READ",
     0x00040000: "GEN_WRITE",
@@ -314,20 +312,18 @@ def add_opnum_call(opnums_list, func_name, actual_access=None):
     :param actual_access: (Optional) The actual Access Mask value (int) used, if available.
     :return: None
     """
-    opnum = SAMR_FUNCTION_OPNUMS.get(func_name)
+    pure_func_name = func_name.split(" (")[0]
+    opnum = SAMR_FUNCTION_OPNUMS.get(pure_func_name)
     if opnum is not None:
         if actual_access is not None:
-            # Show the *actual* Access Mask if provided
             opnums_list.append(f"{func_name} (OpNum {opnum}, Access Mask: 0x{actual_access:08X})")
         else:
-            # Fall back to the old dictionary-based Access Mask
-            access_val = SAMR_FUNCTION_ACCESS.get(func_name)
+            access_val = SAMR_FUNCTION_ACCESS.get(pure_func_name)
             if access_val is not None:
                 opnums_list.append(f"{func_name} (OpNum {opnum}, Access Mask: 0x{access_val:08X})")
             else:
                 opnums_list.append(f"{func_name} (OpNum {opnum})")
     else:
-        # Neither OpNum nor Access is known
         opnums_list.append(func_name)
 
 
@@ -403,7 +399,7 @@ def decode_filetime(value):
     low_part_ndr = value.fields['LowPart']
 
     high_part_int = extract_ndr_value(high_part_ndr)  # becomes plain int
-    low_part_int = extract_ndr_value(low_part_ndr)    # becomes plain int
+    low_part_int = extract_ndr_value(low_part_ndr)  # becomes plain int
 
     # Combine them into a 64-bit integer
     return (high_part_int << 32) | (low_part_int & 0xFFFFFFFF)
@@ -412,16 +408,20 @@ def decode_filetime(value):
 def parse_named_args(argv):
     """
     Parse named arguments of the form key=value from the command line.
+    For arguments passed without an '=', store the key with the value True.
 
-    :param argv: sys.argv or similar list of command-line tokens
-    :return: dict mapping lowercase key -> string value
-    Example: python samr-enum.py target=server1 user=admin password=pass123
+    :param argv: sys.argv or a similar list of command-line tokens.
+    :return: dict mapping lowercase keys to their corresponding string values or True if flag.
+    Example: python samr-enum.py target=server1 user=admin password=pass123 debug
     """
     args = {}
     for item in argv[1:]:
         if '=' in item:
             key, val = item.split('=', 1)
             args[key.strip().lower()] = val.strip()
+        else:
+            # For flag parameters that do not include an '=', store them as True
+            args[item.strip().lower()] = True
     return args
 
 
@@ -1124,7 +1124,7 @@ def get_user_security_descriptor(dce, domainHandle, user_rid, debug, opnums_call
     """
 
     userHandleResp = samr.hSamrOpenUser(dce, domainHandle, 0x0002011b, user_rid)
-    add_opnum_call(opnums_called, "SamrOpenUser (for security query)")
+    add_opnum_call(opnums_called, "SamrOpenUser")
     userHandle = userHandleResp['UserHandle']
 
     security_info = 0x00000001 | 0x00000002 | 0x00000004
@@ -1167,7 +1167,7 @@ def get_user_security_descriptor(dce, domainHandle, user_rid, debug, opnums_call
         raise
 
     samr.hSamrCloseHandle(dce, userHandle)
-    add_opnum_call(opnums_called, "SamrCloseHandle (security query)")
+    add_opnum_call(opnums_called, "SamrCloseHandle")
     return raw_data
 
 
@@ -2278,7 +2278,8 @@ def get_user_details(dce, domainHandle, user_input, debug, opnums_called):
     }
 
 
-def get_local_group_details(dce, builtinHandle, alias_name, debug, opnums_called, primaryDomainHandle, primaryDomainSid):
+def get_local_group_details(dce, builtinHandle, alias_name, debug, opnums_called, primaryDomainHandle,
+                            primaryDomainSid):
     """
     Retrieve detailed information about a local alias (group) from the Builtin domain.
     This function looks up the alias by its name using the Builtin domain handle,
@@ -2671,7 +2672,8 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
 
     elif info_type == 'local-groups':
         # Use the Builtin domain to enumerate local groups (aliases)
-        builtinHandle, builtinDomainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug, opnums_called)
+        builtinHandle, builtinDomainName, domainSidString = get_builtin_domain_handle(dce, serverHandle, debug,
+                                                                                      opnums_called)
         try:
             aliasResp = samr.hSamrEnumerateAliasesInDomain(dce, builtinHandle)
             add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
@@ -2682,7 +2684,8 @@ def display_info(dce, serverHandle, info_type, debug, opnums_called):
         group_tuples = [(safe_str(alias['Name']), alias['RelativeId']) for alias in aliases]
         for group_name, group_rid in group_tuples:
             try:
-                details = enumerate_display_info_local_groups(dce, builtinHandle, group_name, group_rid, debug, opnums_called)
+                details = enumerate_display_info_local_groups(dce, builtinHandle, group_name, group_rid, debug,
+                                                              opnums_called)
                 results.append(details)
             except Exception as e:
                 results.append({'group_name': group_name, 'rid': group_rid, 'error': str(e)})
@@ -2820,19 +2823,19 @@ def get_password_policy(dce, domainHandle, debug, opnums_called):
         props = password_info['PasswordProperties']
         # (Assuming these constants exist in samr; if not, define them as needed.)
         pwd_complex = bool(props & samr.DOMAIN_PASSWORD_COMPLEX)
-        no_anon     = bool(props & samr.DOMAIN_PASSWORD_NO_ANON_CHANGE)
-        no_clrchg   = bool(props & samr.DOMAIN_PASSWORD_NO_CLEAR_CHANGE)
+        no_anon = bool(props & samr.DOMAIN_PASSWORD_NO_ANON_CHANGE)
+        no_clrchg = bool(props & samr.DOMAIN_PASSWORD_NO_CLEAR_CHANGE)
         lock_admins = bool(props & samr.DOMAIN_LOCKOUT_ADMINS)
-        store_clr   = bool(props & samr.DOMAIN_PASSWORD_STORE_CLEARTEXT)
-        refuse_chg  = bool(props & samr.DOMAIN_REFUSE_PASSWORD_CHANGE)
+        store_clr = bool(props & samr.DOMAIN_PASSWORD_STORE_CLEARTEXT)
+        refuse_chg = bool(props & samr.DOMAIN_REFUSE_PASSWORD_CHANGE)
 
         pwd_props_flags = {
             'PwdComplex': yes_no(pwd_complex),
-            'NoAnon':     yes_no(no_anon),
-            'NoClrChg':   yes_no(no_clrchg),
+            'NoAnon': yes_no(no_anon),
+            'NoClrChg': yes_no(no_clrchg),
             'LockAdmins': yes_no(lock_admins),
-            'StoreClr':   yes_no(store_clr),
-            'RefuseChg':  yes_no(refuse_chg),
+            'StoreClr': yes_no(store_clr),
+            'RefuseChg': yes_no(refuse_chg),
         }
 
         return {
@@ -2861,6 +2864,7 @@ def get_domain_info(dce, serverHandle, debug, opnums_called):
     :param opnums_called: List tracking SAMR operations performed.
     :return: Dictionary with domain details (domain SID, domain name, etc.).
     """
+
     def ticks_to_days(ticks_obj):
         if not isinstance(ticks_obj, samr.OLD_LARGE_INTEGER):
             return 0
@@ -3031,12 +3035,12 @@ def main():
     target = args.get('target', '')
     username = args.get('username', '')
     password = args.get('password', '')  # might be empty -> prompt
-    debug = args.get('debug', 'false').lower() == 'true'
+    debug = args.get('debug', False)
     export_file = args.get('export', '')
     export_format = args.get('format', 'txt').lower()
     auth_mode = args.get('auth', 'ntlm').lower()  # "kerberos" or "ntlm" default
     domain = args.get('domain', '')  # mandatory for Kerberos authentication
-    opnums_param = args.get('opnums', 'false').lower() == 'true'
+    opnums_param = any(arg.lower() == "opnums" for arg in sys.argv)
 
     # If password is empty, prompt user. getpass hides the input on CLI
     if password == '':
@@ -3101,8 +3105,8 @@ def main():
                                                                           serverHandle,
                                                                           debug, opnums_called)
             groups_result, did_aliases = enumerate_domain_groups(dce,
-                                                                    domainHandle,
-                                                                    debug)
+                                                                 domainHandle,
+                                                                 debug)
             add_opnum_call(opnums_called, "SamrEnumerateGroupsInDomain")
             if did_aliases:
                 add_opnum_call(opnums_called, "SamrEnumerateAliasesInDomain")
@@ -3307,7 +3311,8 @@ def main():
                             ace_type_str = f"Unknown ({ace_type})" if ace_type is not None else "N/A"
                         print(f"\t\tType:\t\t{ace_type_str}")
                         print(f"\t\tNT ACE Flags:\t0x{ace.get('ace_flags', 0):02X}")
-                        print(f"\t\tAccess Mask:\t0x{ace.get('access_mask', 0):08X} ({format_access_mask(ace.get('access_mask', 0))})")
+                        print(
+                            f"\t\tAccess Mask:\t0x{ace.get('access_mask', 0):08X} ({format_access_mask(ace.get('access_mask', 0))})")
                         sid = ace.get('sid', "N/A")
                         print(f"\t\tSID:\t\t{sid}")
                 else:
