@@ -100,9 +100,9 @@ python samr-enum.py help
 
 - **domain:** The domain of the user for authentication (required if using Kerberos).
 - **auth:**  The authentication protocol. Can be ntlm (default) or kerberos.
-- **debug:**  Displays debug details of the SAMR calls. Acceptable values: true or false (default: false).
+- **debug:**  Displays debug details of the SAMR calls.
 - **export and format:**  Export the data in txt, csv, or json format. Default is txt.
-- **opnums:**  Set to true to display SAMR OpNums in the output. Default is false.
+- **opnums:**  Display SAMR OpNums in the output.
 - **help:**  Print the help page and exit.
 - **acl**  Query and display the Access Control List (ACL) for the target object (only for `enumerate=account-details` supported)
 
@@ -123,9 +123,9 @@ python samr-enum.py help
 ###  Parameters Example
 ```
   python samr-enum.py target=192.168.1.1 username=micky password=mouse123 enumerate=users
-  python samr-enum.py target=192.168.1.1 username=micky password=  enumerate=computers debug=true
+  python samr-enum.py target=192.168.1.1 username=micky password=  enumerate=computers debug
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=local-groups export=export.csv format=csv
-  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=domain-groups opnums=true
+  python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=domain-groups opnums
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=user-memberships-localgroups user=Administrator
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=user-memberships-domaingroups user=Administrator
   python samr-enum.py target=dc1.domain-a.local username=micky password=mouse123 enumerate=account-details user=Administrator acl
@@ -370,7 +370,7 @@ This tool is provided for legitimate security testing, research, or educational 
 This project uses [Semantic Versioning](https://semver.org/) (SemVer) to track releases. The current version is defined in the `samr-enum.py` file as follows:
 
 ```python
-__version__ = "1.1.2"
+__version__ = "1.2.0"
 ```
 
 ## Acknowledgements
