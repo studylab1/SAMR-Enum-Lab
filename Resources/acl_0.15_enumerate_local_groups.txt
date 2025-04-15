@@ -1,0 +1,44 @@
+python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! acl enumerate=local-groups
+Execution started at: 2025-04-12 00:36:33.689454
+
+Member                              RID
+--------------------------------------------------
+Server Operators                    549
+Account Operators                   548
+Pre-Windows 2000 Compatible Access  554
+Incoming Forest Trust Builders      557
+Windows Authorization Access Group  560
+Terminal Server License Servers     561
+Administrators                      544
+Users                               545
+Guests                              546
+Print Operators                     550
+Backup Operators                    551
+Replicator                          552
+Remote Desktop Users                555
+Network Configuration Operators     556
+Performance Monitor Users           558
+Performance Log Users               559
+Distributed COM Users               562
+IIS_IUSRS                           568
+Cryptographic Operators             569
+Event Log Readers                   573
+Certificate Service DCOM Access     574
+RDS Remote Access Servers           575
+RDS Endpoint Servers                576
+RDS Management Servers              577
+Hyper-V Administrators              578
+Access Control Assistance Operators 579
+Remote Management Users             580
+Storage Replica Administrators      582
+================================================================
+Execution time:     	0.17 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	S-1-5-32
+Account:            	enum-a
+Enumerate:          	local-groups
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	28
+================================================================
+

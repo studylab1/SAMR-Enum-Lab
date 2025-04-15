@@ -1,0 +1,13 @@
+python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! acl enumerate=display-info type=computers
+Execution started at: 2025-04-14 00:10:08.263592
+================================================================
+Execution time:     	0.12 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	
+Account:            	enum-a
+Enumerate:          	display-info
+Authentication:     	NTLM
+Execution status:   	error: SessionError()
+Number of objects:  	0
+================================================================
+

@@ -1,0 +1,136 @@
+python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! opnums enumerate=display-info type=domain-groups
+Execution started at: 2025-04-13 23:51:06.412239
+
+RID    MemCnt  Name                           Description                             
+---------------------------------------------------------------------------------------
+498    0       Enterprise Read-only Domain Controllers Members of this group are Read-Only D...
+512    2       Domain Admins                  Designated administrators of the domain 
+513    9       Domain Users                   All domain users                        
+514    1       Domain Guests                  All domain guests                       
+515    5       Domain Computers               All workstations and servers joined t...
+516    1       Domain Controllers             All domain controllers in the domain    
+518    1       Schema Admins                  Designated administrators of the schema 
+519    1       Enterprise Admins              Designated administrators of the ente...
+520    1       Group Policy Creator Owners    Members in this group can modify grou...
+521    0       Read-only Domain Controllers   Members of this group are Read-Only D...
+522    0       Cloneable Domain Controllers   Members of this group that are domain...
+525    0       Protected Users                Members of this group are afforded ad...
+526    0       Key Admins                     Members of this group can perform adm...
+527    0       Enterprise Key Admins          Members of this group can perform adm...
+1102   0       DnsUpdateProxy                 DNS clients who are permitted to perf...
+1106   1       ServiceAccounts                                                        
+1116   8       GroupB3_UG                     Description B3                          
+1130   7       GroupB2_GG                                                             
+1131   7       GroupB7_GG                     Contains a computer from OU2            
+---------------------------------------------------------------------------------------
+RID    MemCnt  Name                           Description                             
+
+================================================================
+Execution time:     	0.36 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	S-1-5-21-1062253458-1571729421-1121886375
+Account:            	enum-a
+Enumerate:          	display-info
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	19
+OpNums called:
+  Name                              OpNum  Access Mask
+-------------------------------------------------------
+  SamrConnect                       0     0x00000031
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000301
+  SamrEnumerateGroupsInDomain       11    --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrOpenGroup                     19    0x00000011
+  SamrGetMembersInGroup             25    --
+  SamrLookupIdsInDomain             18    --
+  SamrQueryInformationGroup         20    --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+================================================================
+

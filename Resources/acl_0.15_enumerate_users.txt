@@ -1,0 +1,25 @@
+python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! enumerate=users
+Execution started at: 2025-04-12 00:06:01.372141
+
+Username          RID
+----------------- ----
+Administrator     500
+Guest             501
+krbtgt            502
+userb1            1103
+userb2            1104
+userb3            1105
+SvcB1             1107
+adminb1           1113
+userb4            1122
+================================================================
+Execution time:     	0.16 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	S-1-5-21-1062253458-1571729421-1121886375
+Account:            	enum-a
+Enumerate:          	users
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	9
+================================================================
+

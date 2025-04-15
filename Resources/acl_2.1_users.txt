@@ -1,0 +1,66 @@
+python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! opnums enumerate=display-info type=users
+Execution started at: 2025-04-13 23:44:36.071305
+
+RID      Last Logon   PwdSet     PwdNE      PwdExp     ForceChg   AccDis     PreAuth    Delg     BadCnt     Username        Full Name            
+-------------------------------------------------------------------------------------------------------------------------------------------------
+500      2025.04.13   2025.04.11 No         No         Never      No         Yes        Yes      0          Administrator                       
+501      Never        Never      Yes        No         Never      Yes        Yes        Yes      0          Guest                               
+502      Never        2025.03.31 No         No         Never      Yes        Yes        Yes      0          krbtgt                              
+1103     Never        2025.04.09 No         No         Never      No         Yes        Yes      0          userb1          UserB1 Last Name B1 
+1105     Never        2025.04.09 No         No         Never      Yes        Yes        Yes      0          userb3          User B3 Name B3     
+1107     Never        2025.04.09 Yes        No         Never      No         Yes        Yes      0          SvcB1                               
+1113     Never        2025.04.09 No         No         Never      No         Yes        Yes      0          adminb1         AdminB1 Name B1     
+-------------------------------------------------------------------------------------------------------------------------------------------------
+RID      Last Logon   PwdSet     PwdNE      PwdExp     ForceChg   AccDis     PreAuth    Delg     BadCnt     Username        Full Name            
+
+================================================================
+Execution time:     	0.24 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	S-1-5-21-1062253458-1571729421-1121886375
+Account:            	enum-a
+Enumerate:          	display-info
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	7
+OpNums called:
+  Name                              OpNum  Access Mask
+-------------------------------------------------------
+  SamrConnect                       0     0x00000031
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000301
+  SamrEnumerateUsersInDomain        13    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrLookupNamesInDomain           17    --
+  SamrLookupNamesInDomain           17    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrCloseHandle                   1     --
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000301
+  SamrCloseHandle                   1     --
+================================================================

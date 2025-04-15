@@ -1,0 +1,13 @@
+python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! enumerate=account-details user=svcb3 acl 
+Execution started at: 2025-04-12 00:09:47.869036
+================================================================
+Execution time:     	0.15 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	S-1-5-21-1062253458-1571729421-1121886375
+Account:            	enum-a
+Enumerate:          	account-details
+Authentication:     	NTLM
+Execution status:   	error: Exception('User lookup failed: SAMR SessionError: code: 0xc0000073 - STATUS_NONE_MAPPED - None of the information to be translated has been translated.')
+Number of objects:  	0
+================================================================
+

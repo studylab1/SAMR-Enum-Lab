@@ -1,0 +1,68 @@
+
+python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! opnums enumerate=summary
+Execution started at: 2025-04-13 23:43:48.739952
+
+Domain Information:
+  Domain SID:                  S-1-5-21-1062253458-1571729421-1121886375
+  Domain Name:                 DOMAIN-B
+  UAS Compatible:              No
+
+Account Lockout Settings:
+  Lockout Threshold:           0
+  Lockout Duration (days):     0
+  Lockout Window (days):       0
+  Force Logoff (days):         0
+
+Password Policy:
+  Minimum Password Length:     N/A
+  Minimum Password Age (days): 1
+  Maximum Password Age (days): 0
+  Password History Length:     N/A
+  Password Properties:
+    PwdComplex                 Yes
+    NoAnon                     No
+    NoClrChg                   No
+    LockAdmins                 No
+    StoreClr                   No
+    RefuseChg                  No
+
+Total Users:                   7
+Total Computers:               5
+Total Domain Groups:           19
+Total Local Groups:            28
+
+================================================================
+Execution time:     	0.18 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	S-1-5-21-1062253458-1571729421-1121886375
+Account:            	enum-a
+Enumerate:          	summary
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	1
+OpNums called:
+  Name                              OpNum  Access Mask
+-------------------------------------------------------
+  SamrConnect                       0     0x00000031
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000305
+  SamrQueryInformationDomain2       46    --
+  SamrQueryInformationDomain2       46    --
+  SamrCloseHandle                   1     --
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000301
+  SamrEnumerateUsersInDomain        13    --
+  SamrEnumerateGroupsInDomain       11    --
+  SamrQueryInformationDomain2       46    --
+  SamrQueryInformationDomain2       46    --
+  SamrCloseHandle                   1     --
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000300
+  SamrEnumerateAliasesInDomain      15    --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+================================================================
+

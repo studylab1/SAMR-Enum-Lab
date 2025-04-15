@@ -1,0 +1,29 @@
+python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! acl enumerate=domain-group-details  group="GroupB6_DL_UG"
+Execution started at: 2025-04-12 01:39:00.781992
+
+-----------------------------------------------------------------
+Domain Group Name:  	GroupB6_DL_UG
+RID:                	1119
+Member Count:       	7
+-----------------------------------------------------------------
+RID                 	Username            
+--------------------------------
+1103                	userb1              
+1104                	userb2              
+1105                	userb3              
+1107                	SvcB1               
+1111                	SvcB3$              
+1112                	SvcB2$              
+1113                	adminb1             
+
+================================================================
+Execution time:     	0.17 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	S-1-5-21-1062253458-1571729421-1121886375
+Account:            	enum-a
+Enumerate:          	domain-group-details
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	1
+================================================================
+

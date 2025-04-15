@@ -1,0 +1,52 @@
+python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! opnums enumerate=display-info type=computers
+Execution started at: 2025-04-13 23:45:38.168667
+
+RID    Name               Logons LastLogon   PwdLastSet  BadPwdCnt PID  Type           Enabled  PwdNReq   PwdNExp  Deleg  Description    
+-----------------------------------------------------------------------------------------------------------------------------------------
+1000   BDC1               54     2025.04.13  2025.03.31  0         516  Server         Yes      No        No       Yes                  
+1111   SvcB3              0      Never       2025.04.09  0         515  Workstation    Yes      No        No       No                   
+1112   SvcB2              0      Never       Never       0         515  Workstation    No       No        No       No                   
+1120   COMPUTERB1         0      Never       2025.04.09  0         515  Workstation    Yes      Yes       No       No     Description B1
+1121   COMPUTERB2         0      Never       2025.04.09  0         515  Workstation    No       Yes       No       No     Description B2
+-----------------------------------------------------------------------------------------------------------------------------------------
+RID    Name               Logons LastLogon   PwdLastSet  BadPwdCnt PID  Type           Enabled  PwdNReq   PwdNExp  Deleg  Description    
+
+================================================================
+Execution time:     	0.19 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	S-1-5-21-1062253458-1571729421-1121886375
+Account:            	enum-a
+Enumerate:          	display-info
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	5
+OpNums called:
+  Name                              OpNum  Access Mask
+-------------------------------------------------------
+  SamrConnect                       0     0x00000031
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000301
+  SamrEnumerateUsersInDomain        13    --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrCloseHandle                   1     --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrCloseHandle                   1     --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrCloseHandle                   1     --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrCloseHandle                   1     --
+  SamrOpenUser                      34    0x0002011B
+  SamrQueryInformationUser2         47    --
+  SamrCloseHandle                   1     --
+  SamrCloseHandle                   1     --
+  SamrEnumerateDomainsInSamServer   6     --
+  SamrLookupDomainInSamServer       5     --
+  SamrOpenDomain                    7     0x00000301
+  SamrCloseHandle                   1     --
+================================================================
+
