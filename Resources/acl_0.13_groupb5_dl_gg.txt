@@ -1,20 +1,33 @@
-python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! acl enumerate=domain-group-details  group="GroupB5_DL_GG"
-Execution started at: 2025-04-12 01:31:05.737924
+python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! acl enumerate=domain-group-details  group="GroupB4_DL_DG"
+Execution started at: 2025-04-17 00:36:02.521337
+================================================================
+Execution time:     	0.15 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	S-1-5-21-1062253458-1571729421-1121886375
+Account:            	enum-a
+Enumerate:          	domain-group-details
+Authentication:     	NTLM
+Execution status:   	error: Exception("Group 'GroupB4_DL_DG' not found or not a valid domain group.")
+Number of objects:  	0
+================================================================
+(.venv) enum@enum-vm:~/PycharmProjects/SAMRClient$ python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! acl enumerate=domain-group-details  group="GroupB5_DL_GG"
+Execution started at: 2025-04-17 00:36:08.951859
 
 -----------------------------------------------------------------
 Domain Group Name:  	GroupB5_DL_GG
 RID:                	1118
-Member Count:       	7
+Member Count:       	8
 -----------------------------------------------------------------
 RID                 	Username            
 --------------------------------
 1103                	userb1              
-1104                	userb2              
 1105                	userb3              
 1107                	SvcB1               
 1111                	SvcB3$              
 1112                	SvcB2$              
 1113                	adminb1             
+1122                	userb4              
+1129                	userb2              
 
 ================================================================
 Execution time:     	0.16 seconds
@@ -26,4 +39,82 @@ Authentication:     	NTLM
 Execution status:   	success
 Number of objects:  	1
 ================================================================
+(.venv) enum@enum-vm:~/PycharmProjects/SAMRClient$ python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! acl enumerate=domain-groups
+Execution started at: 2025-04-17 00:36:13.480177
+
+Member                                  RID
+------------------------------------------------------
+Enterprise Read-only Domain Controllers 498
+Domain Admins                           512
+Domain Users                            513
+Domain Guests                           514
+Domain Computers                        515
+Domain Controllers                      516
+Schema Admins                           518
+Enterprise Admins                       519
+Group Policy Creator Owners             520
+Read-only Domain Controllers            521
+Cloneable Domain Controllers            522
+Protected Users                         525
+Key Admins                              526
+Enterprise Key Admins                   527
+DnsUpdateProxy                          1102
+ServiceAccounts                         1106
+GroupB3_UG                              1116
+GroupB2_GG                              1130
+GroupB7_GG                              1131
+================================================================
+Execution time:     	0.15 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	S-1-5-21-1062253458-1571729421-1121886375
+Account:            	enum-a
+Enumerate:          	domain-groups
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	19
+================================================================
+(.venv) enum@enum-vm:~/PycharmProjects/SAMRClient$ python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! acl enumerate=local-groups
+Execution started at: 2025-04-17 00:36:16.872987
+
+Member                              RID
+--------------------------------------------------
+Server Operators                    549
+Account Operators                   548
+Pre-Windows 2000 Compatible Access  554
+Incoming Forest Trust Builders      557
+Windows Authorization Access Group  560
+Terminal Server License Servers     561
+Administrators                      544
+Users                               545
+Guests                              546
+Print Operators                     550
+Backup Operators                    551
+Replicator                          552
+Remote Desktop Users                555
+Network Configuration Operators     556
+Performance Monitor Users           558
+Performance Log Users               559
+Distributed COM Users               562
+IIS_IUSRS                           568
+Cryptographic Operators             569
+Event Log Readers                   573
+Certificate Service DCOM Access     574
+RDS Remote Access Servers           575
+RDS Endpoint Servers                576
+RDS Management Servers              577
+Hyper-V Administrators              578
+Access Control Assistance Operators 579
+Remote Management Users             580
+Storage Replica Administrators      582
+================================================================
+Execution time:     	0.16 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	S-1-5-32
+Account:            	enum-a
+Enumerate:          	local-groups
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	28
+================================================================
+(.venv) enum@enum-vm:~/PycharmProjects/SAMRClient$ 
 

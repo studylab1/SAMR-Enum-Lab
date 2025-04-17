@@ -1,0 +1,48 @@
+python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! enumerate=domain-group-details group="GroupB1_DG"
+Execution started at: 2025-04-16 23:23:55.598009
+================================================================
+Execution time:     	0.15 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	S-1-5-21-1062253458-1571729421-1121886375
+Account:            	enum-a
+Enumerate:          	domain-group-details
+Authentication:     	NTLM
+Execution status:   	error: Exception("Group 'GroupB1_DG' not found or not a valid domain group.")
+Number of objects:  	0
+================================================================
+(.venv) enum@enum-vm:~/PycharmProjects/SAMRClient$ python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! acl enumerate=domain-groups
+Execution started at: 2025-04-16 23:26:44.525093
+
+Member                                  RID
+------------------------------------------------------
+Enterprise Read-only Domain Controllers 498
+Domain Admins                           512
+Domain Users                            513
+Domain Guests                           514
+Domain Computers                        515
+Domain Controllers                      516
+Schema Admins                           518
+Enterprise Admins                       519
+Group Policy Creator Owners             520
+Read-only Domain Controllers            521
+Cloneable Domain Controllers            522
+Protected Users                         525
+Key Admins                              526
+Enterprise Key Admins                   527
+DnsUpdateProxy                          1102
+ServiceAccounts                         1106
+GroupB3_UG                              1116
+GroupB2_GG                              1130
+GroupB7_GG                              1131
+================================================================
+Execution time:     	0.15 seconds
+Destination target: 	bdc1.domain-b.local
+Domain SID:         	S-1-5-21-1062253458-1571729421-1121886375
+Account:            	enum-a
+Enumerate:          	domain-groups
+Authentication:     	NTLM
+Execution status:   	success
+Number of objects:  	19
+================================================================
+(.venv) enum@enum-vm:~/PycharmProjects/SAMRClient$ 
+

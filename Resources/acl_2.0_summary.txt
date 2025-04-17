@@ -1,11 +1,11 @@
-python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! acl enumerate=computers
-Execution started at: 2025-04-13 23:32:35.985543
+(.venv) enum@enum-vm:~/PycharmProjects/SAMRClient$ python samr-enum.py target=bdc1.domain-b.local username=enum-a password=LabAdm1! acl enumerate=summary
+Execution started at: 2025-04-18 00:45:52.979095
 ================================================================
 Execution time:     	0.12 seconds
 Destination target: 	bdc1.domain-b.local
 Domain SID:         	
 Account:            	enum-a
-Enumerate:          	computers
+Enumerate:          	summary
 Authentication:     	NTLM
 Execution status:   	error: SessionError()
 Number of objects:  	0
