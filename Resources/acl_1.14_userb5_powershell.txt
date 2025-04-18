@@ -1,0 +1,55 @@
+PS C:\Users\Administrator> $ldapPath = "LDAP://CN=UserB5,OU=OU1,DC=domain-b,DC=local"
+PS C:\Users\Administrator> $entry = New-Object System.DirectoryServices.DirectoryEntry($ldapPath)
+PS C:\Users\Administrator> $acl = $entry.ObjectSecurity
+PS C:\Users\Administrator> $acl.GetAccessRules($true, $true, [System.Security.Principal.NTAccount]) | Format-List
+
+
+ActiveDirectoryRights : ListChildren
+InheritanceType       : All
+ObjectType            : 00000000-0000-0000-0000-000000000000
+InheritedObjectType   : 00000000-0000-0000-0000-000000000000
+ObjectFlags           : None
+AccessControlType     : Allow
+IdentityReference     : BUILTIN\Pre-Windows 2000 Compatible Access
+IsInherited           : False
+InheritanceFlags      : ContainerInherit
+PropagationFlags      : None
+
+ActiveDirectoryRights : GenericRead
+InheritanceType       : Descendents
+ObjectType            : 00000000-0000-0000-0000-000000000000
+InheritedObjectType   : 4828cc14-1437-45bc-9b07-ad6f015e5f28
+ObjectFlags           : InheritedObjectAceTypePresent
+AccessControlType     : Allow
+IdentityReference     : BUILTIN\Pre-Windows 2000 Compatible Access
+IsInherited           : False
+InheritanceFlags      : ContainerInherit
+PropagationFlags      : InheritOnly
+
+ActiveDirectoryRights : GenericRead
+InheritanceType       : Descendents
+ObjectType            : 00000000-0000-0000-0000-000000000000
+InheritedObjectType   : bf967a9c-0de6-11d0-a285-00aa003049e2
+ObjectFlags           : InheritedObjectAceTypePresent
+AccessControlType     : Allow
+IdentityReference     : BUILTIN\Pre-Windows 2000 Compatible Access
+IsInherited           : False
+InheritanceFlags      : ContainerInherit
+PropagationFlags      : InheritOnly
+
+ActiveDirectoryRights : GenericRead
+InheritanceType       : All
+ObjectType            : 00000000-0000-0000-0000-000000000000
+InheritedObjectType   : bf967aba-0de6-11d0-a285-00aa003049e2
+ObjectFlags           : InheritedObjectAceTypePresent
+AccessControlType     : Allow
+IdentityReference     : BUILTIN\Pre-Windows 2000 Compatible Access
+IsInherited           : False
+InheritanceFlags      : ContainerInherit
+PropagationFlags      : None
+
+
+
+PS C:\Users\Administrator> hostname
+bdc1
+PS C:\Users\Administrator>
