@@ -695,28 +695,20 @@
       <td>
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_summary.pcapng">Download PCAPNG File (summary)</a> <br> <br>
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_summary.txt">View Program Output (summary)</a> <br> <br> <br>
-
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_computers.pcapng">Download PCAPNG File (computers)</a> <br> <br>
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_computers.txt">View Program Output (computers)</a> <br> <br> <br>
-
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_domain_groups.pcapng">Download PCAPNG File (domain groups)</a> <br> <br>
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_domain_groups.txt">View Program Output (domain groups)</a> <br> <br> <br>
-
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_local_groups.pcapng">Download PCAPNG File (local groups)</a> <br> <br>
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_local_groups.txt">View Program Output (local groups)</a><br> <br> <br>
-
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_users.pcapng">Download PCAPNG File (users)</a> <br> <br>
-          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_users.txt">View Program Output (users)
-
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_users.txt">View Program Output (users)</a>
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_group=groupb2_gg.pcapng">Download PCAPNG File (groupb2_gg)</a> <br> <br>
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_group=groupb2_gg.txt">View Program Output (groupb2_gg)</a>
-
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_group=groupb3_ug.pcapng">Download PCAPNG File (groupb3_gg)</a> <br> <br>
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_group=groupb3_ug.txt">View Program Output (groupb3_gg)</a>
-
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_userb1_membership.pcapng">Download PCAPNG File (membership)</a> <br> <br>
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_userb1_membership.txt">View Program Output (membership)</a>
-
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_userb1.pcapng">Download PCAPNG File (userb1)</a> <br> <br>
           <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_2.2_userb1.txt">View Program Output (userb1)</a>
       </td> <!-- Link -->
