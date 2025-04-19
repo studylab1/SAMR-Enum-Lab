@@ -19,7 +19,7 @@ The lab consists of multiple Active Directory (AD) forests, each configured with
 - **Two-Way Forest Trust with Forest Level Authentication**
 - **Two-Way Forest Trust with Selective Authentication**
 
-<img width="1126" alt="image" src="https://github.com/user-attachments/assets/9790d7ca-41de-4f56-aa43-f5009c03d066" />
+<img width="1126" alt="image" src="https://github.com/user-attachments/assets/36d35f89-81ee-4ab6-b51f-6b8f68d5ef61" />
 
 ### Domain Controllers
 Each forest includes domain controllers (DCs) running the latest version of Windows Server 2022 (as of October 2024) to ensure a realistic and up-to-date testing environment. The domain controllers facilitate SAMR enumeration by simulating real-world trust configurations across forests.
