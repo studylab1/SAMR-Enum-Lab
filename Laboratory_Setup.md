@@ -1,6 +1,6 @@
 # Laboratory Setup for SAMR Enumeration in Multi-Forest Trust Configurations
 
-This page outlines the laboratory environment created to simulate multiple Active Directory forest trust configurations for investigating SAMR (Security Account Manager Remote) enumeration attacks. The setup is specifically designed to analyze how various trust relationships between forests impact SAMR enumeration, with a focus on identifying security risks related to cross-forest reconnaissance and privilege escalation. Rather than providing a step-by-step guide for building the lab, this page describes the essential components and the final structure of the environment, allowing flexibility in how the implementation is carried out. Administrators may choose different methods to achieve the same configuration, depending on their tools and expertise. This approach highlights the intended outcome rather than the specific steps, as there are multiple ways to set up the lab while arriving at an identical result.
+This page outlines the laboratory environment created to simulate multiple Active Directory forest trust configurations for investigating SAMR (Security Account Manager Remote) enumeration attacks. The setup is specifically designed to analyze how various trust relationships between forests and objects ACL impact SAMR enumeration, with a focus on identifying security risks related to cross-forest reconnaissance and privilege escalation. Rather than providing a step-by-step guide for building the lab, this page describes the essential components and the final structure of the environment, allowing flexibility in how the implementation is carried out. Administrators may choose different methods to achieve the same configuration, depending on their tools and expertise. This approach highlights the intended outcome rather than the specific steps, as there are multiple ways to set up the lab while arriving at an identical result.
 
 ## Security Considerations.
 **⚠️ Important Security Note:**
@@ -16,27 +16,16 @@ This page outlines the laboratory environment created to simulate multiple Activ
 ### Active Directory Forests
 The lab consists of multiple Active Directory (AD) forests, each configured with different trust types, including:
 
-- **Forest and External Trusts**
-- **One-Way Trusts** (inbound and outbound)
-- **Selective and Forest-Wide Authentication Scopes**
-- **Windows Server 2016 and Windows Server 2012 R2 Forest Functional Level**
+- **Two-Way Forest Trust with Forest Level Authentication**
+- **Two-Way Forest Trust with Selective Authentication**
 
-![image](https://github.com/user-attachments/assets/6eaf4211-c1e0-4a82-a9d4-ac7fcafd7789)
-
-
+<img width="996" alt="image" src="https://github.com/user-attachments/assets/717d21e9-c62c-4c2c-8df9-65e5861072ac" />
 
 ### Domain Controllers
-Each forest includes domain controllers (DCs) running the latest version of Windows Server to ensure a realistic and up-to-date testing environment. The domain controllers facilitate SAMR enumeration by simulating real-world trust configurations across forests.
-
-### Trust Configurations
-Various trust relationships between the forests are established to test the impact of:
-
-- **Trust Direction** (e.g., inbound, outbound, bidirectional)
-- **Authentication Scopes** (e.g., selective vs. forest-wide)
-- **Transitivity** (whether trust is passed to other domains or not)
+Each forest includes domain controllers (DCs) running the latest version of Windows Server 2022 (as of October 2024) to ensure a realistic and up-to-date testing environment. The domain controllers facilitate SAMR enumeration by simulating real-world trust configurations across forests.
 
 ### SAMR Enumeration
-The SAMR protocol is used to perform enumeration of users, groups, and domain structure across forest boundaries. This setup allows researchers to investigate how trust configurations affect the data exposed by SAMR, which is critical for identifying potential security vulnerabilities.
+The SAMR protocol is used to perform enumeration of users, groups, computers and domain structure across forest boundaries. This setup allows researchers to investigate how trust configurations affect the data exposed by SAMR, which is critical for identifying potential security vulnerabilities.
 
 ## Virtual Environment Configuration
 
@@ -219,3 +208,4 @@ Another instance of Wireshark was installed on the `ydc1` and `zdc1` domain cont
    - **Identification of Exposed Data**: By inspecting SAMR response packets, it’s possible to identify which types of Active Directory objects (users, groups, computers) and attributes are exposed across different trust relationships. This analysis highlights potential security risks tied to specific trust configurations and reveals how much data is exposed to external domains.
 
 This unfiltered, isolated, and documented setup ensures that traffic capture provides a picture of SAMR enumeration behavior within the lab environment. The focus remains on observing and understanding the interaction between trusted domains and the potential security risks associated with enumeration techniques.
+
