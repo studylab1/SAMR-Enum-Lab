@@ -23,7 +23,7 @@
     <tr>
       <td>acl0/1</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>UserB1</td> <!-- Enumerated Object Name -->
+      <td>domain-b\UserB1</td> <!-- Enumerated Object -->
       <td>user</td>  <!-- Enumerated Object Class -->
       <td>Domain Users</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -42,7 +42,7 @@
     <tr>
       <td>acl0/2</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>UserB3</td> <!-- Enumerated Object Name -->
+      <td>domain-b\UserB3</td> <!-- Enumerated Object -->
       <td>user</td>  <!-- Enumerated Object Class -->
       <td>Domain Users</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -61,7 +61,7 @@
     <tr>
       <td>acl0/3</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>Guest</td> <!-- Enumerated Object Name -->
+      <td>domain-b\Guest</td> <!-- Enumerated Object -->
       <td>user</td>  <!-- Enumerated Object Class -->
       <td>Domain Guests, Guests.</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -80,7 +80,7 @@
     <tr>
       <td>acl0/4</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>SvcB1</td> <!-- Enumerated Object Name -->
+      <td>domain-b\SvcB1</td> <!-- Enumerated Object -->
       <td>user</td>  <!-- Enumerated Object Class -->
       <td>Domain Users, ServiceAccounts.</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -99,7 +99,7 @@
     <tr>
       <td>acl0/5</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>SvcB1</td> <!-- Enumerated Object Name -->
+      <td>domain-b\SvcB1</td> <!-- Enumerated Object -->
       <td>msDS-ManagedServiceAccount</td>  <!-- Enumerated Object Class -->
       <td>N/A</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -118,7 +118,7 @@
     <tr>
       <td>acl0/6</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>SvcB3</td> <!-- Enumerated Object Name -->
+      <td>domain-b\SvcB3</td> <!-- Enumerated Object -->
       <td>msDS-GroupManagedServiceAccount</td>  <!-- Enumerated Object Class -->
       <td>N/A</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -137,7 +137,7 @@
     <tr>
       <td>acl0/7</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>AdminB1</td> <!-- Enumerated Object Name -->
+      <td>domain-b\AdminB1</td> <!-- Enumerated Object -->
       <td>user</td>  <!-- Enumerated Object Class -->
       <td>Domain Users, Domain Admins</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -156,7 +156,7 @@
     <tr>
       <td>acl0/8</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB1_DG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB1_DG</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -175,7 +175,7 @@
     <tr>
       <td>acl0/9</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB2_GG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB2_GG</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -194,7 +194,7 @@
     <tr>
       <td>acl0/10</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB3_UG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB3_UG</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -213,7 +213,7 @@
     <tr>
       <td>acl0/11</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>Domain Users</td> <!-- Enumerated Object Name -->
+      <td>domain-b\Domain Users</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>Users</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -235,7 +235,7 @@
     <tr>
       <td>acl0/12</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB4_DL_DG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB4_DL_DG</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -254,7 +254,7 @@
     <tr>
       <td>acl0/13</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB5_DL_GG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB5_DL_GG</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -277,7 +277,7 @@
     <tr>
       <td>acl0/14</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB6_DL_UG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB6_DL_UG</td> <!-- Enumerated Object -->
       <td>group</td> <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -300,7 +300,7 @@
     <tr>
       <td>acl0/15</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>domain-b.local</td> <!-- Enumerated Object Name -->
+      <td>domain-b.local</td> <!-- Enumerated Object -->
       <td>domainDNS</td>  <!-- Enumerated Object Class -->
       <td>N/A</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -332,7 +332,7 @@
     <tr>
       <td>acl1/1</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>UserB2</td> <!-- Enumerated Object Name -->
+      <td>domain-b\UserB2</td> <!-- Enumerated Object -->
       <td>user</td>  <!-- Enumerated Object Class -->
       <td>Domain Users</td> <!-- Member of -->
       <td>All</td>  <!-- Access -->
@@ -353,7 +353,7 @@
     <tr>
       <td>acl1/2</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>UserB2</td> <!-- Enumerated Object Name -->
+      <td>domain-b\UserB2</td> <!-- Enumerated Object -->
       <td>user</td>  <!-- Enumerated Object Class -->
       <td>Domain Users</td> <!-- Member of -->
       <td>All</td>  <!-- Access -->
@@ -375,7 +375,7 @@
     <tr>
       <td>acl1/3</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>UserB2</td> <!-- Enumerated Object Name -->
+      <td>domain-b\UserB2</td> <!-- Enumerated Object -->
       <td>user</td>  <!-- Enumerated Object Class -->
       <td>Domain Users</td> <!-- Member of -->
       <td>List contents</td>  <!-- Access -->
@@ -394,7 +394,7 @@
     <tr>
       <td>acl1/4</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>UserB2</td> <!-- Enumerated Object Name -->
+      <td>domain-b\UserB2</td> <!-- Enumerated Object -->
       <td>user</td>  <!-- Enumerated Object Class -->
       <td>Domain Users</td> <!-- Member of -->
       <td>Read all properties</td>  <!-- Access -->
@@ -413,7 +413,7 @@
     <tr>
       <td>acl1/5</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>UserB2</td> <!-- Enumerated Object Name -->
+      <td>domain-b\UserB2</td> <!-- Enumerated Object -->
       <td>user</td>  <!-- Enumerated Object Class -->
       <td>Domain Users</td> <!-- Member of -->
       <td>Read General Information</td>  <!-- Access -->
@@ -432,7 +432,7 @@
     <tr>
       <td>acl1/6</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB2_GG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB2_GG</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -454,7 +454,7 @@
     <tr>
       <td>acl1/7</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB3_UG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB3_UG</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -476,7 +476,7 @@
     <tr>
       <td>acl1/8</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB5_DL_GG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB5_DL_GG</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -498,7 +498,7 @@
     <tr>
       <td>acl1/9</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB6_DL_UG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB6_DL_UG</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -520,7 +520,7 @@
     <tr>
       <td>acl1/10</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB7_GG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB7_GG</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>Default</td>  <!-- Access -->
@@ -542,7 +542,7 @@
     <tr>
       <td>acl1/11</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB8_GG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB8_GG</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>All</td>  <!-- Access -->
@@ -561,7 +561,7 @@
     <tr>
       <td>acl1/12</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB8_GG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB8_GG</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>All</td>  <!-- Access -->
@@ -580,7 +580,7 @@
     <tr>
       <td>acl1/13</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>GroupB8_GG</td> <!-- Enumerated Object Name -->
+      <td>domain-b\GroupB8_GG</td> <!-- Enumerated Object -->
       <td>group</td>  <!-- Enumerated Object Class -->
       <td>None</td> <!-- Member of -->
       <td>All</td>  <!-- Access -->
@@ -599,7 +599,7 @@
     <tr>
       <td>acl1/14</td> <!-- Scenario ID -->
       <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
-      <td>UserB5</td> <!-- Enumerated Object Name -->
+      <td>domain-b\UserB5</td> <!-- Enumerated Object -->
       <td>user</td>  <!-- Enumerated Object Class -->
       <td>Domain Users</td> <!-- Member of -->
       <td>All</td>  <!-- Access -->
@@ -619,7 +619,7 @@
     <tr>
       <td>acl2/0</td> <!-- Scenario ID -->
       <td>Selective Authentication</td>  <!-- Forest Trust Type -->
-      <td>domain-a.local</td> <!-- Enumerated Object Name -->
+      <td>bdc1.domain-b.local</td> <!-- Enumerated Object -->
       <td>domainDNS</td>  <!-- Enumerated Object Class -->
       <td>N/A</td> <!-- Member of -->
       <td>N/A</td>  <!-- Access -->
@@ -638,7 +638,7 @@
     <tr>
       <td>acl2/1</td> <!-- Scenario ID -->
       <td>Selective Authentication</td>  <!-- Forest Trust Type -->
-      <td>domain-a.local</td> <!-- Enumerated Object Name -->
+      <td>bdc1.domain-b.local</td> <!-- Enumerated Object -->
       <td>domainDNS</td>  <!-- Enumerated Object Class -->
       <td>N/A</td> <!-- Member of -->
       <td>Allow to authenticate - Descendant Computer Objects</td>  <!-- Access -->
@@ -671,7 +671,7 @@
     <tr>
       <td>acl2/2</td> <!-- Scenario ID -->
       <td>Selective Authentication</td>  <!-- Forest Trust Type -->
-      <td>domain-a.local</td> <!-- Enumerated Object Name -->
+      <td>bdc1.domain-b.local</td> <!-- Enumerated Object -->
       <td>domainDNS</td>  <!-- Enumerated Object Class -->
       <td>N/A</td> <!-- Member of -->
       <td>Allow to authenticate - Descendant Computer Objects</td>  <!-- Access -->
@@ -714,6 +714,66 @@
       </td> <!-- Link -->
     </tr>
     <tr>
+      <td>acl3/1</td> <!-- Scenario ID -->
+      <td>Forest Level Authentication</td>  <!-- Forest Trust Type -->
+      <td>domain-x.local</td> <!-- Enumerated Object -->
+      <td>domainDNS</td>  <!-- Enumerated Object Class -->
+      <td>N/A</td> <!-- Member of -->
+      <td>Default</td>  <!-- Access -->
+      <td>N/A</td> <!-- Access Type -->
+      <td>N/A</td>  <!-- Access Applied to -->
+      <td>0, 6, 5, 7, 46, 13, 11, 15, 1, 18, 34, 47.</td> <!-- OpNums -->
+      <td>No</td>  <!-- Errors in Traffic -->
+      <td>Object and its attributes are returned</td> <!-- Results -->
+      <td></td>  <!-- Notes -->
+      <td>
+          python samr-enum.py target=xdc1.domain-x.local username=enum-a password=LabAdm1! opnums enumerate=users <br><br>
+          python samr-enum.py target=xdc1.domain-x.local username=enum-a password=LabAdm1! opnums enumerate=computers <br><br>
+          python samr-enum.py target=xdc1.domain-x.local username=Administrator password=LabAdm1@ opnums enumerate=computers <br><br>
+          python samr-enum.py target=xdc1.domain-x.local username=Administrator password=LabAdm1@ opnums enumerate=users
+      </td> <!-- Execution -->
+    <td>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.1_users.pcapng">Download PCAPNG File (users)</a> <br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.1_users.txt">View Program Output (computers)</a><br><br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.1_computers.pcapng">Download PCAPNG File (users)</a> <br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.1_computers.txt">View Program Output (computers)</a><br><br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.1_users_as_local_Administrator.pcapng">Download PCAPNG File (users)</a> <br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.1_users_as_local_Administrator.txt">View Program Output (computers)</a><br><br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.1_computers_as_local_Administrator.pcapng">Download PCAPNG File (users)</a> <br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.1_computers_as_local_Administrator.txt">View Program Output (computers)</a><br><br> <br>
+      </td> <!-- Link -->
+    </tr>
+    <tr>
+      <td>acl3/2</td> <!-- Scenario ID -->
+      <td>Selective Authentication</td>  <!-- Forest Trust Type -->
+      <td>xdc1.domain-x.local</td> <!-- Enumerated Object -->
+      <td>domainDNS</td>  <!-- Enumerated Object Class -->
+      <td>N/A</td> <!-- Member of -->
+      <td>Allow to authenticate - Descendant Computer Objects</td>  <!-- Access -->
+      <td>Allow</td> <!-- Access Type -->
+      <td>Domain-a\enum-a / Add</td>  <!-- Access Applied to -->
+      <td>0, 6, 5, 7, 13, 34, 47, 1, 19, 25, 20, 18, 17, 46, 11, 15.</td> <!-- OpNums -->
+      <td>No</td>  <!-- Errors in Traffic -->
+      <td>All objects and their attributes are returned</td> <!-- Results -->
+      <td>Access is granted on the domain-a.local object</td>  <!-- Notes -->
+     <td>
+          python samr-enum.py target=xdc1.domain-x.local username=enum-a password=LabAdm1! opnums enumerate=users <br><br>
+          python samr-enum.py target=xdc1.domain-x.local username=enum-a password=LabAdm1! opnums enumerate=computers <br><br>
+          python samr-enum.py target=xdc1.domain-x.local username=Administrator password=LabAdm1@ opnums enumerate=users <br><br>
+          python samr-enum.py target=xdc1.domain-x.local username=Administrator password=LabAdm1@ opnums enumerate=computers
+      </td> <!-- Execution -->
+    <td>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.2_users.pcapng">Download PCAPNG File (users)</a> <br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.2_users.txt">View Program Output (computers)</a><br><br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.2_computers.pcapng">Download PCAPNG File (users)</a> <br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.2_computers.txt">View Program Output (computers)</a><br><br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.2_users_as_local_Administrator.pcapng">Download PCAPNG File (users)</a> <br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.2_users_as_local_Administrator.txt">View Program Output (computers)</a><br><br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.2_computers_as_local_Administrator.pcapng">Download PCAPNG File (users)</a> <br> <br>
+          <a href="https://github.com/studylab1/SAMR-Enum-Lab/raw/refs/heads/main/Resources/acl_3.2_computers_as_local_Administrator.txt">View Program Output (computers)</a><br><br> <br>
+      </td> <!-- Link -->
+    </tr>
+    <tr>
       <th>Scenario ID</th>  <!-- 1 -->
       <th>Forest Trust Type</th>  <!-- 2 -->
       <th>Enumerated Object Name</th>  <!-- 3 -->
@@ -730,6 +790,7 @@
     </tr>
   </tbody>
 </table>
+
 
 
 
