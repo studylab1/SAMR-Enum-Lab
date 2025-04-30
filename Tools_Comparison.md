@@ -17,21 +17,20 @@ This comparison evaluates tools used for Active Directory reconnaissance through
 
 ## System Configuration and Enumeration Vector
 
-The detailed configuration of the lab is described on the [Lab Setup](Lab_Setup.md) page. The lab environment was configured with four one-way forest trusts among `domain-y.local`, `domain-z.local`, and `domain-x.local`, set up with forest-wide authentication.
+The detailed configuration of the lab is described on the [Laboratory Setup](Laboratory_Setup.md) page. The lab environment was configured with two two-way forest trusts among `domain-y.local`, `domain-z.local`, and `domain-x.local`, set up with forest-wide authentication.
 
-SAMR enumeration scans were conducted from the following workstations:
-- `yws1` (Microsoft Windows)** and `xws1` (Ubuntu Linux) to the domain controllers:
+SAMR enumeration scans were conducted from the `xws1` (Ubuntu Linux) workstation towards the following domain controllers:
   - `zdc1.domain-z.local`
   - `xdc1.domain-x.local`  
 
-These scans were performed in cases where tools supported cross-forest requests. When tools did not support cross-forest requests, scans were conducted only to the domain controller `ydc1.domain-y.local` from the same workstations.
+These scans were performed in cases where tools supported cross-forest requests. When tools did not support cross-forest requests, scans were conducted only to the domain controller `ydc1.domain-y.local` from the same workstation.
 
 The data in Active Directory was populated using the BadBlood tool. Key details of the environment include:
 - The `zdc1.domain-z.local` domain controller hosted users, groups, and computers with:
   - Special characters in their names such as   `@`, `#`, `$`, `%`, `^`, `&`, `*`, `!`, `~`, `'`, `+`, `=`, `_`, `-`, `<`, `>`, `,`, `.`, `?`, `/`, `"`.
-  - Fields in foreign language such as Russian and Chinese.
-  - Fields like names, descriptions, and others with long values.
-- The `zdc1.domain-z.local` domain controller contained:
+  - Fields in foreign languages, such as Russian and Chinese.
+  - Fields such as names and descriptions, with long string values. 
+- The `xdc1.domain-z.local` domain controller contained the following:
   - 20,000 users.
   - 10,000 computers and groups.
 
@@ -44,9 +43,9 @@ The following table provides version numbers for the tools evaluated during this
 | Net                 | Built-in      | Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317).                                                                                        |
 | Enum4linux          | 0.9.1         | A legacy enumeration tool commonly used for SMB and NetBIOS reconnaissance. While functional, it lacks updates and advanced features found in modern tools.|
 | Enum4linux-ng       | 1.3.4         | A modernized version of Enum4linux, designed to provide enhanced enumeration capabilities, better output formatting, and support for contemporary SMB versions. |
-| PowerShell          | 1.0.1.0       | ActiveDirectory Module. Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317). Cmdlets from the Active Directory module in PowerShell did not use the SAMR for communication. Instead, these cmdlets primarily relied on the Microsoft .NET Naming Service (MS-NNS) and Microsoft .NET Message Framing Protocol (MS-NMF) for their operations. |
+| PowerShell          | 1.0.1.0       | ActiveDirectory Module. Windows 11 Enterprise x86-64 (version 23H2, OS build 22631.4317). Cmdlets from the Active Directory module in PowerShell did not use the SAMR protocol for communication. Instead, these cmdlets primarily relied on the Microsoft .NET Naming Service (MS-NNS) and Microsoft .NET Message Framing Protocol (MS-NMF) for their operations. |
 | SharpHound          | 2.5.9         | Part of the BloodHound project. Specifically designed to collect data from Active Directory environments for attack path visualization and analysis.    |
-| Metasploit          | 6.4.41 dev    | A penetration testing framework that provides various modules, including auxiliary tools, for conducting security assessments. In the context of SAMR enumeration requests, Metasploit offers modules to interact with the SAMR protocol, allowing testers to enumerate user accounts and computer objects on remote domain controllers. |
+| Metasploit          | 6.4.41 dev    | A penetration testing framework that provides various modules, including auxiliary tools, for conducting security assessments. In the context of SAMR-based enumeration requests, Metasploit offers modules to interact with the SAMR protocol, allowing testers to enumerate user accounts and computer objects on remote domain controllers. |
 | CrackMapExec        | 6.1.0 - John Wick | A post-exploitation and pentesting tool designed to streamline network enumeration, lateral movement, and credential validation within Active Directory environments. Features SAMR-based enumeration for identifying domain objects. |
 | Impacket            | 0.12.0        | A library and suite of tools for interacting with network protocols. For this research, only `samrdump.py` and `net.py` from the Impacket suite were used. These tools facilitate detailed enumeration through SAMR. |
 | rpcclient           | 4.15.13       | A command-line tool, part of the Samba suite, used to interact with the Microsoft Remote Procedure Call (MS-RPC) protocol. It allows querying and managing Windows-based systems remotely over SMB, enabling tasks like enumerating users, groups, shares, and retrieving domain or system information. |
@@ -59,13 +58,13 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 - **Cross-forest Support**: Indicates if the tool can perform enumeration across domains within a forest trust.
 - **OpNum Coverage**: Lists supported SAMR operation numbers.
 - **Excessive Permission Detection**: Specifies the default access permissions required by each tool.
-- **Data Parsing and Accuracy**: Evaluates whether tools correctly interpret and retrieve all fields from SAMR responses and align the output with the expected protocol structures. Includes verification of field completeness and consistency in results across SAMR operations.
+- **Data Parsing and Accuracy**: Evaluates whether tools correctly interpret and retrieve all fields from SAMR responses and ensure output alignment with expected protocol structures. Includes verification of field completeness and consistency in results across SAMR operations.
 - **Supported Authentication Types**: Details whether NTLM, Kerberos, or both protocols are supported (Multi-Authentication Compatible).
 - **Access Level Requirements**: Specifies whether administrator privileges are required for operation.
 
 ## Tool Comparison Results 
 
-> **Note:** The evaluation results analyze tools’ support for cross-forest SAMR requests. If a tool does not support cross-forest SAMR or uses a different protocol for enumeration, other criteria are not assessed, and the corresponding values are marked as "Not Applicable".
+> **Note:** The evaluation results analyze tools’ support for cross-forest SAMR requests. If a tool does not support cross-forest SAMR enumeration or relies on a different protocol for enumeration, other criteria are not assessed, corresponding values are marked as "Not Applicable".
 
 | Tool Name    | Cross-Forest Request Support | OpNum Coverage (23 total, grouped) | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
 |--------------|------------------------------|----------------|--------------------------------|---------------------------|--------------------------------|---------------------------|
@@ -81,7 +80,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 | **samr-enum**| Supported                    | Moderate Coverage (65.2%, 15) | Not Detected    | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
 
 > Cmdlets from the Active Directory module in PowerShell did not use the SAMR for communication. Instead, these cmdlets primarily relied on the Microsoft .NET Naming Service (MS-NNS) and Microsoft .NET Message Framing Protocol (MS-NMF) for their operations.
-> For Metasploit, only the "auxiliary/scanner/smb/smb_enumusers" and "auxiliary/admin/dcerpc/samr_account" modules were examined.
+> For Metasploit, only the "auxiliary/scanner/smb/smb_enumusers" and "auxiliary/admin/dcerpc/samr_account" modules were examined in this evaluation.
 
 ## Criteria Evaluation Details
 
@@ -1218,3 +1217,4 @@ Executed following commands:
 | 3         | `SamrQuerySecurityObject`  | `ACE Type` (from DACL)            | `aceType`                    | Integer / Enum                 | Yes              | Yes                  | Accurate     | Indicates if the ACE is Allow or Deny, etc.                                           |
 | 3         | `SamrQuerySecurityObject`  | `Access Mask` (from ACE)          | `accessMask`                 | Bitmask                       | Yes              | Yes                  | Accurate     | Set of rights granted or denied by this ACE.                                          |
 | 3         | `SamrQuerySecurityObject`  | `SID` (from ACE)                  | `trustee`                    | SID String                     | Yes              | Yes                  | Accurate     | SID to which the access control entry applies.                                        |
+

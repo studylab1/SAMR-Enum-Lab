@@ -1,6 +1,6 @@
 # SAMR Enumeration in Multi-Forest Active Directory Environments
 
-**Research Document Version 1.0 (Draft)**
+**Research Document Version 1.0**
 
 ## Overview
 
@@ -19,21 +19,15 @@ This project explores the enumeration capabilities of the **Security Account Man
 - **Custom SAMR Enumeration Tool**  
   Utilizes a subset of SAMR OpNums to perform targeted enumeration in multi-forest AD setups.
 
-- **Laboratory Setup**  
-  Tested in a simulated AD environment with diverse trust configurations, authentication scopes, and functional levels.
-
 ---
 
-## Research Highlights
+## Research Highlights  
 
-- **Impact of Trust Configurations**  
-  Analyzes how one-way, two-way, and selectively authenticated trusts influence SAMR enumeration results.
+- **Impact of Trust and ACL Configurations**  
+  Measures how two-way forest trusts, selective authentication, and discretionary ACL changes alter SAMR enumeration visibility.  
 
-- **Tool Limitations**  
-  Identifies gaps in existing tools, including restricted OpNum support and dependency on excessive permissions.
-
-- **Security Insights**  
-  Provides recommendations to mitigate risks associated with SAMR enumeration in multi-forest setups.
+- **Tool Coverage and Permission Scope**  
+  Quantifies shortcomings in existing tools, including limited OpNum support.  
 
 ---
 

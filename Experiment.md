@@ -1,4 +1,51 @@
-(In progress)
+## Experiment overview  
+The experiment measures what a non-privileged user from **domain-a.local** can enumerate through the SAMR protocol on a **domain-b.local** and **domain-x.local** domain controllers.  
+Two trust modes are compared: **forest-wide authentication** and **selective authentication**.  
+For every mode the `samr-enum` tool runs one or several enumeration command, the console output is saved, and the matching network capture is stored.  
+Each capture holds traffic for that first command only.
+
+---
+
+### Abbreviations used on this page
+
+| Term | Meaning |
+|------|---------|
+| **SAMR** | Security Account Manager Remote protocol |
+| **SMB** | Server Message Block protocol |
+| **ACE** | Access Control Entries |
+| **ACL** | Access Control List |
+| **MSA** | Managed Service Account |
+| **gMSA** | Group Managed Service Account |
+| **OU** | Organisational Unit |
+| **NTLMSSP** | NT LAN Manager Security Support Provider (used for SMB authentication) |
+
+---
+
+### Table column guide
+
+| Column | Explanation |
+|--------|-------------|
+| **Scenario ID** | Unique label of the test case (`aclX/Y`) |
+| **Forest trust mode** | `Forest-wide` or `Selective` authentication |
+| **Enumerated object** | Target object name requested by `samr-enum` |
+| **Object class** | Type of the domain object |
+| **Member of** | Group memberships of the object (or `None`) |
+| **Access** | Permission level examined (`Default`, `All`, `Read` and so on) |
+| **ACE action** | `Allow`, `Deny`, or `N/A` |
+| **OpNums** | Sequence of SAMR operation numbers observed in the capture |
+| **Error** | SAMR return status code if a SAMR call fails, otherwise `No` |
+| **Result** | Whether the object and its attributes are returned |
+
+---
+
+### Decrypting SMB traffic
+
+The SMB layer in the `.pcapng` files is encrypted.  
+To decrypt it in Wireshark set **Preferences ▸ Protocols ▸ NTLMSSP ▸ NT Password** to `LabAdm1!` for `domain-a` credentials (`enum-a`) and  `LabAdm1@` for `domain-x` credentials (`Administrator`).  
+Wireshark will then show SAMR requests and responses in plaintext. 
+
+---
+### Experiment Results
 
 <table cellpadding="4" cellspacing="0" border="1">
   <thead>
@@ -790,6 +837,7 @@
     </tr>
   </tbody>
 </table>
+
 
 
 

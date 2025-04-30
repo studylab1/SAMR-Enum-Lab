@@ -1,6 +1,6 @@
 # Resources
 
-This page serves as a central repository of downloadable resources, detailed documentation, and supporting scripts to aid in SAMR enumeration and analysis efforts. It contains traffic capture files, tool outputs, enumeration scripts, and comprehensive descriptions of SAMR operation numbers (OpNums). These resources are designed to complement the information presented on other pages and facilitate deeper understanding and hands-on exploration.
+This page serves as a central repository for downloadable resources, detailed descriptions, and supporting scripts to aid in SAMR enumeration and analysis efforts. It includes traffic capture files, tool outputs, enumeration scripts, and comprehensive explanations of SAMR operation numbers (OpNums). These resources are intended to complement the information presented on other pages and to facilitate deeper understanding and hands-on exploration.
 
 ## Table of Contents
 1. [Traffic Captures, Tools Output and Scripts](#traffic-captures-tools-output-and-scripts)
