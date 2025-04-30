@@ -15,6 +15,8 @@
 
 This comparison evaluates tools used for Active Directory reconnaissance through the SAMR protocol. The SAMR protocol enables the retrieval of information on users, groups, computers, domains, and security settings.
 
+<img width="1063" alt="image" src="https://github.com/user-attachments/assets/21f4324c-b983-4657-b3ec-007386016946" />
+
 ## System Configuration and Enumeration Vector
 
 The detailed configuration of the lab is described on the [Laboratory Setup](Laboratory_Setup.md) page. The lab environment was configured with two two-way forest trusts among `domain-y.local`, `domain-z.local`, and `domain-x.local`, set up with forest-wide authentication.
