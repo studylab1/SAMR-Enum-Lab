@@ -144,6 +144,7 @@ The following table outlines the IP addressing scheme used for the lab environme
 | **Domain Controller** | xdc1              | <div align="right">domain-x.local</div>     | 100         | 192.168.10.11/24       | 192.168.10.1                 |
 | **Workstation**       | xws1              | <div align="right">N/A</div>                | 100         | 192.168.10.101/24      | 192.168.10.1                 |
 | **Domain Controller** | ydc1              | <div align="right">domain-y.local</div>     | 110         | 192.168.11.11/24       | 192.168.11.1                 |
+| **Workstation**       | yws1              | <div align="right">domain-y.local</div>     | 110         | 192.168.11.101/24      | 192.168.11.1                 |
 | **Domain Controller** | zdc1              | <div align="right">domain-z.local</div>     | 120         | 192.168.12.11/24       | 192.168.12.1                 |
 
 The entire network is configured to be **isolated** from the host machine to ensure a controlled and contained environment. No traffic can enter or exit the lab network from the host server, preventing external interference and ensuring accurate testing conditions.
@@ -172,4 +173,5 @@ In this lab environment, traffic analysis is essential for monitoring and unders
 3. **Segmentation by Subnet**: Captures are separated by subnet to isolate traffic specific to each domain. This segmentation helps compare enumeration results across forests and assess differences in traffic patterns when trust configurations change.
 
 This unfiltered, isolated, and documented setup ensures that traffic capture provides a picture of SAMR enumeration behavior within the lab environment. The focus remains on observing and understanding the interaction between trusted domains.
+
 
