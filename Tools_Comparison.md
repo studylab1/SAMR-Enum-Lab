@@ -8,7 +8,7 @@
 5. [Tool Comparison Results](#tool-comparison-results)
 6. [Criteria Evaluation Details](#criteria-evaluation-details)
    1. [OpNum Coverage Criterion](#opnum-coverage-criterion)
-   2. [Excessive Permission Detection Criterion](#excessive-permission-detection-criterion)
+   2. [Access Scope Compliance Criterion](#access-scope-compliance-criterion)
    3. [Data Parsing and Accuracy Criterion](#data-parsing-and-accuracy-criterion)
 
 ## Introduction
@@ -59,7 +59,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 - **Cross-forest Support**: Indicates if the tool can perform enumeration across domains within a forest trust.
 - **OpNum Coverage**: Lists supported SAMR operation numbers.
-- **Excessive Permission Detection**: Specifies the default access permissions required by each tool.
+- **Access Scope Compliance**: Specifies the default access permissions required by each tool.
 - **Data Parsing and Accuracy**: Evaluates whether tools correctly interpret and retrieve all fields from SAMR responses and ensure output alignment with expected protocol structures. Includes verification of field completeness and consistency in results across SAMR operations.
 - **Supported Authentication Types**: Details whether NTLM, Kerberos, or both protocols are supported (Multi-Authentication Compatible).
 - **Access Level Requirements**: Specifies whether administrator privileges are required for operation.
@@ -68,18 +68,29 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 > **Note:** The evaluation results analyze tools’ support for cross-forest SAMR requests. If a tool does not support cross-forest SAMR enumeration or relies on a different protocol for enumeration, other criteria are not assessed, corresponding values are marked as "Not Applicable".
 
-| Tool Name    | Cross-Forest Request Support | OpNum Coverage (23 total, grouped) | Excessive Permission Detection | Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
+### Column Descriptions
+
+- **Cross-Forest Request Support**: Whether the tool successfully issues SAMR requests across domains joined by a forest trust.
+- **OpNum Coverage (23 total, grouped)**: Number and percentage of SAMR operation numbers (OpNums) triggered by the tool. Operations are grouped functionally.
+- **Access Scope Compliance**: Indicates whether the tool's specified `Desired Access` bits for each operation conform to the access masks defined in the SAMR specification.
+    - *Compliant* – all `Desired Access` values are valid and within the bounds defined for the corresponding OpNum.
+    - *Over-Permissioned* – at least one operation includes \texttt{Desired Access} bits that exceed the access scope defined in the specification.
+- **Data Parsing and Accuracy**: Whether the tool correctly parses returned SAMR data without omission or misinterpretation.
+- **Supported Authentication Types**: Indicates compatibility with authentication methods such as NTLM, Kerberos, or both.
+- **Access Level Requirements**: Minimum account privileges required to extract data.
+  
+| Tool Name    | Cross-Forest Request Support | OpNum Coverage (23 total, grouped) | Access Scope Compliance| Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
 |--------------|------------------------------|----------------|--------------------------------|---------------------------|--------------------------------|---------------------------|
 | Net          | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | Enum4linux   | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | Enum4linux-ng| Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | PowerShell   | Supported                    | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
-| SharpHound   | Supported                    | Low Coverage (17.3%, 4) | Not Detected          | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| Metasploit   | Supported                    | Low Coverage (26%, 6) | Not Detected            | Accurate                  | NTLM                           | Standard Access Sufficient|
-| CrackMapExec | Supported                    | Low Coverage (26%, 6) | Not Detected            | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| Impacket     | Supported                    | Moderate Coverage (56.5%, 13)| Not Detected     | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| rpcclient    | Supported                    | High Coverage (82.6%, 19) | Not Detected        | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
-| **samr-enum**| Supported                    | Moderate Coverage (65.2%, 15) | Not Detected    | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| SharpHound   | Supported                    | Low Coverage (17.3%, 4) | Compliant             | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| Metasploit   | Supported                    | Low Coverage (26%, 6) | Compliant               | Accurate                  | NTLM                           | Standard Access Sufficient|
+| CrackMapExec | Supported                    | Low Coverage (26%, 6) | Compliant               | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| Impacket     | Supported                    | Moderate Coverage (56.5%, 13)| Compliant        | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| rpcclient    | Supported                    | High Coverage (82.6%, 19) | Compliant           | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
+| **samr-enum**| Supported                    | Moderate Coverage (65.2%, 15) | Compliant       | Accurate                  | Multi-Authentication Compatible| Standard Access Sufficient|
 
 > Cmdlets from the Active Directory module in PowerShell did not use the SAMR for communication. Instead, these cmdlets primarily relied on the Microsoft .NET Naming Service (MS-NNS) and Microsoft .NET Message Framing Protocol (MS-NMF) for their operations.
 > For Metasploit, only the "auxiliary/scanner/smb/smb_enumusers" and "auxiliary/admin/dcerpc/samr_account" modules were examined in this evaluation.
@@ -424,7 +435,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 
 
 
-### Excessive Permission Detection Criterion
+### Access Scope Compliance Criterion
 
 The evaluation focuses on analyzing the **'Desired Access'** field in SAMR requests. For clarity:
 
@@ -1219,4 +1230,5 @@ Executed following commands:
 | 3         | `SamrQuerySecurityObject`  | `ACE Type` (from DACL)            | `aceType`                    | Integer / Enum                 | Yes              | Yes                  | Accurate     | Indicates if the ACE is Allow or Deny, etc.                                           |
 | 3         | `SamrQuerySecurityObject`  | `Access Mask` (from ACE)          | `accessMask`                 | Bitmask                       | Yes              | Yes                  | Accurate     | Set of rights granted or denied by this ACE.                                          |
 | 3         | `SamrQuerySecurityObject`  | `SID` (from ACE)                  | `trustee`                    | SID String                     | Yes              | Yes                  | Accurate     | SID to which the access control entry applies.                                        |
+
 
