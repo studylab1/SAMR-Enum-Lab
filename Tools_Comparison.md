@@ -61,7 +61,7 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
 - **OpNum Coverage**: Lists supported SAMR operation numbers.
 - **Access Scope Compliance**: Specifies the default access permissions required by each tool.
 - **Data Parsing and Accuracy**: Evaluates whether tools correctly interpret and retrieve all fields from SAMR responses and ensure output alignment with expected protocol structures. Includes verification of field completeness and consistency in results across SAMR operations.
-- **Supported Authentication Types**: Details whether NTLM, Kerberos, or both protocols are supported (Multi-Authentication Compatible).
+- **Authentication Protocol Support**: Details whether NTLM, Kerberos, or both protocols are supported (Multi-Authentication Compatible).
 - **Access Level Requirements**: Specifies whether administrator privileges are required for operation.
 
 ## Tool Comparison Results 
@@ -76,10 +76,10 @@ The following criteria were used to evaluate each tool's SAMR enumeration capabi
     - *Compliant* – all `Desired Access` values are valid and within the bounds defined for the corresponding OpNum.
     - *Over-Permissioned* – at least one operation includes \texttt{Desired Access} bits that exceed the access scope defined in the specification.
 - **Data Parsing and Accuracy**: Whether the tool correctly parses returned SAMR data without omission or misinterpretation.
-- **Supported Authentication Types**: Indicates compatibility with authentication methods such as NTLM, Kerberos, or both.
+- **Authentication Protocol Support**: Indicates compatibility with authentication methods such as NTLM, Kerberos, or both.
 - **Access Level Requirements**: Minimum account privileges required to extract data.
   
-| Tool Name    | Cross-Forest Request Support | OpNum Coverage (23 total, grouped) | Access Scope Compliance| Data Parsing and Accuracy | Supported Authentication Types | Access Level Requirements |
+| Tool Name    | Cross-Forest Request Support | OpNum Coverage (23 total, grouped) | Access Scope Compliance| Data Parsing and Accuracy | Authentication Protocol Support | Access Level Requirements |
 |--------------|------------------------------|----------------|--------------------------------|---------------------------|--------------------------------|---------------------------|
 | Net          | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
 | Enum4linux   | Not Supported                | Not Applicable | Not Applicable                 | Not Applicable            | Not Applicable                 | Not Applicable            |
@@ -1230,5 +1230,6 @@ Executed following commands:
 | 3         | `SamrQuerySecurityObject`  | `ACE Type` (from DACL)            | `aceType`                    | Integer / Enum                 | Yes              | Yes                  | Accurate     | Indicates if the ACE is Allow or Deny, etc.                                           |
 | 3         | `SamrQuerySecurityObject`  | `Access Mask` (from ACE)          | `accessMask`                 | Bitmask                       | Yes              | Yes                  | Accurate     | Set of rights granted or denied by this ACE.                                          |
 | 3         | `SamrQuerySecurityObject`  | `SID` (from ACE)                  | `trustee`                    | SID String                     | Yes              | Yes                  | Accurate     | SID to which the access control entry applies.                                        |
+
 
 
