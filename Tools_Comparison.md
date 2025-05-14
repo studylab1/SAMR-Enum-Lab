@@ -15,7 +15,7 @@
 
 This comparison evaluates tools used for Active Directory reconnaissance through the SAMR protocol. The SAMR protocol enables the retrieval of information on users, groups, computers, domains, and security settings.
 
-<img width="1063" alt="image" src="https://github.com/user-attachments/assets/21f4324c-b983-4657-b3ec-007386016946" />
+<img width="1358" alt="image" src="https://github.com/user-attachments/assets/0a1195b7-a2bd-48d3-9569-166ec289ce17" />
 
 ## System Configuration and Enumeration Vector
 

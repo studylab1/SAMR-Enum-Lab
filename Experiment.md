@@ -4,6 +4,8 @@ Two trust modes are compared: **forest-wide authentication** and **selective aut
 For every mode the `samr-enum` tool runs one or several enumeration command, the console output is saved, and the matching network capture is stored.  
 Each capture holds traffic for that first command only.
 
+<img width="1233" alt="image" src="https://github.com/user-attachments/assets/733f191d-b67a-4d24-92e6-c39643e9e760" />
+
 ---
 
 ### Abbreviations used on this page
